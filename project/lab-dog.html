@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>סדנת הכלב · עינב מימון</title>
+<style>
+/* =======================================================================
+   DOG WORKSHOP — iteration on concept 1 only.
+   Note: unlike the concept lab, this file DOES share one pose engine
+   across all dog variants on purpose. Every variant is drawn on the same
+   skeleton (same joint coordinates), so one set of pose rules drives all
+   six and they stay comparable. Once a dog is picked, its poses get
+   re-tuned to that specific drawing.
+   ======================================================================= */
+:root{
+  --navy:#16324F; --cream:#FBF6EE; --coral:#E4572E;
+  --amber:#F2A03D; --green:#4C9A6B; --slate:#4A5C6F; --brown:#8A7A66;
+}
+*{ box-sizing:border-box; }
+body{ margin:0; background:#EFE7DA; color:var(--navy);
+  font-family:"Segoe UI","Noto Sans Hebrew",system-ui,-apple-system,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+
+.wrap{ max-width:1200px; margin:0 auto; padding:0 20px; }
+.head{ padding:34px 0 6px; }
+.head h1{ margin:0 0 6px; font-size:30px; letter-spacing:-.02em; }
+.head .en{ color:var(--brown); font-size:14px; font-weight:600; direction:ltr; text-align:right; }
+.head p{ margin:14px 0 0; max-width:780px; color:var(--slate); font-size:15px; line-height:1.65; }
+
+h2.part{ margin:44px 0 4px; font-size:23px; letter-spacing:-.02em; }
+h2.part .en{ font-weight:600; font-size:14px; color:var(--brown); margin-inline-start:8px; direction:ltr; display:inline-block; }
+.part-sub{ margin:0 0 16px; color:var(--slate); font-size:14.5px; line-height:1.6; max-width:840px; }
+
+.bar{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:0 0 18px;
+  background:rgba(255,255,255,.6); border:1px solid rgba(22,50,79,.12); border-radius:12px; padding:10px 12px; }
+.bar b{ font-size:12.5px; letter-spacing:.04em; color:var(--brown); margin-inline-end:4px; }
+.bar button{ font-family:inherit; font-size:13px; font-weight:700; color:var(--navy);
+  background:transparent; border:1.5px solid rgba(22,50,79,.18); border-radius:99px; padding:7px 14px; cursor:pointer; }
+.bar button:hover{ border-color:var(--navy); }
+.bar button[aria-pressed="true"]{ background:var(--navy); color:var(--cream); border-color:var(--navy); }
+.bar .sep{ width:1px; align-self:stretch; background:rgba(22,50,79,.12); margin:0 6px; }
+
+/* ---- variant grid ---- */
+.grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.card{ background:var(--cream); border:1px solid rgba(22,50,79,.14); border-radius:14px; padding:14px 14px 12px; }
+.card.picked{ border-color:var(--coral); box-shadow:0 0 0 2px rgba(228,87,46,.22); }
+.card .stagebox{ height:150px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px; }
+.card h3{ margin:8px 0 2px; font-size:16px; }
+.card h3 .k{ color:var(--coral); font-weight:900; margin-inline-end:6px; }
+.card p{ margin:0; font-size:12.5px; color:var(--slate); line-height:1.5; min-height:34px; }
+.card .pick{ margin-top:10px; width:100%; font-family:inherit; font-size:13px; font-weight:700;
+  border:1.5px solid rgba(22,50,79,.18); background:transparent; color:var(--navy); border-radius:99px; padding:7px; cursor:pointer; }
+.card.picked .pick{ background:var(--coral); border-color:var(--coral); color:var(--cream); }
+
+/* ---- scroll stages ---- */
+.stage{ position:relative; height:560px; overflow:hidden; border-radius:16px;
+  border:1px solid rgba(22,50,79,.16); box-shadow:0 10px 30px rgba(22,50,79,.10); background:var(--cream); }
+.scroller{ position:absolute; inset:0; overflow-y:auto; overscroll-behavior:contain; background:var(--cream); }
+.scroller::-webkit-scrollbar{ width:8px; }
+.scroller::-webkit-scrollbar-track{ background:rgba(22,50,79,.05); }
+.scroller::-webkit-scrollbar-thumb{ background:rgba(22,50,79,.26); border-radius:99px; }
+.overlay{ position:absolute; inset:0; pointer-events:none; z-index:5; }
+.endlabel{ position:absolute; z-index:6; top:10px; left:14px; font-size:11px; font-weight:800; letter-spacing:.05em;
+  color:rgba(22,50,79,.42); background:rgba(251,246,238,.85); padding:4px 10px; border-radius:99px; }
+.jump{ position:absolute; z-index:7; bottom:12px; left:50%; transform:translateX(-50%);
+  font-family:inherit; font-size:12px; font-weight:700; color:var(--cream); background:var(--navy);
+  border:none; border-radius:99px; padding:8px 16px; cursor:pointer; pointer-events:auto; opacity:.9; }
+.jump:hover{ background:var(--coral); }
+
+/* crude mock page, narrower column than the concept lab so the greeting
+   has the room the real 1440px layout would give it */
+.mk-sec{ max-width:700px; margin:0 auto; padding:38px 24px 42px; }
+.mk-eyebrow{ font-size:12px; font-weight:800; letter-spacing:.14em; color:var(--brown); margin-bottom:12px; }
+.mk-h1{ margin:0; font-size:32px; line-height:1.2; letter-spacing:-.025em; }
+.mk-h2{ margin:0; font-size:23px; letter-spacing:-.02em; }
+.mk-h2.light{ color:var(--cream); }
+.mk-bar{ width:64px; height:5px; border-radius:99px; background:var(--amber); margin:16px 0 18px; }
+.mk-p{ margin:0 0 18px; font-size:15.5px; line-height:1.75; color:var(--slate); }
+.mk-p.light{ color:rgba(251,246,238,.82); }
+.mk-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.mk-btn{ background:var(--coral); color:var(--cream); font-weight:700; font-size:14px; padding:11px 20px; border-radius:99px; }
+.mk-btn.ghost{ background:transparent; color:var(--navy); border:1.5px solid rgba(22,50,79,.2); }
+.mk-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.mk-card{ background:#fff; border:1px solid rgba(22,50,79,.09); border-radius:14px; padding:14px; }
+.mk-card b{ display:block; font-size:14px; margin-bottom:8px; }
+.mk-card span{ display:block; height:8px; border-radius:99px; background:rgba(22,50,79,.09); margin-bottom:7px; }
+.mk-card span:nth-child(3){ width:78%; } .mk-card span:nth-child(4){ width:58%; }
+.mk-strip{ max-width:none; background:var(--navy); padding:52px 24px 58px; }
+.mk-strip .mk-strip-in{ max-width:700px; margin:0 auto; }
+.mk-foot{ margin-top:24px; padding-top:16px; border-top:1px solid rgba(22,50,79,.12); font-size:12.5px; color:var(--brown); }
+
+/* full width, one per row: at half width the side margin disappears and
+   there is nowhere for the greeting to happen */
+.endgrid{ display:grid; grid-template-columns:1fr; gap:26px; }
+.endhead{ margin:0 0 8px; }
+.endhead h3{ margin:0; font-size:17px; }
+.endhead h3 .en{ font-weight:600; font-size:13px; color:var(--brown); margin-inline-start:7px; direction:ltr; display:inline-block; }
+.endhead p{ margin:4px 0 0; font-size:13px; color:var(--slate); line-height:1.5; }
+
+.ask{ margin:40px 0 70px; background:var(--navy); color:var(--cream); border-radius:16px; padding:24px 26px; }
+.ask h3{ margin:0 0 10px; font-size:19px; }
+.ask ol{ margin:0; padding-inline-start:20px; line-height:1.85; font-size:14.5px; color:rgba(251,246,238,.9); }
+.ask ol b{ color:var(--amber); }
+
+/* =======================================================================
+   SHARED DOG POSE ENGINE (one skeleton, six drawings)
+   Joints, for every variant:  body 65,92 · head 96,60 · ear 98,26
+   tail 36,63 · legF1 88,74 · legF2 94,76 · legB1 44,80 · legB2 51,82
+   ======================================================================= */
+@property --dgA { syntax:"<number>"; inherits:true; initial-value:0; }
+@keyframes dgWag     { 0%,100%{transform:rotate(-15deg)} 50%{transform:rotate(17deg)} }
+@keyframes dgHop     { 0%,100%{transform:translateY(0)} 42%{transform:translateY(-5px)} 70%{transform:translateY(-1px)} }
+@keyframes dgBreathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1.6px)} }
+@keyframes dgTilt    { 0%,100%{transform:rotate(-1deg)} 50%{transform:rotate(9deg)} }
+@keyframes dgStepA   { 0%,100%{transform:rotate(calc(var(--dgA) * -25deg))} 50%{transform:rotate(calc(var(--dgA) * 21deg))} }
+@keyframes dgStepB   { 0%,100%{transform:rotate(calc(var(--dgA) * 21deg))} 50%{transform:rotate(calc(var(--dgA) * -25deg))} }
+@keyframes dgEar     { 0%,100%{transform:rotate(calc(var(--dgA) * -10deg))} 50%{transform:rotate(calc(var(--dgA) * 8deg))} }
+
+.dg{ --dgA:0; width:96px; transition:--dgA .5s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
+.dg svg{ width:100%; height:auto; display:block; overflow:visible; }
+.dg g{ transform-box:view-box; }
+.d-part{ transition:transform .55s cubic-bezier(.34,1.15,.5,1); }
+.d-body{ transform-origin:65px 92px; }
+.d-head, .d-headb{ transform-origin:96px 60px; }
+.d-ear, .d-gEar{ transform-origin:98px 26px; }
+.d-tail, .d-tailw{ transform-origin:36px 63px; }
+.d-legF1, .d-gF1{ transform-origin:88px 74px; }
+.d-legF2, .d-gF2{ transform-origin:94px 76px; }
+.d-legB1, .d-gB1{ transform-origin:44px 80px; }
+.d-legB2, .d-gB2{ transform-origin:51px 82px; }
+.d-tongue{ opacity:0; transition:opacity .3s ease; }
+
+.dg[data-pose="alert"] .d-head{ transform:rotate(-5deg) }
+.dg[data-pose="alert"] .d-ear{ transform:rotate(-9deg) }
+.dg[data-pose="alert"] .d-tail{ transform:rotate(-24deg) }
+.dg[data-pose="alert"] .d-tailw{ animation:dgWag 1.7s ease-in-out infinite }
+.dg[data-pose="alert"] .d-bounce{ animation:dgBreathe 3.4s ease-in-out infinite }
+
+.dg[data-pose="sit"] .d-body{ transform:translateY(5px) rotate(-14deg) }
+.dg[data-pose="sit"] .d-head{ transform:rotate(-2deg) }
+.dg[data-pose="sit"] .d-ear{ transform:rotate(5deg) }
+.dg[data-pose="sit"] .d-tail{ transform:rotate(16deg) }
+.dg[data-pose="sit"] .d-tailw{ animation:dgWag 2.1s ease-in-out infinite }
+.dg[data-pose="sit"] .d-legB1{ transform:translate(4px,11px) rotate(60deg) scaleY(.72) }
+.dg[data-pose="sit"] .d-legB2{ transform:translate(4px,10px) rotate(60deg) scaleY(.72) }
+.dg[data-pose="sit"] .d-legF1{ transform:translate(-5px,1px) rotate(-3deg) }
+.dg[data-pose="sit"] .d-legF2{ transform:translate(-5px,1px) rotate(-3deg) }
+
+.dg[data-pose="down"] .d-body{ transform:translateY(14px) rotate(-1deg) }
+.dg[data-pose="down"] .d-head{ transform:translateY(2px) rotate(2deg) }
+.dg[data-pose="down"] .d-ear{ transform:rotate(7deg) }
+.dg[data-pose="down"] .d-tail{ transform:translateY(11px) rotate(36deg) }
+.dg[data-pose="down"] .d-tailw{ animation:dgWag 2.8s ease-in-out infinite }
+.dg[data-pose="down"] .d-legF1{ transform:translateY(14px) rotate(50deg) }
+.dg[data-pose="down"] .d-legF2{ transform:translateY(13px) rotate(50deg) }
+.dg[data-pose="down"] .d-legB1{ transform:translateY(15px) rotate(-38deg) scaleY(.62) }
+.dg[data-pose="down"] .d-legB2{ transform:translateY(14px) rotate(-38deg) scaleY(.62) }
+
+.dg[data-pose="happy"] .d-head{ transform:rotate(-4deg) }
+.dg[data-pose="happy"] .d-headb{ animation:dgTilt 2.4s ease-in-out infinite }
+.dg[data-pose="happy"] .d-ear{ transform:rotate(-5deg) }
+.dg[data-pose="happy"] .d-tail{ transform:rotate(-32deg) }
+.dg[data-pose="happy"] .d-tailw{ animation:dgWag .5s ease-in-out infinite }
+.dg[data-pose="happy"] .d-bounce{ animation:dgBreathe 1.9s ease-in-out infinite }
+.dg[data-pose="happy"] .d-tongue{ opacity:1 }
+
+.dg[data-pose="wag"] .d-head{ transform:rotate(-9deg) }
+.dg[data-pose="wag"] .d-ear{ transform:rotate(-13deg) }
+.dg[data-pose="wag"] .d-tail{ transform:rotate(-42deg) }
+.dg[data-pose="wag"] .d-tailw{ animation:dgWag .27s ease-in-out infinite }
+.dg[data-pose="wag"] .d-bounce{ animation:dgHop .62s ease-in-out infinite }
+.dg[data-pose="wag"] .d-tongue{ opacity:1 }
+
+.d-gait{ animation-duration:.54s; animation-timing-function:ease-in-out; animation-iteration-count:infinite; }
+.d-gF1, .d-gB2{ animation-name:dgStepA }
+.d-gF2, .d-gB1{ animation-name:dgStepB }
+.d-gEar{ animation-name:dgEar }
+.dg[data-gait="rest"] .d-gait{ animation:none }
+.dg[data-gait="trot"]{ --dgA:1; transition:--dgA .16s ease-out; }
+.dg[data-gait="trot"] .d-body,
+.dg[data-gait="trot"] .d-legF1, .dg[data-gait="trot"] .d-legF2,
+.dg[data-gait="trot"] .d-legB1, .dg[data-gait="trot"] .d-legB2{ transform:none }
+.dg[data-gait="trot"] .d-head{ transform:rotate(-4deg) }
+.dg[data-gait="trot"] .d-ear{ transform:rotate(-4deg) }
+.dg[data-gait="trot"] .d-bounce{ animation:dgBreathe .27s ease-in-out infinite }
+
+/* ---- greeting overrides. MUST stay after the pose rules: same specificity,
+   later wins, so the greeting takes over only the parts it names. ---- */
+.dg[data-greet="nose"] .d-head{ transform:rotate(9deg) translate(4px,4px) }
+.dg[data-greet="nose"] .d-ear{ transform:rotate(-2deg) }
+.dg[data-greet="nose"] .d-body{ transform:translateX(5px) }
+.dg[data-greet="nose"] .d-tongue{ opacity:0 }
+
+/* A LOW paw. Lifting it to chest height puts the amber leg across the amber
+   body and the muzzle, where it disappears; down here it meets the palm in
+   open space. Measured: the pad lands at x~88, 30px above the floor. */
+.dg[data-greet="paw"] .d-legF1{ transform:translate(4px,-6px) rotate(-30deg) }
+.dg[data-greet="paw"] .d-head{ transform:rotate(-7deg) }
+.dg[data-greet="paw"] .d-body{ transform:translateY(4px) rotate(-11deg) }
+.dg[data-greet="paw"] .d-legB1{ transform:translate(4px,11px) rotate(60deg) scaleY(.72) }
+.dg[data-greet="paw"] .d-legB2{ transform:translate(4px,10px) rotate(60deg) scaleY(.72) }
+
+.dg[data-greet="ball"] .d-head{ transform:rotate(19deg) translateY(7px) }
+.dg[data-greet="ball"] .d-ear{ transform:rotate(13deg) }
+.dg[data-greet="ball"] .d-tongue{ opacity:0 }
+
+.dg[data-greet="clip"] .d-head{ transform:rotate(-7deg) }
+.dg[data-greet="clip"] .d-body{ transform:translateY(5px) rotate(-14deg) }
+.dg[data-greet="clip"] .d-legB1{ transform:translate(4px,11px) rotate(60deg) scaleY(.72) }
+.dg[data-greet="clip"] .d-legB2{ transform:translate(4px,10px) rotate(60deg) scaleY(.72) }
+
+.dg[data-greet="lean"] .d-head{ transform:rotate(-17deg) translateX(-3px) }
+.dg[data-greet="lean"] .d-ear{ transform:rotate(-6deg) }
+.dg[data-greet="lean"] .d-body{ transform:translateY(5px) rotate(-16deg) }
+.dg[data-greet="lean"] .d-legB1{ transform:translate(4px,11px) rotate(60deg) scaleY(.72) }
+.dg[data-greet="lean"] .d-legB2{ transform:translate(4px,10px) rotate(60deg) scaleY(.72) }
+
+@media (prefers-reduced-motion: reduce){
+  .dg, .dg *{ animation:none !important; transition:none !important; }
+}
+
+/* ---- the dog as it sits in a scroll stage ---- */
+.dog-host{ position:absolute; left:20px; bottom:14px; }
+
+/* =======================================================================
+   ENDINGS — the person entering the frame
+   ======================================================================= */
+.person{ position:absolute; opacity:0; transition:opacity .5s ease, transform .75s cubic-bezier(.2,.9,.3,1); }
+/* height:auto so the per-ending width below scales the whole hand. A human
+   hand is roughly the size of this dog's head — everything is sized to that. */
+.person svg{ display:block; overflow:visible; height:auto; }
+.overlay.is-in .person{ opacity:1; transform:none; }
+
+/* e1 nose touch — hand rises from below and offers the back of the hand */
+.e1-hand{ left:122px; bottom:2px; transform:translateY(90px); }
+.e1-hand svg{ width:40px; }
+.e1-spark{ position:absolute; left:106px; bottom:40px; width:26px; height:26px; opacity:0; transition:opacity .4s ease .35s; z-index:3; }
+.overlay.is-in .e1-spark{ opacity:1; }
+.e1-spark circle{ fill:none; stroke:var(--coral); stroke-width:2.4; }
+.overlay.is-in .e1-spark circle{ animation:e1Pulse 1.8s ease-out infinite .4s; }
+@keyframes e1Pulse{ 0%{ r:4; opacity:.85 } 100%{ r:13; opacity:0 } }
+
+/* e2 give a paw — the raised paw lands at about x94 / 39 above the floor,
+   and the palm's top surface sits right under it. The dog is layered ABOVE
+   the hand so the paw visibly rests IN the palm rather than behind it. */
+.e2-hand{ left:78px; bottom:-3px; transform:translate(30px,74px); z-index:1; }
+.e2-hand svg{ width:56px; }
+.stage[data-ending="2"] .dog-host{ z-index:2; }
+
+/* e3 the ball — the dog lowers its head and the ball travels from its mouth
+   to the waiting palm. (Reaching down to the floor from below reads wrong.) */
+/* resting on the palm (fingers top measured at 49 above the floor), and it
+   starts at the dog's mouth so the travel reads as a hand-over */
+.e3-ball{ position:absolute; left:132px; bottom:46px; width:16px; height:16px; border-radius:50%;
+  background:var(--green); z-index:2;
+  opacity:0; transition:opacity .3s ease, transform .85s cubic-bezier(.3,.9,.3,1); transform:translate(-30px,4px); }
+.overlay.is-in .e3-ball{ opacity:1; transform:none; }
+.e3-hand{ left:112px; bottom:14px; transform:translate(30px,74px); z-index:1; }
+.e3-hand svg{ width:56px; }
+
+/* e4 clipping the leash — the clip meets the coral collar at about
+   x82 / 47 above the floor; the forearm runs off the bottom edge. */
+.e4-hand{ left:67px; bottom:-2px; transform:translate(22px,84px); }
+.e4-hand svg{ width:38px; }
+/* 1:1 with its viewBox and anchored to the stage floor, so the leash can be
+   drawn straight onto the measured clip position (x80, 53 above the floor) */
+.e4-leash{ position:absolute; left:0; bottom:0; width:210px; height:170px; opacity:0; transition:opacity .5s ease .25s; }
+.overlay.is-in .e4-leash{ opacity:1; }
+.e4-leash path{ fill:none; stroke:var(--coral); stroke-width:3.4; stroke-linecap:round; }
+
+/* e5 sitting together — a seated figure slides in from the edge. The dog
+   faces right all page long, so when they arrive it TURNS AROUND to face
+   them; without the flip the final tableau has the dog's back to the person. */
+.e5-person{ left:10px; bottom:16px; transform:translateX(-110px); }
+.e5-person svg{ width:66px; }
+.stage[data-ending="5"] .dog-host{ transition:transform .7s cubic-bezier(.3,.9,.3,1); transform-origin:50% 100%; }
+.stage[data-ending="5"] .overlay.is-in .dog-host{ transform:scaleX(-1); }
+/* this ending needs more room, so the dog stands further in */
+.stage[data-ending="5"] .dog-host{ left:66px; }
+
+@media (prefers-reduced-motion: reduce){
+  .person, .e3-ball, .e4-leash, .e1-spark{ transition:none !important; }
+  .overlay.is-in .e1-spark circle{ animation:none !important; opacity:.6; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="head">
+    <h1>סדנת הכלב — שתי החלטות</h1>
+    <div class="en">Dog workshop · concept 1 · which dog, and how the person arrives</div>
+    <p>
+      נשארנו עם קונספט 1 — הכלב שהולך לצידך. נשארו שתי שאלות פתוחות:
+      <b>(א)</b> איזה כלב, כי הנוכחי לא עובד;
+      <b>(ב)</b> מה קורה בסוף, כשהוא מתרגש — כאן נכנס אדם למסגרת, והשאלה היא באיזו אינטראקציה.
+      בוחרים כלב למעלה, והוא מתחלף בכל הבדיקות שלמטה.
+    </p>
+  </div>
+
+  <!-- ============ PART A: pick the dog ============ -->
+  <h2 class="part">א. איזה כלב <span class="en">Which dog</span></h2>
+  <p class="part-sub">
+    כל שישה מצוירים על אותו שלד, כך שהתנוחות זהות וההשוואה הוגנת. הכפתורים משנים את התנוחה של כולם יחד —
+    כדאי לעבור על כל התנוחות, ובעיקר ללחוץ &ldquo;גודל אמיתי&rdquo;, כי באתר הוא מופיע ב־88px ולא בגדול.
+  </p>
+  <div class="bar">
+    <b>תנוחה</b>
+    <button data-pose-btn="alert" aria-pressed="true">דרוך</button>
+    <button data-pose-btn="sit">ישיבה</button>
+    <button data-pose-btn="down">שכיבה</button>
+    <button data-pose-btn="happy">שמח</button>
+    <button data-pose-btn="wag">מתרגש</button>
+    <span class="sep"></span>
+    <b>הליכה</b>
+    <button data-gait-btn="trot">הפעלת דידוי</button>
+    <span class="sep"></span>
+    <button data-size-btn="small">גודל אמיתי (88px)</button>
+  </div>
+  <div class="grid" id="variantGrid"></div>
+
+  <!-- ============ PART B: in context ============ -->
+  <h2 class="part">ב. הכלב בתוך העמוד <span class="en">In context</span></h2>
+  <p class="part-sub">גללו בתוך המסגרת. הכלב שבחרתם למעלה, עם אותו מנגנון של הקונספט הקיים: תנוחה לפי הסקשן, דידוי בזמן גלילה.</p>
+  <div class="stage" data-stage="ctx">
+    <div class="scroller" dir="rtl"></div>
+    <div class="overlay"><div class="dog-host dg" data-pose="alert" data-gait="rest"></div></div>
+  </div>
+
+  <!-- ============ PART C: the endings ============ -->
+  <h2 class="part">ג. הכניסה של האדם <span class="en">How the person arrives</span></h2>
+  <p class="part-sub">
+    חמש אפשרויות לרגע הסיום. גללו עד הסוף בכל מסגרת (או לחצו על הכפתור) — האדם נכנס בסקשן יצירת הקשר ויוצא כשחוזרים למעלה.
+    <br><b>הערה מכוונת:</b> בארבע מהן רואים רק ידיים ולא פנים — גם כי יש מעט מקום בשוליים, וגם כי זה מתאים לעבודה עם ילדים ודיירים שאי אפשר להראות.
+  </p>
+  <div class="endgrid" id="endGrid"></div>
+
+  <div class="ask">
+    <h3>מה אני צריך ממך כדי להמשיך</h3>
+    <ol>
+      <li><b>מה לא עובד בכלב הנוכחי?</b> הראש גדול מדי? נראה יותר מדי &ldquo;קליפ־ארט&rdquo;? הצבע? הגזע? תשובה קצרה תכוון את הסיבוב הבא.</li>
+      <li><b>איזו וריאציה הכי קרובה</b> — גם אם אף אחת לא מושלמת. אני מפתח משם.</li>
+      <li><b>איזה סיום?</b> ואם &ldquo;יושבים יחד&rdquo; — האם מותר להראות דמות של אדם בכלל, או להישאר על ידיים בלבד?</li>
+      <li><b>ילד או מבוגר?</b> היד כרגע ניטרלית בגודלה. אפשר להקטין אותה לילד או להגדיל למבוגר.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+/* =======================================================================
+   SIX DOG DRAWINGS — same skeleton, same class names, same joints.
+   ======================================================================= */
+var DOGS = {};
+
+/* ---------- A · the current site dog (baseline, unchanged) ---------- */
+DOGS.A = '<svg viewBox="0 0 150 118">' +
+  '<ellipse cx="74" cy="108" rx="46" ry="6" fill="#16324F" opacity=".10"></ellipse>' +
+  '<g class="d-bounce">' +
+    '<g class="d-part d-legB2"><g class="d-gait d-gB2"><rect x="46" y="78" width="11" height="26" rx="5.5" fill="#8A7A66"></rect><ellipse cx="51.5" cy="102" rx="8" ry="4.6" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-legF2"><g class="d-gait d-gF2"><rect x="89" y="72" width="11" height="31" rx="5.5" fill="#8A7A66"></rect><ellipse cx="94.5" cy="102" rx="8" ry="4.6" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-tail"><g class="d-tailw"><path d="M36 63c-11-2-17-14-13-25" fill="none" stroke="#F2A03D" stroke-width="10" stroke-linecap="round"></path><circle cx="24" cy="37" r="6.5" fill="#FBF6EE"></circle></g></g>' +
+    '<g class="d-part d-body">' +
+      '<ellipse cx="45" cy="76" rx="17" ry="18" fill="#F2A03D"></ellipse>' +
+      '<ellipse cx="65" cy="71" rx="32" ry="21" fill="#F2A03D"></ellipse>' +
+      '<path d="M94 56c8-6 18-4 22 5 4 9 0 17-9 19-9 2-16-3-18-9z" fill="#F2A03D"></path>' +
+      '<ellipse cx="78" cy="81" rx="18" ry="10.5" fill="#FBF6EE"></ellipse>' +
+      '<g class="d-part d-head"><g class="d-headb">' +
+        '<circle cx="106" cy="42" r="23" fill="#F2A03D"></circle>' +
+        '<ellipse cx="124" cy="53" rx="17" ry="13" fill="#FBF6EE"></ellipse>' +
+        '<path class="d-tongue" d="M125 62c6-1 11 3 11 8 0 4-8 6-11 1z" fill="#E4572E"></path>' +
+        '<path d="M126 58c2.5 4 7.5 3.5 10 0" fill="none" stroke="#16324F" stroke-width="2.4" stroke-linecap="round"></path>' +
+        '<ellipse cx="134" cy="47" rx="6.4" ry="5.4" fill="#16324F"></ellipse>' +
+        '<ellipse cx="100" cy="52" rx="6" ry="4" fill="#E4572E" opacity=".2"></ellipse>' +
+        '<circle cx="112" cy="37" r="5.2" fill="#16324F"></circle><circle cx="114" cy="34.8" r="2" fill="#FBF6EE"></circle>' +
+        '<path d="M106 26c3.5-2.5 8.5-1.5 11 1.5" fill="none" stroke="#8A7A66" stroke-width="2.6" stroke-linecap="round"></path>' +
+        '<g class="d-part d-ear"><g class="d-gait d-gEar"><path d="M99 22c-10 1-16 11-16 23 0 11 5 18 11 17 6-1 7-11 7-20z" fill="#8A7A66"></path></g></g>' +
+      '</g></g>' +
+      '<path d="M88 62c3 8 11 13 19 10" fill="none" stroke="#E4572E" stroke-width="9" stroke-linecap="round"></path>' +
+      '<circle cx="104" cy="79" r="5.2" fill="#4C9A6B"></circle>' +
+    '</g>' +
+    '<g class="d-part d-legB1"><g class="d-gait d-gB1"><rect x="38" y="76" width="12" height="28" rx="6" fill="#F2A03D"></rect><ellipse cx="44" cy="102" rx="8.6" ry="5" fill="#FBF6EE"></ellipse></g></g>' +
+    '<g class="d-part d-legF1"><g class="d-gait d-gF1"><rect x="82" y="70" width="12" height="33" rx="6" fill="#F2A03D"></rect><ellipse cx="88" cy="102" rx="8.6" ry="5" fill="#FBF6EE"></ellipse></g></g>' +
+  '</g></svg>';
+
+/* ---------- B · refined proportions: smaller head, longer legs, slimmer ---------- */
+DOGS.B = '<svg viewBox="0 0 150 118">' +
+  '<ellipse cx="74" cy="108" rx="42" ry="5.5" fill="#16324F" opacity=".10"></ellipse>' +
+  '<g class="d-bounce">' +
+    '<g class="d-part d-legB2"><g class="d-gait d-gB2"><rect x="48" y="80" width="9" height="25" rx="4.5" fill="#8A7A66"></rect><ellipse cx="52.5" cy="103" rx="7" ry="4" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-legF2"><g class="d-gait d-gF2"><rect x="90" y="74" width="9" height="31" rx="4.5" fill="#8A7A66"></rect><ellipse cx="94.5" cy="103" rx="7" ry="4" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-tail"><g class="d-tailw"><path d="M36 63c-10-3-14-14-9-24" fill="none" stroke="#F2A03D" stroke-width="8" stroke-linecap="round"></path><circle cx="28" cy="40" r="5.2" fill="#FBF6EE"></circle></g></g>' +
+    '<g class="d-part d-body">' +
+      '<ellipse cx="46" cy="76" rx="15" ry="16" fill="#F2A03D"></ellipse>' +
+      '<ellipse cx="66" cy="72" rx="30" ry="17" fill="#F2A03D"></ellipse>' +
+      '<path d="M95 58c7-6 16-4 20 4 4 8 0 15-8 17-8 2-14-3-16-8z" fill="#F2A03D"></path>' +
+      '<ellipse cx="79" cy="80" rx="15" ry="9" fill="#FBF6EE"></ellipse>' +
+      '<g class="d-part d-head"><g class="d-headb">' +
+        '<circle cx="108" cy="44" r="19" fill="#F2A03D"></circle>' +
+        '<ellipse cx="123" cy="53" rx="13.5" ry="10.5" fill="#FBF6EE"></ellipse>' +
+        '<path class="d-tongue" d="M124 61c5-1 9 2.5 9 6.5 0 3.5-6.5 5-9 .8z" fill="#E4572E"></path>' +
+        '<path d="M125 57c2 3.4 6 3 8 0" fill="none" stroke="#16324F" stroke-width="2.2" stroke-linecap="round"></path>' +
+        '<ellipse cx="132" cy="48" rx="5.2" ry="4.4" fill="#16324F"></ellipse>' +
+        '<circle cx="112" cy="40" r="4.2" fill="#16324F"></circle><circle cx="113.6" cy="38.4" r="1.6" fill="#FBF6EE"></circle>' +
+        '<path d="M107 30c3-2 7-1.2 9 1.2" fill="none" stroke="#8A7A66" stroke-width="2.2" stroke-linecap="round"></path>' +
+        '<g class="d-part d-ear"><g class="d-gait d-gEar"><path d="M101 26c-8 1.5-13 10-13 20 0 9 4 15 9 14 5-1 6-9 6-17z" fill="#8A7A66"></path></g></g>' +
+      '</g></g>' +
+      '<path d="M90 62c2.5 7 9 11 16 9" fill="none" stroke="#E4572E" stroke-width="7.5" stroke-linecap="round"></path>' +
+      '<circle cx="104" cy="77" r="4.2" fill="#4C9A6B"></circle>' +
+    '</g>' +
+    '<g class="d-part d-legB1"><g class="d-gait d-gB1"><rect x="40" y="78" width="10" height="27" rx="5" fill="#F2A03D"></rect><ellipse cx="45" cy="103" rx="7.6" ry="4.4" fill="#FBF6EE"></ellipse></g></g>' +
+    '<g class="d-part d-legF1"><g class="d-gait d-gF1"><rect x="84" y="72" width="10" height="33" rx="5" fill="#F2A03D"></rect><ellipse cx="89" cy="103" rx="7.6" ry="4.4" fill="#FBF6EE"></ellipse></g></g>' +
+  '</g></svg>';
+
+/* ---------- C · flat silhouette: one navy shape, coral collar, cream eye ---------- */
+DOGS.C = '<svg viewBox="0 0 150 118">' +
+  '<ellipse cx="74" cy="108" rx="44" ry="5.5" fill="#16324F" opacity=".10"></ellipse>' +
+  '<g class="d-bounce">' +
+    '<g class="d-part d-legB2"><g class="d-gait d-gB2"><rect x="47" y="78" width="10" height="27" rx="5" fill="#16324F" opacity=".72"></rect></g></g>' +
+    '<g class="d-part d-legF2"><g class="d-gait d-gF2"><rect x="90" y="72" width="10" height="33" rx="5" fill="#16324F" opacity=".72"></rect></g></g>' +
+    '<g class="d-part d-tail"><g class="d-tailw"><path d="M36 63c-11-2-17-14-13-25" fill="none" stroke="#16324F" stroke-width="9" stroke-linecap="round"></path></g></g>' +
+    '<g class="d-part d-body">' +
+      '<ellipse cx="45" cy="76" rx="17" ry="17" fill="#16324F"></ellipse>' +
+      '<ellipse cx="65" cy="72" rx="31" ry="19" fill="#16324F"></ellipse>' +
+      '<path d="M93 56c8-6 18-4 22 5 4 9 0 17-9 19-9 2-16-3-18-9z" fill="#16324F"></path>' +
+      '<g class="d-part d-head"><g class="d-headb">' +
+        '<circle cx="106" cy="42" r="21" fill="#16324F"></circle>' +
+        '<ellipse cx="124" cy="52" rx="15" ry="11" fill="#16324F"></ellipse>' +
+        '<path class="d-tongue" d="M126 60c5-1 9 2.5 9 6.5 0 3.5-6.5 5-9 .8z" fill="#E4572E"></path>' +
+        '<circle cx="113" cy="37" r="2.8" fill="#FBF6EE"></circle>' +
+        '<g class="d-part d-ear"><g class="d-gait d-gEar"><path d="M99 22c-10 1-16 11-16 23 0 11 5 18 11 17 6-1 7-11 7-20z" fill="#16324F"></path></g></g>' +
+      '</g></g>' +
+      '<path d="M88 62c3 8 11 13 19 10" fill="none" stroke="#E4572E" stroke-width="8" stroke-linecap="round"></path>' +
+    '</g>' +
+    '<g class="d-part d-legB1"><g class="d-gait d-gB1"><rect x="39" y="76" width="11" height="29" rx="5.5" fill="#16324F"></rect></g></g>' +
+    '<g class="d-part d-legF1"><g class="d-gait d-gF1"><rect x="83" y="70" width="11" height="35" rx="5.5" fill="#16324F"></rect></g></g>' +
+  '</g></svg>';
+
+/* ---------- D · line art: cream fills, navy outline, coral collar only ---------- */
+DOGS.D = '<svg viewBox="0 0 150 118">' +
+  '<ellipse cx="74" cy="108" rx="42" ry="5" fill="#16324F" opacity=".08"></ellipse>' +
+  '<g class="d-bounce" fill="#FBF6EE" stroke="#16324F" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">' +
+    '<g class="d-part d-legB2"><g class="d-gait d-gB2"><rect x="48" y="80" width="11" height="25" rx="5.5"></rect></g></g>' +
+    '<g class="d-part d-legF2"><g class="d-gait d-gF2"><rect x="90" y="74" width="11" height="31" rx="5.5"></rect></g></g>' +
+    '<g class="d-part d-tail"><g class="d-tailw"><path d="M36 62c-10-3-14-14-9-24" fill="none" stroke-width="6.5"></path><circle cx="28" cy="39" r="6"></circle></g></g>' +
+    '<g class="d-part d-body">' +
+      /* one clean outline for the trunk; the head is a separate group so it
+         can rotate, and the fat coral collar hides the seam between them */
+      '<path d="M32 72C32 56 44 48 62 48C76 48 88 52 95 60C98 66 98 74 95 80L95 86C95 89 92 91 88 91L48 91C38 91 32 83 32 72Z"></path>' +
+      '<g class="d-part d-head"><g class="d-headb">' +
+        '<circle cx="108" cy="44" r="19"></circle>' +
+        '<ellipse cx="123" cy="53" rx="13.5" ry="10.5"></ellipse>' +
+        '<path class="d-tongue" d="M124 61c5-1 9 2.5 9 6.5 0 3.5-6.5 5-9 .8z" fill="#E4572E" stroke-width="2.4"></path>' +
+        '<path d="M125 57c2 3.4 6 3 8 0" fill="none" stroke-width="2.6"></path>' +
+        '<ellipse cx="132" cy="48" rx="5.2" ry="4.4" fill="#16324F"></ellipse>' +
+        '<circle cx="112" cy="40" r="3.8" fill="#16324F" stroke="none"></circle>' +
+        '<g class="d-part d-ear"><g class="d-gait d-gEar"><path d="M100 27c-8 1.5-12 10-12 19 0 8 4 14 9 13 5-1 6-8 6-16z" fill="rgba(22,50,79,.12)"></path></g></g>' +
+      '</g></g>' +
+      '<path d="M90 52C93 63 99 70 108 71" fill="none" stroke="#E4572E" stroke-width="9"></path>' +
+    '</g>' +
+    '<g class="d-part d-legB1"><g class="d-gait d-gB1"><rect x="40" y="78" width="12" height="27" rx="6"></rect></g></g>' +
+    '<g class="d-part d-legF1"><g class="d-gait d-gF1"><rect x="84" y="72" width="12" height="33" rx="6"></rect></g></g>' +
+  '</g></svg>';
+
+/* ---------- E · soft & round: chunky, short-legged, warmer ---------- */
+DOGS.E = '<svg viewBox="0 0 150 118">' +
+  '<ellipse cx="74" cy="108" rx="48" ry="6" fill="#16324F" opacity=".10"></ellipse>' +
+  '<g class="d-bounce">' +
+    '<g class="d-part d-legB2"><g class="d-gait d-gB2"><rect x="42" y="86" width="14" height="19" rx="7" fill="#8A7A66"></rect><ellipse cx="49" cy="103" rx="9.5" ry="5" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-legF2"><g class="d-gait d-gF2"><rect x="86" y="84" width="14" height="21" rx="7" fill="#8A7A66"></rect><ellipse cx="93" cy="103" rx="9.5" ry="5" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-tail"><g class="d-tailw"><path d="M36 63c-12 0-18-10-15-20" fill="none" stroke="#F2A03D" stroke-width="12" stroke-linecap="round"></path><circle cx="22" cy="44" r="7.5" fill="#FBF6EE"></circle></g></g>' +
+    '<g class="d-part d-body">' +
+      '<ellipse cx="44" cy="74" rx="20" ry="20" fill="#F2A03D"></ellipse>' +
+      '<ellipse cx="66" cy="72" rx="33" ry="22" fill="#F2A03D"></ellipse>' +
+      '<path d="M94 54c9-7 20-4 24 6 4 10 0 19-10 21-10 2-17-3-19-10z" fill="#F2A03D"></path>' +
+      '<ellipse cx="80" cy="82" rx="19" ry="12" fill="#FBF6EE"></ellipse>' +
+      '<g class="d-part d-head"><g class="d-headb">' +
+        '<circle cx="107" cy="42" r="25" fill="#F2A03D"></circle>' +
+        '<ellipse cx="126" cy="54" rx="17" ry="14" fill="#FBF6EE"></ellipse>' +
+        '<path class="d-tongue" d="M127 64c6.5-1 11.5 3 11.5 8 0 4.5-8 6-11.5 1z" fill="#E4572E"></path>' +
+        '<path d="M128 59c2.6 4 8 3.6 10.5 0" fill="none" stroke="#16324F" stroke-width="2.4" stroke-linecap="round"></path>' +
+        '<ellipse cx="136" cy="48" rx="6.6" ry="5.6" fill="#16324F"></ellipse>' +
+        '<ellipse cx="99" cy="53" rx="7" ry="4.6" fill="#E4572E" opacity=".2"></ellipse>' +
+        '<circle cx="113" cy="36" r="5.6" fill="#16324F"></circle><circle cx="115" cy="33.6" r="2.2" fill="#FBF6EE"></circle>' +
+        '<g class="d-part d-ear"><g class="d-gait d-gEar"><path d="M99 20c-12 1-19 12-19 26 0 12 6 20 13 19 7-1 8-13 8-23z" fill="#8A7A66"></path></g></g>' +
+      '</g></g>' +
+      '<path d="M88 62c3 8 11 13 20 10" fill="none" stroke="#E4572E" stroke-width="10" stroke-linecap="round"></path>' +
+      '<circle cx="105" cy="80" r="5.6" fill="#4C9A6B"></circle>' +
+    '</g>' +
+    '<g class="d-part d-legB1"><g class="d-gait d-gB1"><rect x="34" y="84" width="15" height="21" rx="7.5" fill="#F2A03D"></rect><ellipse cx="41.5" cy="103" rx="10" ry="5.4" fill="#FBF6EE"></ellipse></g></g>' +
+    '<g class="d-part d-legF1"><g class="d-gait d-gF1"><rect x="79" y="82" width="15" height="23" rx="7.5" fill="#F2A03D"></rect><ellipse cx="86.5" cy="103" rx="10" ry="5.4" fill="#FBF6EE"></ellipse></g></g>' +
+  '</g></svg>';
+
+/* ---------- F · taller build: long legs, erect ear, working-dog read ---------- */
+DOGS.F = '<svg viewBox="0 0 150 118">' +
+  '<ellipse cx="74" cy="108" rx="40" ry="5" fill="#16324F" opacity=".10"></ellipse>' +
+  '<g class="d-bounce">' +
+    '<g class="d-part d-legB2"><g class="d-gait d-gB2"><rect x="49" y="70" width="8" height="35" rx="4" fill="#8A7A66"></rect><ellipse cx="53" cy="103" rx="6.5" ry="3.8" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-legF2"><g class="d-gait d-gF2"><rect x="91" y="64" width="8" height="41" rx="4" fill="#8A7A66"></rect><ellipse cx="95" cy="103" rx="6.5" ry="3.8" fill="#8A7A66"></ellipse></g></g>' +
+    '<g class="d-part d-tail"><g class="d-tailw"><path d="M36 60c-13 3-18 15-14 26" fill="none" stroke="#F2A03D" stroke-width="9" stroke-linecap="round"></path><circle cx="23" cy="84" r="5" fill="#FBF6EE"></circle></g></g>' +
+    '<g class="d-part d-body">' +
+      '<ellipse cx="47" cy="64" rx="16" ry="15" fill="#F2A03D"></ellipse>' +
+      '<ellipse cx="67" cy="64" rx="30" ry="15" fill="#F2A03D"></ellipse>' +
+      '<ellipse cx="88" cy="66" rx="15" ry="15" fill="#F2A03D"></ellipse>' +
+      '<path d="M92 62c4-10 10-18 18-22l8 12c-6 4-11 11-13 18z" fill="#F2A03D"></path>' +
+      '<ellipse cx="86" cy="74" rx="12" ry="8" fill="#FBF6EE"></ellipse>' +
+      '<g class="d-part d-head"><g class="d-headb">' +
+        '<circle cx="112" cy="36" r="17" fill="#F2A03D"></circle>' +
+        '<path d="M120 32c10-2 19 2 20 8 1 6-7 11-16 10-6-1-10-5-10-10z" fill="#FBF6EE"></path>' +
+        '<path class="d-tongue" d="M132 48c5.5-1 9.5 2.5 9.5 7 0 4-7 5.5-9.5 1z" fill="#E4572E"></path>' +
+        '<path d="M131 45c2.2 3.4 6.5 3 8.5 0" fill="none" stroke="#16324F" stroke-width="2.2" stroke-linecap="round"></path>' +
+        '<ellipse cx="139" cy="38" rx="5" ry="4.2" fill="#16324F"></ellipse>' +
+        '<circle cx="116" cy="32" r="4.2" fill="#16324F"></circle><circle cx="117.6" cy="30.4" r="1.6" fill="#FBF6EE"></circle>' +
+        /* erect ear, set back on the skull and tilted up-and-back so it
+           reads as a shepherd's ear rather than a hat on top of the head */
+        '<g class="d-part d-ear"><g class="d-gait d-gEar"><path d="M104 30L92 6l22 12z" fill="#8A7A66"></path><path d="M104 27L96 11l13 7z" fill="#16324F" opacity=".16"></path></g></g>' +
+      '</g></g>' +
+      '<path d="M97 50c1 8 7 14 15 14" fill="none" stroke="#E4572E" stroke-width="7.5" stroke-linecap="round"></path>' +
+      '<circle cx="110" cy="64" r="4.2" fill="#4C9A6B"></circle>' +
+    '</g>' +
+    '<g class="d-part d-legB1"><g class="d-gait d-gB1"><rect x="41" y="68" width="9" height="37" rx="4.5" fill="#F2A03D"></rect><ellipse cx="45.5" cy="103" rx="7" ry="4.2" fill="#FBF6EE"></ellipse></g></g>' +
+    '<g class="d-part d-legF1"><g class="d-gait d-gF1"><rect x="84" y="62" width="9" height="43" rx="4.5" fill="#F2A03D"></rect><ellipse cx="88.5" cy="103" rx="7" ry="4.2" fill="#FBF6EE"></ellipse></g></g>' +
+  '</g></svg>';
+
+var VARIANTS = [
+  { k:'A', he:'הנוכחי',            en:'Current',   note:'הכלב שבאתר היום — נקודת הייחוס.' },
+  { k:'B', he:'פרופורציות מתוקנות', en:'Refined',   note:'אותה דמות: ראש קטן ב־18%, רגליים ארוכות יותר, גוף רזה יותר, עין קטנה.' },
+  { k:'C', he:'צללית',             en:'Silhouette',note:'צורה שטוחה אחת בכחול, ללא פנים. קולר כתום ועין קרם בלבד.' },
+  { k:'D', he:'קו מתאר',           en:'Line art',  note:'קווי מתאר בלבד על מילוי קרם — תחושה מאוירת ושקטה.' },
+  { k:'E', he:'רך ועגול',          en:'Soft',      note:'עבה, רגליים קצרות, כפות גדולות. יותר חום, פחות אילוף.' },
+  { k:'F', he:'מבנה גבוה',         en:'Tall build',note:'רגליים ארוכות, אוזן זקופה, גב ישר — כלב עבודה בוגר.' }
+];
+
+var ENDINGS = [
+  { k:'1', greet:'nose', he:'נגיעת אף',    en:'Nose touch',      note:'יד עולה לתוך המסגרת, הכלב מותח את הצוואר ונוגע בה באף. ניצוץ כתום קטן.' },
+  { k:'2', greet:'paw',  he:'נותן כפה',    en:'Give a paw',      note:'כף יד נפתחת, הכלב מרים כפה ומניח בתוכה — בדיוק המחווה שבלוגו.' },
+  { k:'3', greet:'ball', he:'מוסר את הכדור', en:'Handing over the ball', note:'הכלב מוריד את הראש והכדור עובר ממנו אל כף היד הפתוחה — מסירה, לא ויתור.' },
+  { k:'4', greet:'clip', he:'חיבור הרצועה',en:'Clipping the leash', note:'יד נכנסת עם הקרביינר ומחברת לקולר — יוצאים יחד.' },
+  { k:'5', greet:'lean', he:'יושבים יחד',  en:'Sitting together',note:'דמות יושבת (ללא פנים) נכנסת מהצד, הכלב מתיישב ונשען לעברה.' }
+];
+
+/* the crude mock page, same in every stage */
+var MOCK =
+  '<div class="mk-sec" data-story="alert">' +
+    '<div class="mk-eyebrow">כלבנות טיפולית ואילוף</div>' +
+    '<h3 class="mk-h1">הפגישה הראשונה מתחילה בשקט</h3><div class="mk-bar"></div>' +
+    '<p class="mk-p">מרחב בטוח שבו ילד, הורה או דייר פוגש כלב מאומן — ומשם מתחילים לעבוד יחד, בקצב שלו.</p>' +
+    '<div class="mk-actions"><span class="mk-btn">קביעת שיחת היכרות</span><span class="mk-btn ghost">מה קורה בפגישה</span></div>' +
+  '</div>' +
+  '<div class="mk-sec" data-story="sit"><h4 class="mk-h2">מה עושים יחד</h4><div class="mk-bar"></div>' +
+    '<div class="mk-cards">' +
+      '<div class="mk-card"><b>מפגש היכרות</b><span></span><span></span><span></span></div>' +
+      '<div class="mk-card"><b>משימה משותפת</b><span></span><span></span><span></span></div>' +
+      '<div class="mk-card"><b>סיכום ופרידה</b><span></span><span></span><span></span></div>' +
+    '</div></div>' +
+  '<div class="mk-sec mk-strip" data-story="down"><div class="mk-strip-in">' +
+    '<h4 class="mk-h2 light">משימה אחת, שני שותפים</h4><div class="mk-bar"></div>' +
+    '<p class="mk-p light">הכלב לא עושה את העבודה במקום המטופל — הוא נותן סיבה להתחיל אותה.</p></div></div>' +
+  '<div class="mk-sec" data-story="happy"><h4 class="mk-h2">למי זה מתאים</h4><div class="mk-bar"></div>' +
+    '<div class="mk-cards">' +
+      '<div class="mk-card"><b>ילדים ונוער</b><span></span><span></span><span></span></div>' +
+      '<div class="mk-card"><b>משפחות</b><span></span><span></span><span></span></div>' +
+      '<div class="mk-card"><b>דיירי מוסדות</b><span></span><span></span><span></span></div>' +
+    '</div></div>' +
+  '<div class="mk-sec" data-story="wag"><h4 class="mk-h2">נשארים בקשר</h4><div class="mk-bar"></div>' +
+    '<p class="mk-p">שיחת היכרות קצרה בטלפון, בלי התחייבות.</p>' +
+    '<div class="mk-actions"><span class="mk-btn">שליחת הודעה</span><span class="mk-btn ghost">שאלות נפוצות</span></div>' +
+    '<div class="mk-foot">עינב מימון · כלבנות טיפולית ואילוף · ישראל</div></div>';
+
+/* ---- the person: hands only, plus one seated figure ---- */
+function handOpen(rot) {   // back of hand / offered hand, fingers up
+  return '<svg width="62" height="96" viewBox="0 0 62 96" style="transform:rotate(' + rot + 'deg); transform-origin:50% 100%;">' +
+    '<g fill="#8A7A66">' +
+      '<rect x="14" y="14" width="9" height="30" rx="4.5"></rect>' +
+      '<rect x="24" y="9"  width="9" height="35" rx="4.5"></rect>' +
+      '<rect x="34" y="12" width="9" height="32" rx="4.5"></rect>' +
+      '<rect x="44" y="20" width="8" height="24" rx="4"></rect>' +
+      '<rect x="10" y="38" width="42" height="34" rx="15"></rect>' +
+      '<rect x="2"  y="42" width="18" height="9" rx="4.5" transform="rotate(-38 11 46.5)"></rect>' +
+      '<rect x="16" y="66" width="30" height="30" rx="9"></rect>' +
+    '</g></svg>';
+}
+/* Flat open palm, fingers pointing LEFT toward the dog, forearm running
+   down-right and off the bottom edge. Used for both the paw and the ball. */
+function handCup() {
+  return '<svg width="78" height="70" viewBox="0 0 78 70">' +
+    '<g fill="#8A7A66">' +
+      '<rect x="50" y="34" width="27" height="40" rx="13" transform="rotate(15 63 54)"></rect>' +  // forearm
+      '<rect x="2"  y="22" width="42" height="22" rx="11"></rect>' +                               // fingers
+      '<rect x="30" y="17" width="34" height="31" rx="13"></rect>' +                               // palm
+      '<rect x="33" y="7"  width="21" height="11" rx="5.5" transform="rotate(-13 43 12)"></rect>' +// thumb
+    '</g>' +
+    '<g stroke="#FBF6EE" stroke-width="1.5" opacity=".45" stroke-linecap="round">' +               // finger lines
+      '<path d="M6 28h20"></path><path d="M6 34h22"></path><path d="M8 40h18"></path>' +
+    '</g></svg>';
+}
+/* Fist pinching a carabiner. The clip sticks out to the upper LEFT so it can
+   reach the collar while the arm stays out of the dog's silhouette. */
+function handClip() {
+  return '<svg width="60" height="104" viewBox="0 0 60 104">' +
+    '<g fill="#8A7A66">' +
+      '<rect x="16" y="58" width="30" height="46" rx="14"></rect>' +                               // forearm
+      '<rect x="12" y="36" width="40" height="32" rx="15"></rect>' +                               // fist
+      '<rect x="8"  y="42" width="24" height="11" rx="5.5" transform="rotate(-16 20 47.5)"></rect>'+// thumb
+    '</g>' +
+    /* the carabiner is navy, not coral: a coral clip lands on the coral
+       collar and the two merge into one unreadable blob */
+    '<path d="M20 38C9 34 5 23 12 16c7-6 16-2 17 7" fill="none" stroke="#16324F" stroke-width="4.2" stroke-linecap="round"></path>' +
+  '</svg>';
+}
+/* A person sitting on the floor, side view, facing right — head, a gap for a
+   neck, a bent arm reaching out, crossed legs. No face, ever. */
+function seatedFigure() {
+  return '<svg width="84" height="88" viewBox="0 0 84 88">' +
+    '<g fill="#8A7A66">' +
+      '<circle cx="26" cy="14" r="12.5"></circle>' +                       // head
+      '<rect x="21" y="24" width="10" height="10" rx="4"></rect>' +        // neck, so the head reads separately
+      '<path d="M13 42c0-9 6-15 14-15s14 6 14 15v24H13z"></path>' +        // torso, leaning slightly forward
+      '<rect x="8" y="62" width="56" height="19" rx="9.5"></rect>' +       // crossed legs, extended toward the dog
+      '<circle cx="56" cy="66" r="9"></circle>' +                          // knee
+    '</g>' +
+    /* the arm reaches out of the figure's silhouette toward the dog —
+       inside it, the limb is invisible */
+    '<path d="M36 42L54 56L74 50" fill="none" stroke="#8A7A66" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"></path>' +
+    '<circle cx="76" cy="49" r="6.5" fill="#8A7A66"></circle>' +           // hand, offered
+  '</svg>';
+}
+
+/* ---- build part A ---- */
+var picked = 'B';
+var grid = document.getElementById('variantGrid');
+VARIANTS.forEach(function (v) {
+  var card = document.createElement('div');
+  card.className = 'card' + (v.k === picked ? ' picked' : '');
+  card.setAttribute('data-k', v.k);
+  card.innerHTML =
+    '<div class="stagebox"><div class="dg" data-pose="alert" data-gait="rest" style="width:150px">' + DOGS[v.k] + '</div></div>' +
+    '<h3><span class="k">' + v.k + '</span>' + v.he + '</h3>' +
+    '<p>' + v.note + '</p>' +
+    '<button class="pick">' + (v.k === picked ? 'נבחר ✓' : 'בחירה') + '</button>';
+  card.querySelector('.pick').addEventListener('click', function () { choose(v.k); });
+  grid.appendChild(card);
+});
+
+function choose(k) {
+  picked = k;
+  document.querySelectorAll('.card').forEach(function (c) {
+    var on = c.getAttribute('data-k') === k;
+    c.classList.toggle('picked', on);
+    c.querySelector('.pick').innerHTML = on ? 'נבחר ✓' : 'בחירה';
+  });
+  document.querySelectorAll('.dog-host').forEach(function (h) { h.innerHTML = DOGS[k]; });
+}
+
+document.querySelectorAll('[data-pose-btn]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('[data-pose-btn]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+    b.setAttribute('aria-pressed', 'true');
+    document.querySelectorAll('#variantGrid .dg').forEach(function (d) { d.setAttribute('data-pose', b.getAttribute('data-pose-btn')); });
+  });
+});
+var gaitBtn = document.querySelector('[data-gait-btn]');
+gaitBtn.addEventListener('click', function () {
+  var on = gaitBtn.getAttribute('aria-pressed') === 'true';
+  gaitBtn.setAttribute('aria-pressed', on ? 'false' : 'true');
+  gaitBtn.innerHTML = on ? 'הפעלת דידוי' : 'עצירת דידוי';
+  document.querySelectorAll('#variantGrid .dg').forEach(function (d) { d.setAttribute('data-gait', on ? 'rest' : 'trot'); });
+});
+var sizeBtn = document.querySelector('[data-size-btn]');
+sizeBtn.addEventListener('click', function () {
+  var on = sizeBtn.getAttribute('aria-pressed') === 'true';
+  sizeBtn.setAttribute('aria-pressed', on ? 'false' : 'true');
+  sizeBtn.innerHTML = on ? 'גודל אמיתי (88px)' : 'הגדלה לבדיקה';
+  document.querySelectorAll('#variantGrid .dg').forEach(function (d) { d.style.width = on ? '150px' : '88px'; });
+});
+
+/* ---- build part C panels ---- */
+var endGrid = document.getElementById('endGrid');
+ENDINGS.forEach(function (e) {
+  var box = document.createElement('div');
+  var extra = '';
+  if (e.k === '1') extra = '<div class="person e1-hand">' + handOpen(-24) + '</div>' +
+    '<svg class="e1-spark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="4"></circle></svg>';
+  if (e.k === '2') extra = '<div class="person e2-hand">' + handCup() + '</div>';
+  if (e.k === '3') extra = '<div class="person e3-hand">' + handCup() + '</div><div class="e3-ball"></div>';
+  if (e.k === '4') extra = '<svg class="e4-leash" viewBox="0 0 210 170"><path d="M80 118C66 140 44 150 0 162"></path></svg>' +
+    '<div class="person e4-hand">' + handClip() + '</div>';
+  if (e.k === '5') extra = '<div class="person e5-person">' + seatedFigure() + '</div>';
+
+  box.innerHTML =
+    '<div class="endhead"><h3>' + e.k + '. ' + e.he + '<span class="en">' + e.en + '</span></h3><p>' + e.note + '</p></div>' +
+    '<div class="stage" data-stage="end' + e.k + '" data-ending="' + e.k + '">' +
+      '<div class="scroller" dir="rtl"></div>' +
+      '<div class="endlabel">' + e.en + '</div>' +
+      '<button class="jump">קפיצה לסוף ↓</button>' +
+      '<div class="overlay"><div class="dog-host dg" data-pose="alert" data-gait="rest"></div>' + extra + '</div>' +
+    '</div>';
+  endGrid.appendChild(box);
+});
+
+/* ---- wire every stage ---- */
+document.querySelectorAll('.scroller').forEach(function (s) { s.innerHTML = MOCK; });
+document.querySelectorAll('.dog-host').forEach(function (h) { h.innerHTML = DOGS[picked]; });
+
+var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+document.querySelectorAll('.stage').forEach(function (stage) {
+  var sc = stage.querySelector('.scroller');
+  var dog = stage.querySelector('.dog-host');
+  var overlay = stage.querySelector('.overlay');
+  var ending = stage.getAttribute('data-ending');
+  var greet = ending ? (ENDINGS.filter(function (e) { return e.k === ending; })[0].greet) : null;
+  var marks = sc.querySelectorAll('[data-story]');
+  var tA, tB;
+
+  var jump = stage.querySelector('.jump');
+  if (jump) jump.addEventListener('click', function () {
+    sc.scrollTo({ top: sc.scrollHeight, behavior: REDUCE ? 'auto' : 'smooth' });
+  });
+
+  if (REDUCE) {
+    // static but still telling the story: dog settled, person already there
+    dog.setAttribute('data-pose', 'sit');
+    if (greet) { dog.setAttribute('data-greet', greet); overlay.classList.add('is-in'); }
+    return;
+  }
+
+  function draw() {
+    var max = sc.scrollHeight - sc.clientHeight;
+    var p = max > 0 ? sc.scrollTop / max : 0;
+
+    // pose from the section crossing the middle — same rule as the live site
+    var mid = sc.clientHeight * 0.5, chosen = null;
+    for (var i = 0; i < marks.length; i++) {
+      var top = marks[i].offsetTop - sc.scrollTop;
+      if (top <= mid && top + marks[i].offsetHeight >= mid) chosen = marks[i];
+    }
+    var pose = chosen ? chosen.getAttribute('data-story') : 'alert';
+    if (dog.getAttribute('data-pose') !== pose) dog.setAttribute('data-pose', pose);
+
+    // the greeting takes over at the contact section
+    if (greet) {
+      var on = p > 0.86;
+      overlay.classList.toggle('is-in', on);
+      dog.setAttribute('data-greet', on ? greet : 'none');
+    }
+  }
+
+  sc.addEventListener('scroll', function () {
+    if (dog.getAttribute('data-gait') !== 'trot') dog.setAttribute('data-gait', 'trot');
+    clearTimeout(tA); clearTimeout(tB);
+    tA = setTimeout(function () { dog.setAttribute('data-gait', 'idle'); }, 190);
+    tB = setTimeout(function () { dog.setAttribute('data-gait', 'rest'); }, 860);
+    draw();
+  }, { passive: true });
+
+  draw();
+});
+</script>
+</body>
+</html>

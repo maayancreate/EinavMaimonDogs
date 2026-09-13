@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>גלריית כלבים — סטטי · עינב מימון</title>
+<style>
+/* =====================================================================
+   STATIC DOG GALLERY. Deliberately contains no animation of any kind:
+   no @keyframes, no transition, no transform, no JS. A still gallery.
+
+   Construction rule for every dog: the body is ONE continuous path that
+   includes head, neck, back, croup, tail and the two near legs. The far
+   legs sit behind it, pushed deep inside the body. Ears are separate
+   lobes only so they can overhang the skull, and every ear base is buried
+   15-25px inside the head. All markings are clipped to the body path, so
+   no detail can physically escape the silhouette. Fill everything flat
+   black and each of these is one connected shape.
+   ===================================================================== */
+:root{
+  --navy:#16324F; --cream:#FBF6EE; --coral:#E4572E;
+  --amber:#F2A03D; --green:#4C9A6B; --slate:#4A5C6F; --brown:#8A7A66;
+}
+*{ box-sizing:border-box; }
+body{ margin:0; background:#EFE7DA; color:var(--navy);
+  font-family:"Segoe UI","Noto Sans Hebrew",system-ui,-apple-system,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+.wrap{ max-width:1240px; margin:0 auto; padding:0 20px 70px; }
+
+.head{ padding:34px 0 8px; }
+.head h1{ margin:0 0 6px; font-size:30px; letter-spacing:-.02em; }
+.head .en{ color:var(--brown); font-size:14px; font-weight:600; direction:ltr; text-align:right; }
+.head p{ margin:14px 0 0; max-width:820px; color:var(--slate); font-size:15px; line-height:1.65; }
+.head .keys{ margin-top:14px; padding:12px 16px; border-radius:12px; background:rgba(22,50,79,.06);
+  border:1px solid rgba(22,50,79,.10); font-size:13.5px; color:var(--slate); line-height:1.7; max-width:820px; }
+.head .keys b{ color:var(--navy); }
+
+.grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px; }
+.card{ border:1px solid rgba(22,50,79,.16); border-radius:16px; overflow:hidden; background:#fff; }
+.card .cap{ padding:12px 16px 11px; background:#fff; border-bottom:1px solid rgba(22,50,79,.10); }
+.card .cap h2{ margin:0; font-size:16.5px; letter-spacing:-.01em; }
+.card .cap h2 .num{ display:inline-flex; align-items:center; justify-content:center;
+  width:25px; height:25px; border-radius:50%; background:var(--navy); color:var(--cream);
+  font-size:13px; font-weight:800; margin-inline-end:8px; vertical-align:-5px; }
+.card .cap .en{ font-weight:600; font-size:12.5px; color:var(--brown); margin-inline-start:7px; direction:ltr; display:inline-block; }
+.card .cap p{ margin:5px 0 0; font-size:12.5px; color:var(--slate); line-height:1.5; }
+.card .cap .hers{ display:inline-block; margin-inline-start:6px; font-size:10.5px; font-weight:800;
+  letter-spacing:.04em; padding:2px 8px; border-radius:99px; background:var(--green); color:var(--cream); vertical-align:2px; }
+
+/* the two test grounds: identical dogs, opposite backgrounds */
+.strip{ display:flex; align-items:flex-end; gap:20px; padding:14px 18px 12px; }
+.strip.on-cream{ background:var(--cream); color:var(--navy); }
+.strip.on-navy{ background:var(--navy); color:var(--cream); }
+.slot{ display:flex; flex-direction:column; align-items:center; gap:5px; }
+.slot .lbl{ font-size:10px; font-weight:700; letter-spacing:.06em; opacity:.45; }
+.slot.real .lbl{ opacity:.9; color:var(--coral); }
+.strip.on-navy .slot.real .lbl{ color:var(--amber); }
+svg.s200{ width:200px; height:150px; display:block; }
+svg.s88{ width:88px; height:66px; display:block; }
+svg.s48{ width:48px; height:36px; display:block; }
+
+.foot{ margin-top:26px; font-size:13px; color:var(--brown); }
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     DEFS — one <path> per dog is the entire silhouette. It is used three
+     times per ground via <use>, and again as its own clipPath.
+     ===================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+
+<path id="p1"  d="M186 56C182 49 176 46 168 46C160 45 155 40 150 32C145 24 136 24 129 31C123 37 119 43 113 49C106 55 96 58 84 59C72 60 58 58 48 63C40 56 26 48 16 40C13 43 15 52 22 60C29 68 33 72 36 79C34 88 36 98 41 108C43 118 41 130 41 142L59 142C59 130 57 118 59 108C61 100 64 96 70 95C84 97 98 98 110 100C117 102 120 112 120 122C120 132 119 138 119 142L137 142C137 132 136 120 138 110C140 98 144 86 149 76C153 68 158 63 165 61C173 59 181 58 186 56Z"/>
+<clipPath id="c1"><use href="#p1"/></clipPath>
+
+<path id="p2"  d="M180 58C178 50 172 46 164 45C156 44 152 38 149 30C145 21 135 21 128 29C122 36 118 42 112 48C104 54 94 58 82 59C70 60 56 58 46 63C42 54 36 48 28 46C26 52 28 60 34 70C37 78 34 88 38 98C40 110 38 126 38 142L58 142C58 128 56 114 58 104C60 96 63 92 69 91C84 93 100 94 112 96C120 98 123 110 123 122C123 132 122 138 122 142L142 142C142 132 141 120 143 108C145 94 149 82 154 72C158 64 162 60 168 59C174 58 178 58 180 58Z"/>
+<clipPath id="c2"><use href="#p2"/></clipPath>
+
+<path id="p3"  d="M188 52C185 45 179 42 171 41C162 40 157 35 153 27C149 19 139 19 132 26C126 32 122 38 116 44C108 50 98 54 86 55C74 56 60 55 50 60C40 52 24 44 8 40C6 44 12 52 24 62C32 70 36 76 39 84C42 94 38 104 42 114C44 124 42 134 42 142L58 142C58 132 56 120 58 110C60 100 63 94 69 92C84 94 100 95 112 97C119 99 122 110 122 122C122 132 121 138 121 142L137 142C137 132 136 120 138 108C140 94 144 80 149 70C153 62 158 57 165 55C174 53 183 52 188 52Z"/>
+<clipPath id="c3"><use href="#p3"/></clipPath>
+
+<!-- deeper scallops than a 4px wobble: at 88px a subtle ripple just reads
+     as a lumpy dog, so the shag has to be exaggerated to survive -->
+<path id="p4"  d="M184 62C184 54 178 48 170 49C171 42 164 38 158 42C157 33 148 27 140 31C138 21 126 21 120 30C117 36 116 42 112 46C106 50 104 44 98 48C92 52 90 46 84 50C78 54 76 48 70 52C64 56 60 54 54 60C48 52 34 46 22 46C18 52 24 60 32 66C38 71 40 78 38 86C36 94 40 102 42 110C44 120 42 132 42 142L60 142C60 132 58 120 60 110C62 102 64 98 70 96C76 101 82 96 88 100C94 96 100 101 106 98C112 102 118 98 122 102C126 106 126 114 126 124C126 134 125 138 125 142L143 142C143 132 142 120 144 110C146 98 150 86 155 76C159 68 164 63 171 63C177 63 182 68 184 62Z"/>
+<clipPath id="c4"><use href="#p4"/></clipPath>
+
+<path id="p5"  d="M184 52C181 45 175 42 167 41C159 40 154 34 150 26C146 18 136 18 129 26C123 33 119 40 113 46C105 52 94 56 82 58C70 60 56 60 46 66C42 56 34 48 24 44C21 49 24 58 30 66C34 72 36 78 38 86C40 94 38 100 40 108C42 118 40 132 40 142L58 142C58 132 56 122 58 114C60 108 63 105 69 104C84 106 100 107 112 109C118 111 121 120 121 128C121 136 120 140 120 142L138 142C138 134 137 126 139 118C141 106 145 92 150 80C154 70 158 62 164 58C170 54 178 52 184 52Z"/>
+<clipPath id="c5"><use href="#p5"/></clipPath>
+
+<path id="p6"  d="M190 54C187 47 181 44 173 43C164 42 158 37 154 29C150 21 140 21 133 28C127 34 123 40 117 46C109 52 98 56 86 57C74 58 60 57 50 62C40 56 24 50 8 48C6 53 14 60 26 68C33 73 37 78 40 86C42 96 40 106 42 116C44 126 42 134 42 142L58 142C58 132 56 120 58 110C60 100 63 95 69 93C84 95 100 96 112 98C119 100 122 110 122 122C122 132 121 138 121 142L137 142C137 132 136 120 138 108C140 94 144 80 149 70C153 62 158 57 165 55C174 53 184 54 190 54Z"/>
+<clipPath id="c6"><use href="#p6"/></clipPath>
+
+<path id="p7"  d="M184 60C181 52 175 48 167 47C158 46 153 40 150 32C146 23 136 23 129 31C123 38 119 44 113 50C104 56 93 60 80 61C66 62 52 61 42 66C34 62 22 60 10 62C8 68 16 72 28 74C32 80 34 88 36 96C38 108 36 124 36 142L58 142C58 126 56 112 58 102C60 94 63 90 69 89C86 91 104 92 118 94C126 96 129 108 129 122C129 132 128 138 128 142L150 142C150 132 149 120 151 108C153 94 157 82 162 72C166 64 171 59 178 57C181 56 183 58 184 60Z"/>
+<clipPath id="c7"><use href="#p7"/></clipPath>
+
+<path id="p8"  d="M190 60C187 53 181 50 173 49C164 48 158 42 154 34C150 25 140 25 133 33C127 40 123 47 117 53C108 60 94 64 78 66C60 68 44 70 34 78C28 84 26 92 28 100C30 108 30 116 30 124C30 132 30 138 30 142L50 142C50 136 49 130 51 124C53 118 56 115 62 114C84 112 106 112 122 114C129 115 132 120 132 128C132 136 131 140 131 142L151 142C151 136 150 130 152 124C154 114 158 100 163 88C167 78 172 68 178 64C182 61 187 60 190 60Z"/>
+<clipPath id="c8"><use href="#p8"/></clipPath>
+
+<!-- a slim trimmed body; the poodle reads through the pom lobes added on
+     top of it (topknot, tail pom, leg bracelets), not through wobbly curls -->
+<path id="p9"  d="M184 56C181 49 175 46 167 46C159 45 154 40 149 32C144 24 135 24 128 31C122 37 118 43 112 49C105 55 95 58 83 59C71 60 57 58 47 63C40 57 28 50 18 44C15 47 17 55 24 62C31 69 34 73 36 80C34 89 36 99 41 109C43 119 41 130 41 142L59 142C59 130 57 118 59 108C61 100 64 96 70 95C84 97 98 98 110 100C117 102 120 112 120 122C120 132 119 138 119 142L137 142C137 132 136 120 138 110C140 98 144 86 149 76C153 68 158 63 165 61C173 59 181 58 184 56Z"/>
+<clipPath id="c9"><use href="#p9"/></clipPath>
+
+<path id="p10" d="M186 56C183 49 177 46 169 45C160 44 155 39 151 31C147 22 137 22 130 30C124 37 120 43 114 49C106 55 96 59 84 60C74 61 58 60 48 65C44 56 40 44 42 34C46 30 52 34 54 44C56 54 54 62 50 70C46 78 44 88 44 98C46 110 44 126 44 142L60 142C60 126 58 114 60 104C62 96 65 92 71 91C86 93 102 94 114 96C121 98 124 110 124 122C124 132 123 138 123 142L139 142C139 132 138 120 140 108C142 94 146 82 151 72C155 64 160 59 167 57C175 55 182 56 186 56Z"/>
+<clipPath id="c10"><use href="#p10"/></clipPath>
+
+<!-- ===================== assembled dogs ===================== -->
+
+<!-- 1 · GOLDEN RETRIEVER -->
+<g id="dog1">
+  <ellipse cx="92" cy="145" rx="62" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="62" y="84" width="15" height="58" rx="7.5" fill="#C77F22"/>
+  <rect x="98" y="84" width="15" height="58" rx="7.5" fill="#C77F22"/>
+  <use href="#p1" fill="#F2A03D"/>
+  <!-- shading is always DARKER than the body: a near-cream marking that
+       reaches the outline dissolves into the cream page -->
+  <g clip-path="url(#c1)">
+    <ellipse cx="146" cy="100" rx="16" ry="26" fill="#E08E28"/>
+    <circle cx="18" cy="44" r="11" fill="#C77F22"/>
+  </g>
+  <path d="M130 30C119 36 114 52 117 67C119 78 128 84 136 79C143 74 144 56 142 43C140 33 137 29 130 30Z" fill="#C77F22"/>
+  <g clip-path="url(#c1)"><path d="M151 86C145 77 139 71 131 68" stroke="#E4572E" stroke-width="11" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c1)"><circle cx="151" cy="46" r="4.6" fill="#16324F"/><circle cx="152.6" cy="44.2" r="1.7" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c1)"><ellipse cx="178" cy="54" rx="5.4" ry="4.6" fill="#16324F"/></g>
+</g>
+
+<!-- 2 · BOXER -->
+<g id="dog2">
+  <ellipse cx="90" cy="145" rx="60" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="62" y="82" width="16" height="60" rx="8" fill="#6E6151"/>
+  <rect x="100" y="82" width="16" height="60" rx="8" fill="#6E6151"/>
+  <use href="#p2" fill="#8A7A66"/>
+  <g clip-path="url(#c2)">
+    <!-- dark mask, but brown not navy: a navy muzzle on the navy ground
+         eats the front of the face -->
+    <path d="M144 22C168 22 188 40 190 60C192 80 172 92 152 86C136 81 130 64 132 46C133 32 137 23 144 22Z" fill="#5A5046"/>
+  </g>
+  <use href="#p2" fill="none" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M132 28C123 30 118 38 119 49C120 58 128 62 134 57C139 52 139 36 132 28Z" fill="#6E6151" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <g clip-path="url(#c2)"><path d="M150 88C144 80 138 74 130 71" stroke="#E4572E" stroke-width="11" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c2)"><circle cx="150" cy="44" r="4.4" fill="#FBF6EE"/><circle cx="151.4" cy="42.4" r="1.6" fill="#16324F"/></g>
+  <g clip-path="url(#c2)"><ellipse cx="173" cy="56" rx="5.4" ry="4.6" fill="#16324F"/></g>
+</g>
+
+<!-- 3 · IRISH SETTER -->
+<g id="dog3">
+  <ellipse cx="90" cy="145" rx="58" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="62" y="80" width="14" height="62" rx="7" fill="#B33D1B"/>
+  <rect x="100" y="80" width="14" height="62" rx="7" fill="#B33D1B"/>
+  <use href="#p3" fill="#E4572E"/>
+  <g clip-path="url(#c3)">
+    <ellipse cx="146" cy="96" rx="14" ry="22" fill="#CF4520"/>
+    <path d="M8 40C22 42 36 58 44 80L18 96 0 54Z" fill="#B33D1B"/>
+    <rect x="38" y="128" width="24" height="18" fill="#B33D1B"/>
+    <rect x="116" y="128" width="24" height="18" fill="#B33D1B"/>
+  </g>
+  <path d="M133 27C122 34 116 52 119 68C121 79 130 84 138 79C145 74 146 55 144 42C142 31 140 27 133 27Z" fill="#B33D1B"/>
+  <g clip-path="url(#c3)"><path d="M152 80C146 72 140 66 132 63" stroke="#16324F" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c3)"><circle cx="152" cy="42" r="4.4" fill="#16324F"/><circle cx="153.5" cy="40.3" r="1.6" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c3)"><ellipse cx="182" cy="50" rx="6" ry="5" fill="#16324F"/></g>
+</g>
+
+<!-- 4 · SCRUFFY WHEATEN TERRIER -->
+<g id="dog4">
+  <ellipse cx="92" cy="145" rx="58" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="64" y="86" width="15" height="56" rx="7.5" fill="#C77F22"/>
+  <rect x="100" y="86" width="15" height="56" rx="7.5" fill="#C77F22"/>
+  <use href="#p4" fill="#F2A03D"/>
+  <g clip-path="url(#c4)">
+    <path d="M150 44C172 44 190 58 190 74C190 92 170 100 154 94C140 89 134 72 136 58C137 48 143 44 150 44Z" fill="#F8D9A8"/>
+    <ellipse cx="148" cy="104" rx="15" ry="22" fill="#F8D9A8"/>
+    <rect x="38" y="128" width="24" height="18" fill="#F8D9A8"/>
+    <rect x="118" y="128" width="24" height="18" fill="#F8D9A8"/>
+  </g>
+  <!-- outlined: this dog's pale beard and socks run right up to the edge,
+       and without a contour they bleed into the cream page -->
+  <use href="#p4" fill="none" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M127 32C119 36 115 48 117 60C119 69 126 73 132 68C138 63 139 49 137 40C135 33 132 31 127 32Z" fill="#C77F22" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <g clip-path="url(#c4)"><path d="M152 90C146 82 140 76 132 73" stroke="#E4572E" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c4)"><circle cx="149" cy="49" r="4.2" fill="#16324F"/><circle cx="150.4" cy="47.4" r="1.5" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c4)"><ellipse cx="176" cy="58" rx="6" ry="5" fill="#16324F"/></g>
+</g>
+
+<!-- 5 · SMALL WHITE & TAN TERRIER -->
+<g id="dog5">
+  <ellipse cx="88" cy="145" rx="56" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="62" y="90" width="15" height="52" rx="7.5" fill="#39485A"/>
+  <rect x="100" y="90" width="15" height="52" rx="7.5" fill="#39485A"/>
+  <use href="#p5" fill="#4A5C6F"/>
+  <g clip-path="url(#c5)">
+    <!-- the white edge follows the underline instead of cutting a straight
+         band across the body, which read as a waterline -->
+    <path d="M30 106C46 98 60 106 76 102C92 98 110 102 126 98C144 94 164 98 180 108L200 120 200 150 0 150 0 118Z" fill="#FBF6EE"/>
+    <path d="M150 28C170 26 188 40 190 56C192 74 174 84 158 78C144 73 138 56 140 42C141 32 145 28 150 28Z" fill="#FBF6EE"/>
+  </g>
+  <use href="#p5" fill="none" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M132 22C123 24 118 33 119 44C120 53 127 57 133 52C138 47 139 31 132 22Z" fill="#39485A" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <g clip-path="url(#c5)"><path d="M150 82C144 74 138 69 130 66" stroke="#E4572E" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c5)"><circle cx="150" cy="42" r="4.2" fill="#16324F"/><circle cx="151.4" cy="40.4" r="1.5" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c5)"><ellipse cx="178" cy="50" rx="6" ry="5" fill="#16324F"/></g>
+</g>
+
+<!-- 6 · BORDER COLLIE -->
+<g id="dog6">
+  <ellipse cx="90" cy="145" rx="60" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="62" y="82" width="15" height="60" rx="7.5" fill="#39485A"/>
+  <rect x="100" y="82" width="15" height="60" rx="7.5" fill="#39485A"/>
+  <use href="#p6" fill="#4A5C6F"/>
+  <g clip-path="url(#c6)">
+    <path d="M126 92C150 88 178 96 200 112L200 150 100 150 108 110Z" fill="#FBF6EE"/>
+    <path d="M164 24C178 28 190 42 192 58C194 74 180 82 168 78C158 74 154 60 156 44C157 32 160 24 164 24Z" fill="#FBF6EE"/>
+    <path d="M8 48C22 50 36 62 46 82L24 96 0 58Z" fill="#FBF6EE"/>
+    <rect x="38" y="128" width="24" height="18" fill="#FBF6EE"/>
+  </g>
+  <use href="#p6" fill="none" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M131 20C121 23 116 33 117 46C118 55 125 59 132 54C138 49 138 30 131 20Z" fill="#39485A" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <g clip-path="url(#c6)"><path d="M150 80C144 72 138 67 130 64" stroke="#E4572E" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c6)"><circle cx="153" cy="43" r="4.2" fill="#16324F"/><circle cx="154.4" cy="41.4" r="1.5" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c6)"><ellipse cx="184" cy="52" rx="6" ry="5" fill="#16324F"/></g>
+</g>
+
+<!-- 7 · LABRADOR -->
+<g id="dog7">
+  <ellipse cx="92" cy="145" rx="62" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="62" y="80" width="17" height="62" rx="8.5" fill="#C77F22"/>
+  <rect x="102" y="80" width="17" height="62" rx="8.5" fill="#C77F22"/>
+  <use href="#p7" fill="#F2A03D"/>
+  <g clip-path="url(#c7)">
+    <ellipse cx="152" cy="98" rx="16" ry="26" fill="#E08E28"/>
+    <ellipse cx="30" cy="70" rx="18" ry="10" fill="#C77F22"/>
+  </g>
+  <path d="M131 32C121 36 116 50 118 63C120 73 128 77 134 72C140 67 141 49 139 39C137 33 136 31 131 32Z" fill="#C77F22"/>
+  <g clip-path="url(#c7)"><path d="M154 88C148 80 142 74 134 71" stroke="#E4572E" stroke-width="12" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c7)"><circle cx="151" cy="48" r="4.8" fill="#16324F"/><circle cx="152.7" cy="46.1" r="1.8" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c7)"><ellipse cx="176" cy="58" rx="5.6" ry="4.8" fill="#16324F"/></g>
+</g>
+
+<!-- 8 · CORGI -->
+<g id="dog8">
+  <ellipse cx="92" cy="145" rx="64" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="62" y="100" width="15" height="42" rx="7.5" fill="#B33D1B"/>
+  <rect x="104" y="100" width="15" height="42" rx="7.5" fill="#B33D1B"/>
+  <use href="#p8" fill="#E4572E"/>
+  <g clip-path="url(#c8)">
+    <path d="M34 100C78 92 130 96 180 110L200 122 200 150 0 150 0 122Z" fill="#FBF6EE"/>
+    <path d="M156 34C176 32 192 46 194 62C196 78 178 88 162 82C148 77 142 62 144 48C145 38 150 34 156 34Z" fill="#FBF6EE"/>
+  </g>
+  <use href="#p8" fill="none" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M128 36C120 31 114 14 120 8C127 3 137 16 139 31C140 39 134 41 128 36Z" fill="#B33D1B" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M149 34C143 27 141 10 148 7C155 5 161 19 161 33C161 41 155 41 149 34Z" fill="#B33D1B" stroke="#16324F" stroke-width="2.6" stroke-linejoin="round"/>
+  <g clip-path="url(#c8)"><path d="M154 88C148 80 142 74 134 71" stroke="#16324F" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c8)"><circle cx="152" cy="50" r="4.2" fill="#16324F"/><circle cx="153.4" cy="48.4" r="1.5" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c8)"><ellipse cx="184" cy="58" rx="6" ry="5" fill="#16324F"/></g>
+</g>
+
+<!-- 9 · CURLY POODLE -->
+<g id="dog9">
+  <ellipse cx="92" cy="145" rx="58" ry="5" fill="currentColor" opacity=".10"/>
+  <rect x="64" y="84" width="15" height="58" rx="7.5" fill="#6E6151"/>
+  <rect x="102" y="84" width="15" height="58" rx="7.5" fill="#6E6151"/>
+  <use href="#p9" fill="#8A7A66"/>
+  <!-- the poodle signature: every pom overlaps the body by 12px or more, so
+       the union stays one connected shape -->
+  <circle cx="50" cy="124" r="13" fill="#8A7A66"/>
+  <circle cx="128" cy="124" r="13" fill="#8A7A66"/>
+  <circle cx="20" cy="46" r="14" fill="#8A7A66"/>
+  <ellipse cx="146" cy="90" rx="19" ry="21" fill="#8A7A66"/>
+  <circle cx="136" cy="26" r="17" fill="#8A7A66"/>
+  <g clip-path="url(#c9)"><ellipse cx="148" cy="102" rx="14" ry="24" fill="#7A6C5A"/></g>
+  <path d="M126 30C116 35 111 49 114 62C116 72 124 76 131 71C138 66 139 49 137 38C135 30 132 29 126 30Z" fill="#6E6151"/>
+  <g clip-path="url(#c9)"><path d="M150 84C144 76 138 70 130 67" stroke="#E4572E" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+  <g clip-path="url(#c9)"><circle cx="148" cy="46" r="4.2" fill="#16324F"/><circle cx="149.4" cy="44.4" r="1.5" fill="#FBF6EE"/></g>
+  <g clip-path="url(#c9)"><ellipse cx="176" cy="54" rx="6" ry="5" fill="#16324F"/></g>
+</g>
+
+<!-- 10 · SCRUFFY MIXED BREED (line art; the stroke follows the ground) -->
+<g id="dog10">
+  <ellipse cx="92" cy="145" rx="58" ry="5" fill="currentColor" opacity=".10"/>
+  <g fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M66 92v50M106 92v50"/>
+    <use href="#p10"/>
+    <path d="M132 30C124 26 118 10 124 5C131 1 140 14 142 28C143 36 138 35 132 30Z"/>
+    <path d="M151 82C145 74 139 68 131 65" stroke="#E4572E" stroke-width="10"/>
+  </g>
+  <g clip-path="url(#c10)"><circle cx="151" cy="45" r="4.6" fill="currentColor"/></g>
+  <g clip-path="url(#c10)"><ellipse cx="180" cy="54" rx="6.2" ry="5.2" fill="currentColor"/></g>
+</g>
+
+</defs></svg>
+
+
+<div class="wrap">
+  <div class="head">
+    <h1>גלריית כלבים — סטטי, בלי שום אנימציה</h1>
+    <div class="en">Static dog gallery · choose the drawing first, motion comes later</div>
+    <p>
+      עשרה כלבים שונים, מצוירים מחדש מאפס. אין כאן שום תנועה — לא אנימציה, לא מעברים, לא כפתורי תנוחה.
+      המטרה היא לבחור <b>ציור</b>, ורק אחר כך לחזור לשאלת התנועה.
+    </p>
+    <div class="keys">
+      <b>מה תוקן:</b> כל כלב מצויר עכשיו כ<b>צורה אחת רציפה</b> — ראש, צוואר, גב, אגן, זנב ורגליים באותו קו מתאר עצמו.
+      אין יותר חלקים מורכבים שנפתחים ביניהם פערים. האוזן היא החלק היחיד שנפרד, כדי שתוכל לחרוג מהראש,
+      והבסיס שלה קבור עמוק בתוך הגולגולת. כל הכתמים חתוכים לצורת הגוף, כך שפיזית אי אפשר שמשהו יברח החוצה.
+      <br>
+      <b>איך להסתכל:</b> כל כלב בשלושה גדלים — 200px לבדיקה, <b style="color:#E4572E">88px שזה הגודל האמיתי באתר</b>, ו־48px.
+      וכל כלב פעמיים: על קרם ועל כחול, כי באתר הוא חוצה פס כחול כהה.
+      <br>
+      <b>מסומן בירוק</b> = מבוסס על כלב אמיתי שלך, מהתמונות ששלחת.
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">1</span>גולדן קרם<span class="en">Cream golden retriever</span><span class="hers">כלב שלך</span></h2>
+        <p>הגולדן הבהיר מהמפגשים הטיפוליים. מילוי שטוח, קו רך, אוזן תלויה, זנב נוצתי.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog1"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog1"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog1"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog1"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog1"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog1"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">2</span>בוקסר<span class="en">Boxer</span><span class="hers">כלב שלך</span></h2>
+        <p>הבוקסר מהתמונה עם הרתמה. גוף מוצק, אף קצר ומרובע, מסכה כהה, אוזן מקופלת גבוה.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog2"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog2"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog2"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog2"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog2"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog2"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">3</span>סטר אירי<span class="en">Irish setter</span><span class="hers">כלב שלך</span></h2>
+        <p>האדמוני עם הפרווה הארוכה מהתמונה המשפחתית. רגליים ארוכות, חזה עמוק, אוזן ארוכה ונוצתית.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog3"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog3"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog3"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog3"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog3"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog3"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">4</span>טרייר פרוע<span class="en">Scruffy wheaten terrier</span><span class="hers">כלב שלך</span></h2>
+        <p>הפרוע הקרם שמלקק לך את הפנים בתמונה. קו מתאר גלי ומרושל, זקן בהיר, שיער על המצח.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog4"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog4"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog4"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog4"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog4"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog4"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">5</span>טרייר קטן<span class="en">Small terrier</span><span class="hers">כלב שלך</span></h2>
+        <p>הקטן הלבן-חום מימין בתמונה. גוף קומפקטי, רגליים קצרות, אוזן זקופה־מקופלת, פרצוף בהיר.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog5"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog5"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog5"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog5"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog5"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog5"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">6</span>בורדר קולי<span class="en">Border collie</span></h2>
+        <p>מהתמונה עם הילד על הדשא. שחור-לבן (כאן באפור-כחלחל), אוזן חצי־זקופה, זנב מלא.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog6"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog6"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog6"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog6"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog6"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog6"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">7</span>לברדור<span class="en">Labrador</span></h2>
+        <p>מבנה כבד ורחב, ראש מרובע, זנב עבה וישר. הכי &ldquo;כלב טיפולי קלאסי&rdquo; מבין כולם.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog7"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog7"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog7"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog7"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog7"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog7"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">8</span>קורגי<span class="en">Corgi</span></h2>
+        <p>גוף ארוך ונמוך, רגליים קצרצרות, אוזניים ענקיות וזקופות, בלי זנב. הכי מזוהה בסילואט.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog8"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog8"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog8"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog8"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog8"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog8"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">9</span>פודל מתולתל<span class="en">Curly poodle</span></h2>
+        <p>קו מתאר גלי־מתולתל לאורך הגוף, ציצית על הראש, פונפון בזנב. סגנון גיאומטרי יותר.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog9"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog9"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog9"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog9"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog9"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog9"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cap">
+        <h2><span class="num">10</span>מעורב פרוע — קו מתאר<span class="en">Mixed breed, line art</span></h2>
+        <p>סגנון קו בלבד, אוזן זקופה אחת. הקו מתהפך לפי הרקע. מוצג להשוואה — קו דק נוטה להישבר בקטן.</p>
+      </div>
+      <div class="strip on-cream">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog10"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog10"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog10"/></svg><span class="lbl">48</span></div>
+      </div>
+      <div class="strip on-navy">
+        <div class="slot"><svg class="s200" viewBox="0 0 200 150"><use href="#dog10"/></svg><span class="lbl">200</span></div>
+        <div class="slot real"><svg class="s88" viewBox="0 0 200 150"><use href="#dog10"/></svg><span class="lbl">88 · אתר</span></div>
+        <div class="slot"><svg class="s48" viewBox="0 0 200 150"><use href="#dog10"/></svg><span class="lbl">48</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    קובץ מעבדה בלבד, לא מחובר לאתר. אחרי שתבחרו מספר — נחזור לשאלת התנועה, ואז בזהירות.
+    <span style="direction:ltr; display:inline-block; margin-inline-start:8px;">Static reference only. Say a number.</span>
+  </div>
+</div>
+
+</body>
+</html>

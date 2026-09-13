@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="236" viewBox="0 0 150 118">
+<!-- ============================================================
+     THE ORIGINAL SITE DOG — extracted verbatim from DOGS.A in
+     lab-dog.html (lines 356-383), de-stringified so it is editable.
+     Nothing changed: same coordinates, same colours, same class names.
+
+     ANIMATION HOOKS (the class names drive the rig; keep them):
+       .d-bounce  wraps everything     — breathe / hop
+       .d-part    every movable part   — transition .55s
+       .d-body    transform-origin  65 92
+       .d-head / .d-headb              96 60   head bob + tilt
+       .d-ear  / .d-gEar               98 26   ear flop
+       .d-tail / .d-tailw              36 63   wag
+       .d-legF1 / .d-gF1               88 74
+       .d-legF2 / .d-gF2               94 76
+       .d-legB1 / .d-gB1               44 80
+       .d-legB2 / .d-gB2               51 82
+       .d-tongue                       shown on the happy/pant poses
+
+     WHY PARTS DETACH WHEN IT MOVES (measured, not guessed):
+       1. TAIL — worst offender. The stroke starts at (36,63). The rump
+          ellipse is cx45 cy76 rx17 ry18, so at x=36 it only spans
+          y 60.7-91.3. The tail root sits 2px inside the top edge, and
+          .d-tailw rotates about that exact point — so any wag swings the
+          root straight out of the body. It needs to start ~12px deeper,
+          around (42,72).
+       2. HEAD — the head circle (106,42 r23) meets the body only through
+          the narrow neck path "M94 56c8-6 18-4 22 5...". Overlap is about
+          y 50-65 at its widest and it narrows fast toward the throat.
+          Rotating about (96,60) shears that seam open. The coral collar
+          stroke at "M88 62..." is currently doing the job of hiding it,
+          which is why the collar can never move or thin.
+       3. FRONT LEGS — legF1 rect starts at y=70; the body ellipse
+          (65,71 rx32 ry21) at x=88 has its lower edge at y~85.6, so only
+          ~15px of socket. It holds at rest and opens up under gait
+          rotation.
+       The structural fix for all three is the same: replace the stacked
+       ellipses with ONE body path that includes neck and rump, so head,
+       tail and legs each sit in a deep socket instead of butt-jointing.
+
+     TO MAKE IT READ GOLDEN RETRIEVER (shape + colour, in impact order):
+       - TAIL: the thin stroke + cream ball reads as a lollipop. A golden's
+         tail is a broad feathered plume carried level with the back.
+         This is the single strongest breed cue.
+       - EAR: currently a short flap set high (root y=22). Golden ears are
+         longer, set at eye level, and hang to just BELOW the jawline so
+         they break the head silhouette.
+       - COAT: #F2A03D is the logo amber — too orange/saturated for a coat.
+         A cream-gold body (#DEB77C or lighter #E8C48A) with #C79A5C for
+         the far legs/ear reads golden; keep #F2A03D as an accent only.
+         The #8A7A66 muddy brown on the far legs and ear is the main thing
+         making it read "generic cartoon dog".
+       - MUZZLE: the cream ellipse (124,53) sits on the head like a patch.
+         Blend it and make it slightly longer and broader.
+       - HEAD SIZE: r23 in a 118-tall box is very big. A slightly smaller
+         head over a deeper chest reads adult retriever, not puppy.
+       - FEATHERING on the chest and the back of the legs — cheap to add,
+         and the second strongest cue after the tail.
+     ============================================================ -->
+
+<ellipse cx="74" cy="108" rx="46" ry="6" fill="#16324F" opacity=".10"/>
+
+<g class="d-bounce">
+
+  <!-- far hind leg -->
+  <g class="d-part d-legB2"><g class="d-gait d-gB2">
+    <rect x="46" y="78" width="11" height="26" rx="5.5" fill="#8A7A66"/>
+    <ellipse cx="51.5" cy="102" rx="8" ry="4.6" fill="#8A7A66"/>
+  </g></g>
+
+  <!-- far front leg -->
+  <g class="d-part d-legF2"><g class="d-gait d-gF2">
+    <rect x="89" y="72" width="11" height="31" rx="5.5" fill="#8A7A66"/>
+    <ellipse cx="94.5" cy="102" rx="8" ry="4.6" fill="#8A7A66"/>
+  </g></g>
+
+  <!-- tail  (root at 36,63 — see note 1 above) -->
+  <g class="d-part d-tail"><g class="d-tailw">
+    <path d="M36 63c-11-2-17-14-13-25" fill="none" stroke="#F2A03D" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="24" cy="37" r="6.5" fill="#FBF6EE"/>
+  </g></g>
+
+  <!-- body: rump ellipse + barrel ellipse + neck path + cream belly -->
+  <g class="d-part d-body">
+    <ellipse cx="45" cy="76" rx="17" ry="18" fill="#F2A03D"/>
+    <ellipse cx="65" cy="71" rx="32" ry="21" fill="#F2A03D"/>
+    <path d="M94 56c8-6 18-4 22 5 4 9 0 17-9 19-9 2-16-3-18-9z" fill="#F2A03D"/>
+    <ellipse cx="78" cy="81" rx="18" ry="10.5" fill="#FBF6EE"/>
+
+    <!-- head -->
+    <g class="d-part d-head"><g class="d-headb">
+      <circle cx="106" cy="42" r="23" fill="#F2A03D"/>
+      <ellipse cx="124" cy="53" rx="17" ry="13" fill="#FBF6EE"/>
+      <path class="d-tongue" d="M125 62c6-1 11 3 11 8 0 4-8 6-11 1z" fill="#E4572E"/>
+      <path d="M126 58c2.5 4 7.5 3.5 10 0" fill="none" stroke="#16324F" stroke-width="2.4" stroke-linecap="round"/>
+      <ellipse cx="134" cy="47" rx="6.4" ry="5.4" fill="#16324F"/>
+      <ellipse cx="100" cy="52" rx="6" ry="4" fill="#E4572E" opacity=".2"/>
+      <circle cx="112" cy="37" r="5.2" fill="#16324F"/>
+      <circle cx="114" cy="34.8" r="2" fill="#FBF6EE"/>
+      <path d="M106 26c3.5-2.5 8.5-1.5 11 1.5" fill="none" stroke="#8A7A66" stroke-width="2.6" stroke-linecap="round"/>
+
+      <!-- ear -->
+      <g class="d-part d-ear"><g class="d-gait d-gEar">
+        <path d="M99 22c-10 1-16 11-16 23 0 11 5 18 11 17 6-1 7-11 7-20z" fill="#8A7A66"/>
+      </g></g>
+    </g></g>
+
+    <!-- collar: currently also hiding the head/neck seam -->
+    <path d="M88 62c3 8 11 13 19 10" fill="none" stroke="#E4572E" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="104" cy="79" r="5.2" fill="#4C9A6B"/>
+  </g>
+
+  <!-- near hind leg -->
+  <g class="d-part d-legB1"><g class="d-gait d-gB1">
+    <rect x="38" y="76" width="12" height="28" rx="6" fill="#F2A03D"/>
+    <ellipse cx="44" cy="102" rx="8.6" ry="5" fill="#FBF6EE"/>
+  </g></g>
+
+  <!-- near front leg -->
+  <g class="d-part d-legF1"><g class="d-gait d-gF1">
+    <rect x="82" y="70" width="12" height="33" rx="6" fill="#F2A03D"/>
+    <ellipse cx="88" cy="102" rx="8.6" ry="5" fill="#FBF6EE"/>
+  </g></g>
+
+</g>
+</svg>
