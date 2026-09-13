@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Alef:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  body { margin:0; background:#FBF6EE; font-family:'Heebo',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:#E4572E; text-decoration:none; }
+  a:hover { color:#16324F; }
+  @keyframes popIn { 0%{opacity:0; transform:scale(.2) translateY(10px)} 60%{opacity:1; transform:scale(1.18) translateY(0)} 100%{opacity:1; transform:scale(1)} }
+  @keyframes riseIn { from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes drawRing { from{stroke-dashoffset:132} to{stroke-dashoffset:0} }
+  @keyframes dropTag { 0%{opacity:0; transform:translateY(-16px)} 70%{opacity:1; transform:translateY(3px)} 100%{transform:translateY(0)} }
+  @keyframes curtainUp { 0%{transform:translateY(0)} 100%{transform:translateY(-102%)} }
+  @keyframes settle { 0%{transform:scale(1)} 100%{transform:scale(.86)} }
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.01ms !important} }
+</style>
+</helmet>
+
+<div dir="rtl" style="min-height:100vh; background:#FBF6EE; color:#16324F;">
+  <div style="max-width:1080px; margin:0 auto; padding:clamp(28px,5vw,64px) 20px clamp(48px,7vw,96px);">
+
+    <div style="font-size:13px; font-weight:900; letter-spacing:.14em; color:#E4572E;">עינב מימון · זהות</div>
+    <h1 style="font-size:clamp(30px,5vw,52px); font-weight:900; letter-spacing:-.035em; margin:8px 0 12px;">לוגו ואנימציית כניסה</h1>
+    <p style="font-family:'Alef',serif; font-size:17px; line-height:1.7; color:#4A5C6F; max-width:38em; margin:0 0 34px; text-wrap:pretty;">בחרו כיוון למעלה כדי לראות איך הוא נכנס לדף, ולמטה איך הוא נראה בצבע, בשחור‑לבן וכאייקון קטן.</p>
+
+    <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px;">
+      <button onClick="{{ pick1 }}" style="{{ tab1 }}">01 · כף רגל</button>
+      <button onClick="{{ pick2 }}" style="{{ tab2 }}">02 · מונוגרמה</button>
+      <button onClick="{{ pick3 }}" style="{{ tab3 }}">03 · קולר ודסקית</button>
+      <button onClick="{{ replay }}" style="border:none; background:#E4572E; color:#FBF6EE; font-family:inherit; font-weight:900; font-size:14px; padding:11px 20px; border-radius:99px; cursor:pointer; margin-inline-start:auto;" style-hover="background:#16324F;">↻ נגן שוב</button>
+    </div>
+
+    <div style="position:relative; border-radius:28px; overflow:hidden; background:#fff; border:1px solid rgba(22,50,79,.08); aspect-ratio:16/9; min-height:300px;">
+      <div style="position:absolute; inset:0; padding:24px; display:flex; flex-direction:column; gap:14px; opacity:.5;">
+        <div style="height:16px; width:38%; background:rgba(22,50,79,.12); border-radius:8px;"></div>
+        <div style="height:46px; width:72%; background:rgba(22,50,79,.14); border-radius:12px;"></div>
+        <div style="height:14px; width:56%; background:rgba(22,50,79,.09); border-radius:8px;"></div>
+        <div style="margin-top:auto; display:flex; gap:12px;">
+          <div style="height:40px; width:150px; background:#16324F; border-radius:99px;"></div>
+          <div style="height:40px; width:150px; background:rgba(22,50,79,.12); border-radius:99px;"></div>
+        </div>
+      </div>
+
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute; inset:0; background:#16324F; display:flex; align-items:center; justify-content:center; animation:curtainUp .7s cubic-bezier(.7,0,.2,1) 1.75s both;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:16px; animation:settle .7s cubic-bezier(.7,0,.2,1) 1.75s both;">
+
+            <sc-if value="{{ isPaw }}" hint-placeholder-val="{{ true }}">
+              <svg viewBox="0 0 64 64" style="width:112px; height:112px;" aria-hidden="true">
+                <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z" fill="#F2A03D" style="transform-origin:32px 46px; animation:popIn .55s cubic-bezier(.3,1.6,.5,1) .12s both;"></path>
+                <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)" fill="#F2A03D" style="transform-origin:11.5px 29px; animation:popIn .5s cubic-bezier(.3,1.6,.5,1) .34s both;"></ellipse>
+                <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)" fill="#F2A03D" style="transform-origin:24.5px 17px; animation:popIn .5s cubic-bezier(.3,1.6,.5,1) .46s both;"></ellipse>
+                <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)" fill="#F2A03D" style="transform-origin:52.5px 29px; animation:popIn .5s cubic-bezier(.3,1.6,.5,1) .58s both;"></ellipse>
+                <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)" fill="#E4572E" style="transform-origin:39.5px 17px; animation:popIn .6s cubic-bezier(.3,1.7,.5,1) .82s both;"></ellipse>
+              </svg>
+            </sc-if>
+
+            <sc-if value="{{ isMono }}" hint-placeholder-val="{{ false }}">
+              <svg viewBox="0 0 64 64" style="width:104px; height:104px;" aria-hidden="true">
+                <rect x="2" y="2" width="60" height="60" rx="20" fill="#FBF6EE" style="transform-origin:32px 32px; animation:popIn .6s cubic-bezier(.3,1.6,.5,1) .15s both;"></rect>
+                <text x="32" y="43" text-anchor="middle" font-family="Heebo, sans-serif" font-size="26" font-weight="900" fill="#16324F" style="animation:fadeIn .5s ease-out .5s both;">ע״מ</text>
+                <circle cx="48" cy="16" r="5" fill="#E4572E" style="animation:dropTag .5s cubic-bezier(.3,1.5,.5,1) .8s both;"></circle>
+              </svg>
+            </sc-if>
+
+            <sc-if value="{{ isCollar }}" hint-placeholder-val="{{ false }}">
+              <svg viewBox="0 0 64 64" style="width:104px; height:104px;" aria-hidden="true">
+                <circle cx="32" cy="29" r="21" fill="none" stroke="#F2A03D" stroke-width="7" stroke-linecap="round" stroke-dasharray="132" transform="rotate(-90 32 29)" style="animation:drawRing .8s cubic-bezier(.6,0,.2,1) .15s both;"></circle>
+                <circle cx="32" cy="55" r="7.5" fill="#F2A03D" style="animation:dropTag .5s cubic-bezier(.3,1.5,.5,1) .9s both;"></circle>
+                <circle cx="32" cy="55" r="2.6" fill="#16324F" style="animation:fadeIn .3s ease-out 1.2s both;"></circle>
+              </svg>
+            </sc-if>
+
+            <div style="text-align:center; color:#FBF6EE;">
+              <div style="font-size:clamp(24px,3.4vw,34px); font-weight:900; letter-spacing:-.03em; animation:riseIn .6s cubic-bezier(.2,.8,.2,1) 1.05s both;">עינב מימון</div>
+              <div style="font-size:13px; font-weight:500; letter-spacing:.14em; color:rgba(251,246,238,.7); animation:riseIn .6s cubic-bezier(.2,.8,.2,1) 1.25s both;">כלבנות טיפולית ואילוף</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:18px; font-size:13px; color:#4A5C6F;">
+      <span style="background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:99px; padding:8px 14px;"><b>2.4 שניות</b> מרגע הכניסה</span>
+      <span style="background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:99px; padding:8px 14px;">רק בכניסה <b>הראשונה</b> — נשמר בדפדפן</span>
+      <span style="background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:99px; padding:8px 14px;">מדלג אוטומטית אם המשתמש ביקש פחות תנועה</span>
+      <span style="background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:99px; padding:8px 14px;">הדף כבר טעון מאחורי המסך</span>
+    </div>
+
+    <h2 style="font-size:clamp(24px,3.4vw,36px); font-weight:900; letter-spacing:-.03em; margin:clamp(44px,6vw,76px) 0 8px;">הכף השמנמנה</h2>
+    <p style="font-family:'Alef',serif; font-size:16px; line-height:1.7; color:#4A5C6F; max-width:36em; margin:0 0 26px;">רק הצורה השחורה מהתמונה: כרית רחבה ומעוגלת וארבע אצבעות שמנות ונוטות החוצה. ארבע גרסאות של אותה צורה.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr)); gap:16px;">
+
+      <div style="background:#16324F; border-radius:24px; padding:26px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:84px; height:84px;" aria-hidden="true">
+          <g fill="#F2A03D">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)" fill="#E4572E"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">1 · מלאה ✓</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">הכיוון שנבחר. עגולה ורכה בלי שום פינה חדה, עם אצבע אחת כתומה.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:26px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:84px; height:84px;" aria-hidden="true">
+          <g fill="none" stroke="#F2A03D" stroke-width="4.5">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="6" ry="7.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="6.4" ry="8.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="6.4" ry="8.4" transform="rotate(9 39.5 17)"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="6" ry="7.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">2 · בקו</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">אותה צורה בקו עבה. קלילה יותר, טובה על רקע תמונה.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:26px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:84px; height:84px;" aria-hidden="true">
+          <g fill="#F2A03D">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+          <circle cx="26" cy="43" r="3.2" fill="#16324F"></circle>
+          <circle cx="38" cy="43" r="3.2" fill="#16324F"></circle>
+          <path d="M27 51c1.5 2.6 3.2 3.9 5 3.9s3.5-1.3 5-3.9" fill="none" stroke="#16324F" stroke-width="3" stroke-linecap="round"></path>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">3 · מחייכת</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">הכרית היא גם פרצוף. הכי חמוד, והכי פונה לילדים.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:26px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:84px; height:84px;" aria-hidden="true">
+          <g fill="#F2A03D" transform="rotate(-10 32 38)">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11" cy="29" rx="6.4" ry="8" transform="rotate(-28 11 29)"></ellipse>
+            <ellipse cx="24" cy="16" rx="7.8" ry="9.8" transform="rotate(-9 24 16)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7" ry="9" transform="rotate(9 39.5 17)"></ellipse>
+            <ellipse cx="52.5" cy="30" rx="6" ry="7.4" transform="rotate(24 52.5 30)"></ellipse>
+          </g>
+          <circle cx="54" cy="12" r="3.4" fill="#E4572E"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">4 · בתנועה</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">נטויה קצת ואצבעות בגדלים שונים, עם נקודה כתומה. הכי משחקית.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px; background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:24px; padding:clamp(20px,3vw,28px); display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(20px,4vw,44px);">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <svg viewBox="0 0 64 64" style="width:52px; height:52px;" aria-hidden="true">
+          <g fill="#16324F">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+        </svg>
+        <div><div style="font-size:21px; font-weight:900; letter-spacing:-.02em;">עינב מימון</div><div style="font-size:11px; letter-spacing:.12em; color:#8A7A66;">כלבנות טיפולית ואילוף</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="width:62px; height:62px; border-radius:50%; background:#F2A03D; display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 64 64" style="width:36px; height:36px;" aria-hidden="true"><g fill="#16324F"><path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path><ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse><ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse><ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)"></ellipse><ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse></g></svg>
+        </div>
+        <div style="width:34px; height:34px; border-radius:50%; background:#F2A03D; display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 64 64" style="width:20px; height:20px;" aria-hidden="true"><g fill="#16324F"><path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path><ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse><ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse><ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)"></ellipse><ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse></g></svg>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(36px,5vw,64px); background:#16324F; color:#FBF6EE; border-radius:28px; padding:clamp(24px,4vw,42px); display:flex; flex-wrap:wrap; gap:clamp(24px,4vw,48px); align-items:center;">
+      <div style="flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:14px;">
+        <svg viewBox="0 0 64 64" style="width:clamp(120px,18vw,168px); height:clamp(120px,18vw,168px);" aria-hidden="true">
+          <g fill="#F2A03D">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)" fill="#E4572E"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+        </svg>
+        <div style="text-align:center;"><div style="font-size:22px; font-weight:900; letter-spacing:-.02em;">עינב מימון</div><div style="font-size:11px; letter-spacing:.12em; color:rgba(251,246,238,.7);">כלבנות טיפולית ואילוף</div></div>
+      </div>
+
+      <div style="flex:1 1 300px; min-width:0;">
+        <div style="font-size:12px; font-weight:900; letter-spacing:.14em; color:#F2A03D;">האצבע הכתומה</div>
+        <h2 style="font-size:clamp(22px,3vw,32px); font-weight:900; letter-spacing:-.03em; margin:8px 0 12px;">אחת מארבע היא לא הכלב</h2>
+        <p style="font-family:'Alef',serif; font-size:16px; line-height:1.75; color:rgba(251,246,238,.82); margin:0 0 18px; max-width:34em;">בכף יש ארבע אצבעות. שלוש מהן הן הכלב, והרביעית — זה מי שיושב מולו: הילד, ההורה, הדייר בבית האבות. זאת בדיוק העבודה של עינב: היא לא מביאה כלב שיעשה טריקים, היא מכניסה אדם לתוך המפגש עם הכלב. לכן האצבע הכתומה היא הצבע היחיד שבולט, והיא זאת שנכנסת אחרונה באנימציית הפתיחה — קודם מגיע הכלב, ואז מצטרף האדם.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <span style="background:rgba(251,246,238,.1); border-radius:99px; padding:8px 14px; font-size:13px; font-weight:700;">בשחור‑לבן: אותה אצבע נשארת מלאה והשאר בקו</span>
+          <span style="background:rgba(251,246,238,.1); border-radius:99px; padding:8px 14px; font-size:13px; font-weight:700;">באייקון קטן: אפשר לוותר עליה בלי לשבור את הסימן</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-size:clamp(24px,3.4vw,36px); font-weight:900; letter-spacing:-.03em; margin:clamp(44px,6vw,76px) 0 8px;">שש כפות רגל שונות</h2>
+    <p style="font-family:'Alef',serif; font-size:16px; line-height:1.7; color:#4A5C6F; max-width:36em; margin:0 0 26px;">לא אותה כף בטיפולים שונים — שש צורות שונות של כף רגל. סמנו מספר ואבנה סביבה.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); gap:16px;">
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:72px; height:72px;" aria-hidden="true">
+          <ellipse cx="32" cy="41" rx="15" ry="12.5" fill="#F2A03D"></ellipse>
+          <circle cx="14" cy="26" r="6.2" fill="#F2A03D"></circle>
+          <circle cx="25.5" cy="16.5" r="6.2" fill="#F2A03D"></circle>
+          <circle cx="38.5" cy="16.5" r="6.2" fill="#F2A03D"></circle>
+          <circle cx="50" cy="26" r="6.2" fill="#F2A03D"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:15px; font-weight:900;">1 · עגולה ורחבה</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">כלב גדול ורגוע. ידידותית ויציבה.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:72px; height:72px;" aria-hidden="true">
+          <ellipse cx="32" cy="44" rx="11" ry="13" fill="#F2A03D"></ellipse>
+          <ellipse cx="16" cy="27" rx="4.6" ry="7.4" transform="rotate(-22 16 27)" fill="#F2A03D"></ellipse>
+          <ellipse cx="26" cy="16" rx="4.6" ry="7.8" transform="rotate(-8 26 16)" fill="#F2A03D"></ellipse>
+          <ellipse cx="38" cy="16" rx="4.6" ry="7.8" transform="rotate(8 38 16)" fill="#F2A03D"></ellipse>
+          <ellipse cx="48" cy="27" rx="4.6" ry="7.4" transform="rotate(22 48 27)" fill="#F2A03D"></ellipse>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:15px; font-weight:900;">2 · צרה וארוכה</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">אלגנטית יותר, פחות "חיה מצוירת".</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:72px; height:72px;" aria-hidden="true">
+          <path d="M32 28c9 0 16 6 16 12.5S41 51 32 51s-16-4-16-10.5S23 28 32 28z" fill="#F2A03D"></path>
+          <path d="M26 51c1.5-4 3-6 6-6s4.5 2 6 6z" fill="#16324F"></path>
+          <circle cx="15" cy="25" r="5.6" fill="#F2A03D"></circle>
+          <circle cx="25.5" cy="15" r="5.6" fill="#F2A03D"></circle>
+          <circle cx="38.5" cy="15" r="5.6" fill="#F2A03D"></circle>
+          <circle cx="49" cy="25" r="5.6" fill="#F2A03D"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:15px; font-weight:900;">3 · כרית אמיתית</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">עם החריץ של הכרית. אנטומית ונכונה.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:72px; height:72px;" aria-hidden="true">
+          <rect x="18" y="30" width="28" height="22" rx="9" fill="#F2A03D"></rect>
+          <rect x="10" y="20" width="11" height="15" rx="5.5" transform="rotate(-18 15.5 27.5)" fill="#F2A03D"></rect>
+          <rect x="21" y="12" width="11" height="15" rx="5.5" fill="#F2A03D"></rect>
+          <rect x="33" y="12" width="11" height="15" rx="5.5" fill="#F2A03D"></rect>
+          <rect x="43" y="20" width="11" height="15" rx="5.5" transform="rotate(18 48.5 27.5)" fill="#F2A03D"></rect>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:15px; font-weight:900;">4 · גיאומטרית</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">בנויה ממלבנים מעוגלים. מודרנית ונקייה.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:72px; height:72px;" aria-hidden="true">
+          <g transform="rotate(-11 32 34)">
+            <ellipse cx="33" cy="42" rx="14" ry="11" fill="#F2A03D"></ellipse>
+            <circle cx="15" cy="29" r="5.2" fill="#F2A03D"></circle>
+            <circle cx="25" cy="18" r="7" fill="#F2A03D"></circle>
+            <circle cx="38" cy="17" r="5.8" fill="#F2A03D"></circle>
+            <circle cx="49" cy="27" r="4.4" fill="#F2A03D"></circle>
+          </g>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:15px; font-weight:900;">5 · לא סימטרית</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">אצבעות בגדלים שונים ונטייה קלה. חיה ומשחקית.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:72px; height:72px;" aria-hidden="true">
+          <ellipse cx="32" cy="42" rx="13" ry="11" fill="#F2A03D"></ellipse>
+          <circle cx="18" cy="24" r="6.5" fill="#F2A03D"></circle>
+          <circle cx="32" cy="17" r="6.5" fill="#F2A03D"></circle>
+          <circle cx="46" cy="24" r="6.5" fill="#F2A03D"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:15px; font-weight:900;">6 · שלוש אצבעות</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">מינימלית. נשארת קריאה גם באייקון קטן.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-size:clamp(24px,3.4vw,36px); font-weight:900; letter-spacing:-.03em; margin:clamp(44px,6vw,76px) 0 8px;">וריאציות על כף הרגל</h2>
+    <p style="font-family:'Alef',serif; font-size:16px; line-height:1.7; color:#4A5C6F; max-width:36em; margin:0 0 26px;">אותו כיוון חם, חמש דרכים לעשות אותו קצת פחות צפוי. סמנו אחת ואפתח אותה.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr)); gap:16px;">
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;" style-hover="transform:translateY(-5px);">
+        <svg viewBox="0 0 64 64" style="width:76px; height:76px;" aria-hidden="true">
+          <circle cx="32" cy="32" r="29" fill="none" stroke="#F2A03D" stroke-width="4"></circle>
+          <ellipse cx="32" cy="40" rx="12" ry="10" fill="#F2A03D"></ellipse>
+          <circle cx="18" cy="28" r="5" fill="#F2A03D"></circle>
+          <circle cx="26.5" cy="20.5" r="5" fill="#E4572E"></circle>
+          <circle cx="37.5" cy="20.5" r="5" fill="#F2A03D"></circle>
+          <circle cx="46" cy="28" r="5" fill="#F2A03D"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">א · חותמת</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">הכף בתוך טבעת. נראה כמו חותמת הסמכה, טוב למסמכים ולתעודות.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;" style-hover="transform:translateY(-5px);">
+        <svg viewBox="0 0 64 64" style="width:76px; height:76px;" aria-hidden="true">
+          <path d="M6 26a20 20 0 0 1 20-20h12a20 20 0 0 1 0 40H26l-12 12v-14A20 20 0 0 1 6 26z" fill="#F2A03D"></path>
+          <ellipse cx="32" cy="32" rx="9" ry="7.5" fill="#16324F"></ellipse>
+          <circle cx="21" cy="22.5" r="3.8" fill="#16324F"></circle>
+          <circle cx="28" cy="16.5" r="3.8" fill="#16324F"></circle>
+          <circle cx="36" cy="16.5" r="3.8" fill="#16324F"></circle>
+          <circle cx="43" cy="22.5" r="3.8" fill="#16324F"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">ב · בועת שיחה</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">מחבר ישירות למסר: הכלב הוא מה שפותח את השיחה. הכי מספר סיפור.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;" style-hover="transform:translateY(-5px);">
+        <svg viewBox="0 0 64 64" style="width:76px; height:76px;" aria-hidden="true">
+          <g transform="translate(2 40) rotate(-20) scale(.34)" fill="#F2A03D" opacity=".45"><ellipse cx="32" cy="41" rx="15" ry="12.5"></ellipse><circle cx="14" cy="26" r="6.2"></circle><circle cx="25.5" cy="16.5" r="6.2"></circle><circle cx="38.5" cy="16.5" r="6.2"></circle><circle cx="50" cy="26" r="6.2"></circle></g>
+          <g transform="translate(17 24) rotate(-10) scale(.44)" fill="#F2A03D" opacity=".75"><ellipse cx="32" cy="41" rx="15" ry="12.5"></ellipse><circle cx="14" cy="26" r="6.2"></circle><circle cx="25.5" cy="16.5" r="6.2"></circle><circle cx="38.5" cy="16.5" r="6.2"></circle><circle cx="50" cy="26" r="6.2"></circle></g>
+          <g transform="translate(31 4) scale(.56)" fill="#F2A03D"><ellipse cx="32" cy="41" rx="15" ry="12.5"></ellipse><circle cx="14" cy="26" r="6.2"></circle><circle cx="25.5" cy="16.5" r="6.2" fill="#E4572E"></circle><circle cx="38.5" cy="16.5" r="6.2"></circle><circle cx="50" cy="26" r="6.2"></circle></g>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">ג · שלושה עקבות</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">תנועה והתקדמות, ורמז לשלושת הכלבים. יפה באנימציה — נדבק עקבה אחרי עקבה.</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;" style-hover="transform:translateY(-5px);">
+        <svg viewBox="0 0 64 64" style="width:76px; height:76px;" aria-hidden="true">
+          <ellipse cx="32" cy="40" rx="13" ry="11" fill="none" stroke="#F2A03D" stroke-width="4"></ellipse>
+          <circle cx="16" cy="27" r="5.4" fill="none" stroke="#F2A03D" stroke-width="4"></circle>
+          <circle cx="26" cy="18" r="5.4" fill="#E4572E"></circle>
+          <circle cx="38" cy="18" r="5.4" fill="none" stroke="#F2A03D" stroke-width="4"></circle>
+          <circle cx="48" cy="27" r="5.4" fill="none" stroke="#F2A03D" stroke-width="4"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">ד · קו דק</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">אותה צורה בקו במקום במילוי. עדין ובוגר יותר, פחות "גן ילדים".</div>
+        </div>
+      </div>
+
+      <div style="background:#16324F; border-radius:24px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;" style-hover="transform:translateY(-5px);">
+        <svg viewBox="0 0 64 64" style="width:76px; height:76px;" aria-hidden="true">
+          <path d="M32 12c-9 0-16 6.4-16 15 0 9.5 8.6 16.4 16 22 7.4-5.6 16-12.5 16-22 0-8.6-7-15-16-15z" fill="#E4572E"></path>
+          <ellipse cx="32" cy="34" rx="8.5" ry="7" fill="#FBF6EE"></ellipse>
+          <circle cx="22.5" cy="26" r="3.6" fill="#FBF6EE"></circle>
+          <circle cx="28.5" cy="20.5" r="3.6" fill="#FBF6EE"></circle>
+          <circle cx="35.5" cy="20.5" r="3.6" fill="#FBF6EE"></circle>
+          <circle cx="41.5" cy="26" r="3.6" fill="#FBF6EE"></circle>
+        </svg>
+        <div>
+          <div style="color:#FBF6EE; font-size:16px; font-weight:900;">ה · לב</div>
+          <div style="font-family:'Alef',serif; font-size:13px; line-height:1.5; color:rgba(251,246,238,.7); margin-top:4px;">הכי רגשי מכולם. מתאים למפגשים עם ילדים וקשישים, פחות למכרזים ולרשויות.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-size:clamp(24px,3.4vw,36px); font-weight:900; letter-spacing:-.03em; margin:clamp(44px,6vw,76px) 0 8px;">שלושת הכיוונים</h2>
+    <p style="font-family:'Alef',serif; font-size:16px; line-height:1.7; color:#4A5C6F; max-width:36em; margin:0 0 26px;">כל כיוון בשלוש גרסאות: לוקאפ מלא, שחור‑לבן לחותמת ולמסמכים, ואייקון קטן לוואטסאפ ולאינסטגרם.</p>
+
+    <div style="display:flex; flex-direction:column; gap:18px;">
+
+      <div style="background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:26px; padding:clamp(20px,3vw,30px); display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)); gap:18px; align-items:center;">
+        <div>
+          <div style="font-size:12px; font-weight:900; letter-spacing:.14em; color:#E4572E;">01 · כף רגל</div>
+          <h3 style="font-size:22px; font-weight:900; margin:6px 0 8px;">חם ומיידי</h3>
+          <p style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:0;">ברור לכל אחד בשנייה. החיסרון: זה גם הסימן הנפוץ ביותר בתחום.</p>
+        </div>
+        <div style="background:#16324F; border-radius:20px; padding:26px; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center;">
+          <svg viewBox="0 0 64 64" style="width:62px; height:62px;" aria-hidden="true"><ellipse cx="32" cy="41" rx="15" ry="12.5" fill="#F2A03D"></ellipse><circle cx="14" cy="26" r="6.2" fill="#F2A03D"></circle><circle cx="25.5" cy="16.5" r="6.2" fill="#E4572E"></circle><circle cx="38.5" cy="16.5" r="6.2" fill="#F2A03D"></circle><circle cx="50" cy="26" r="6.2" fill="#F2A03D"></circle></svg>
+          <div style="color:#FBF6EE;"><div style="font-size:19px; font-weight:900; letter-spacing:-.02em;">עינב מימון</div><div style="font-size:11px; letter-spacing:.1em; color:rgba(251,246,238,.7);">כלבנות טיפולית ואילוף</div></div>
+        </div>
+        <div style="background:#FBF6EE; border-radius:20px; padding:26px; display:flex; align-items:center; justify-content:center; gap:12px;">
+          <svg viewBox="0 0 64 64" style="width:44px; height:44px;" aria-hidden="true"><ellipse cx="32" cy="41" rx="15" ry="12.5" fill="#16324F"></ellipse><circle cx="14" cy="26" r="6.2" fill="#16324F"></circle><circle cx="25.5" cy="16.5" r="6.2" fill="#16324F"></circle><circle cx="38.5" cy="16.5" r="6.2" fill="#16324F"></circle><circle cx="50" cy="26" r="6.2" fill="#16324F"></circle></svg>
+          <div style="font-size:20px; font-weight:900; letter-spacing:-.03em;">עינב מימון</div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:14px;">
+          <div style="width:64px; height:64px; border-radius:50%; background:#F2A03D; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 64 64" style="width:38px; height:38px;" aria-hidden="true"><ellipse cx="32" cy="41" rx="15" ry="12.5" fill="#16324F"></ellipse><circle cx="14" cy="26" r="6.2" fill="#16324F"></circle><circle cx="25.5" cy="16.5" r="6.2" fill="#16324F"></circle><circle cx="38.5" cy="16.5" r="6.2" fill="#16324F"></circle><circle cx="50" cy="26" r="6.2" fill="#16324F"></circle></svg></div>
+          <div style="width:34px; height:34px; border-radius:50%; background:#F2A03D; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 64 64" style="width:20px; height:20px;" aria-hidden="true"><ellipse cx="32" cy="41" rx="15" ry="12.5" fill="#16324F"></ellipse><circle cx="14" cy="26" r="6.2" fill="#16324F"></circle><circle cx="25.5" cy="16.5" r="6.2" fill="#16324F"></circle><circle cx="38.5" cy="16.5" r="6.2" fill="#16324F"></circle><circle cx="50" cy="26" r="6.2" fill="#16324F"></circle></svg></div>
+        </div>
+      </div>
+
+      <div style="background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:26px; padding:clamp(20px,3vw,30px); display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)); gap:18px; align-items:center;">
+        <div>
+          <div style="font-size:12px; font-weight:900; letter-spacing:.14em; color:#E4572E;">02 · מונוגרמה</div>
+          <h3 style="font-size:22px; font-weight:900; margin:6px 0 8px;">נקי ומקצועי</h3>
+          <p style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:0;">השם לפני הכלבים. עובד טוב מול גנים, בתי ספר ורשויות, ופחות "חמוד".</p>
+        </div>
+        <div style="background:#16324F; border-radius:20px; padding:26px; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center;">
+          <svg viewBox="0 0 64 64" style="width:62px; height:62px;" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="20" fill="#FBF6EE"></rect><text x="32" y="43" text-anchor="middle" font-family="Heebo, sans-serif" font-size="26" font-weight="900" fill="#16324F">ע״מ</text><circle cx="48" cy="16" r="5" fill="#E4572E"></circle></svg>
+          <div style="color:#FBF6EE;"><div style="font-size:19px; font-weight:900; letter-spacing:-.02em;">עינב מימון</div><div style="font-size:11px; letter-spacing:.1em; color:rgba(251,246,238,.7);">כלבנות טיפולית ואילוף</div></div>
+        </div>
+        <div style="background:#FBF6EE; border-radius:20px; padding:26px; display:flex; align-items:center; justify-content:center; gap:12px;">
+          <svg viewBox="0 0 64 64" style="width:44px; height:44px;" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="20" fill="#16324F"></rect><text x="32" y="43" text-anchor="middle" font-family="Heebo, sans-serif" font-size="26" font-weight="900" fill="#FBF6EE">ע״מ</text></svg>
+          <div style="font-size:20px; font-weight:900; letter-spacing:-.03em;">עינב מימון</div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:14px;">
+          <svg viewBox="0 0 64 64" style="width:64px; height:64px;" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="20" fill="#16324F"></rect><text x="32" y="43" text-anchor="middle" font-family="Heebo, sans-serif" font-size="26" font-weight="900" fill="#FBF6EE">ע״מ</text><circle cx="48" cy="16" r="5" fill="#F2A03D"></circle></svg>
+          <svg viewBox="0 0 64 64" style="width:34px; height:34px;" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="20" fill="#16324F"></rect><text x="32" y="44" text-anchor="middle" font-family="Heebo, sans-serif" font-size="28" font-weight="900" fill="#FBF6EE">ע״מ</text></svg>
+        </div>
+      </div>
+
+      <div style="background:#fff; border:1px solid rgba(22,50,79,.08); border-radius:26px; padding:clamp(20px,3vw,30px); display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)); gap:18px; align-items:center;">
+        <div>
+          <div style="font-size:12px; font-weight:900; letter-spacing:.14em; color:#E4572E;">03 · קולר ודסקית</div>
+          <h3 style="font-size:22px; font-weight:900; margin:6px 0 8px;">הכי בולט</h3>
+          <p style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:0;">מרמז על כלב בלי לצייר אותו, והדסקית נותנת נקודה שאפשר לשחק איתה באנימציה.</p>
+        </div>
+        <div style="background:#16324F; border-radius:20px; padding:26px; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center;">
+          <svg viewBox="0 0 64 64" style="width:62px; height:62px;" aria-hidden="true"><circle cx="32" cy="29" r="21" fill="none" stroke="#F2A03D" stroke-width="7"></circle><circle cx="32" cy="55" r="7.5" fill="#F2A03D"></circle><circle cx="32" cy="55" r="2.6" fill="#16324F"></circle></svg>
+          <div style="color:#FBF6EE;"><div style="font-size:19px; font-weight:900; letter-spacing:-.02em;">עינב מימון</div><div style="font-size:11px; letter-spacing:.1em; color:rgba(251,246,238,.7);">כלבנות טיפולית ואילוף</div></div>
+        </div>
+        <div style="background:#FBF6EE; border-radius:20px; padding:26px; display:flex; align-items:center; justify-content:center; gap:12px;">
+          <svg viewBox="0 0 64 64" style="width:44px; height:44px;" aria-hidden="true"><circle cx="32" cy="29" r="21" fill="none" stroke="#16324F" stroke-width="7"></circle><circle cx="32" cy="55" r="7.5" fill="#16324F"></circle><circle cx="32" cy="55" r="2.6" fill="#FBF6EE"></circle></svg>
+          <div style="font-size:20px; font-weight:900; letter-spacing:-.03em;">עינב מימון</div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:14px;">
+          <div style="width:64px; height:64px; border-radius:50%; background:#F2A03D; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 64 64" style="width:38px; height:38px;" aria-hidden="true"><circle cx="32" cy="29" r="21" fill="none" stroke="#16324F" stroke-width="7"></circle><circle cx="32" cy="55" r="7.5" fill="#16324F"></circle></svg></div>
+          <div style="width:34px; height:34px; border-radius:50%; background:#F2A03D; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 64 64" style="width:20px; height:20px;" aria-hidden="true"><circle cx="32" cy="29" r="21" fill="none" stroke="#16324F" stroke-width="8"></circle><circle cx="32" cy="55" r="7.5" fill="#16324F"></circle></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(36px,5vw,64px); background:#16324F; color:#FBF6EE; border-radius:26px; padding:clamp(24px,3.5vw,36px);">
+      <h2 style="font-size:clamp(20px,2.6vw,28px); font-weight:900; letter-spacing:-.02em; margin:0 0 10px;">מה צריך כדי לסגור</h2>
+      <p style="font-family:'Alef',serif; font-size:16px; line-height:1.7; color:rgba(251,246,238,.8); max-width:38em; margin:0;">בחרו מספר כיוון. אחרי זה אפתח אותו סופית: התאמות פרופורציה, גרסת שורה אחת לכותרת האתר, אייקון לרשתות, וחיבור אנימציית הכניסה לדף הנחיתה עצמו.</p>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { dir: 1, playing: true };
+
+  componentDidMount() { this._t = setTimeout(() => this.setState({ playing: false }), 2600); }
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._t2); }
+
+  play(dir) {
+    clearTimeout(this._t); clearTimeout(this._t2);
+    this.setState({ dir, playing: false });
+    this._t2 = setTimeout(() => {
+      this.setState({ playing: true });
+      this._t = setTimeout(() => this.setState({ playing: false }), 2600);
+    }, 60);
+  }
+
+  tabStyle(active) {
+    return 'border:1.5px solid ' + (active ? '#16324F' : 'rgba(22,50,79,.18)') +
+      '; background:' + (active ? '#16324F' : 'transparent') +
+      '; color:' + (active ? '#FBF6EE' : '#16324F') +
+      "; font-family:'Heebo',sans-serif; font-weight:700; font-size:14px; padding:11px 18px; border-radius:99px; cursor:pointer; white-space:nowrap;";
+  }
+
+  renderVals() {
+    const d = this.state.dir;
+    return {
+      playing: this.state.playing,
+      isPaw: d === 1, isMono: d === 2, isCollar: d === 3,
+      tab1: this.tabStyle(d === 1), tab2: this.tabStyle(d === 2), tab3: this.tabStyle(d === 3),
+      pick1: () => this.play(1), pick2: () => this.play(2), pick3: () => this.play(3),
+      replay: () => this.play(this.state.dir)
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Alef:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  body { margin:0; background:#FBF6EE; font-family:'Heebo',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:#E4572E; text-decoration:none; }
+  a:hover { color:#16324F; }
+  @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  @keyframes floatY2 { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-22px) rotate(4deg)} }
+  @keyframes bounceBall { 0%,100%{transform:translateY(0) scaleX(1)} 45%{transform:translateY(-46px) scaleX(.96)} 55%{transform:translateY(-40px)} 98%{transform:translateY(0) scaleX(1.08)} }
+  @keyframes riseIn { from{opacity:0; transform:translateY(28px)} to{opacity:1; transform:translateY(0)} }
+  @keyframes wag { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(8deg)} }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  @keyframes pulseRing { 0%{transform:scale(.9); opacity:.55} 70%{transform:scale(1.5); opacity:0} 100%{opacity:0} }
+  @keyframes popIn { 0%{opacity:0; transform:scale(.2) translateY(10px)} 60%{opacity:1; transform:scale(1.18) translateY(0)} 100%{opacity:1; transform:scale(1)} }
+  @keyframes curtainUp { 0%{transform:translateY(0)} 100%{transform:translateY(-102%)} }
+  @keyframes settle { 0%{transform:scale(1)} 100%{transform:scale(.86)} }
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important} }
+</style>
+</helmet>
+
+<div dir="rtl" style="min-height:100vh; background:#FBF6EE; color:#16324F; overflow-x:hidden;">
+
+  <sc-if value="{{ splash }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:200; background:#16324F; display:flex; align-items:center; justify-content:center; animation:curtainUp .7s cubic-bezier(.7,0,.2,1) 1.9s both;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px; animation:settle .7s cubic-bezier(.7,0,.2,1) 1.9s both;">
+        <svg viewBox="0 0 64 64" style="width:clamp(96px,16vw,132px); height:clamp(96px,16vw,132px);" aria-hidden="true">
+          <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z" fill="#F2A03D" style="transform-origin:32px 46px; animation:popIn .55s cubic-bezier(.3,1.6,.5,1) .12s both;"></path>
+          <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)" fill="#F2A03D" style="transform-origin:11.5px 29px; animation:popIn .5s cubic-bezier(.3,1.6,.5,1) .34s both;"></ellipse>
+          <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)" fill="#F2A03D" style="transform-origin:24.5px 17px; animation:popIn .5s cubic-bezier(.3,1.6,.5,1) .46s both;"></ellipse>
+          <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)" fill="#F2A03D" style="transform-origin:52.5px 29px; animation:popIn .5s cubic-bezier(.3,1.6,.5,1) .58s both;"></ellipse>
+          <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)" fill="#E4572E" style="transform-origin:39.5px 17px; animation:popIn .6s cubic-bezier(.3,1.7,.5,1) .84s both;"></ellipse>
+        </svg>
+        <div style="text-align:center; color:#FBF6EE;">
+          <div style="font-size:clamp(24px,4vw,34px); font-weight:900; letter-spacing:-.03em; animation:riseIn .6s cubic-bezier(.2,.8,.2,1) 1.1s both;">עינב מימון</div>
+          <div style="font-size:12px; font-weight:500; letter-spacing:.14em; color:rgba(251,246,238,.7); animation:riseIn .6s cubic-bezier(.2,.8,.2,1) 1.3s both;">כלבנות טיפולית ואילוף</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <header style="position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); background:rgba(251,246,238,.85); border-bottom:1px solid rgba(22,50,79,.08);">
+    <div style="max-width:1140px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:16px;">
+      <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+        <svg viewBox="0 0 64 64" style="width:38px; height:38px; flex:none;" aria-hidden="true">
+          <g fill="#16324F">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)" fill="#E4572E"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+        </svg>
+        <div style="line-height:1.05; min-width:0;">
+          <div data-t="עינב מימון" data-en="Einav Maimon" style="font-weight:900; font-size:17px; letter-spacing:-.02em;">עינב מימון</div>
+          <div data-t="כלבנות טיפולית ואילוף" data-en="Therapy Dogs &amp; Training" style="font-size:11px; font-weight:500; color:#7C6A55; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">כלבנות טיפולית ואילוף</div>
+        </div>
+      </div>
+      <button onClick="{{ toggleLang }}" style="border:1.5px solid rgba(22,50,79,.18); background:transparent; color:#16324F; font-family:inherit; font-weight:700; font-size:13px; padding:7px 12px; border-radius:99px; cursor:pointer;" style-hover="border-color:#16324F; background:#16324F; color:#FBF6EE;">{{ langLabel }}</button>
+      <a href="#contact" data-t="קביעת שיחת היכרות" data-en="Book an intro call" style="background:#E4572E; color:#FBF6EE; font-weight:700; font-size:14px; padding:10px 18px; border-radius:99px; white-space:nowrap;" style-hover="background:#16324F; color:#FBF6EE;">קביעת שיחת היכרות</a>
+    </div>
+  </header>
+
+  <section style="position:relative; max-width:1140px; margin:0 auto; padding:clamp(32px,6vw,72px) 20px clamp(40px,7vw,88px); display:flex; flex-wrap:wrap; gap:clamp(28px,5vw,56px); align-items:center;">
+    <div style="position:absolute; top:8%; left:-70px; width:220px; height:220px; border-radius:50%; background:rgba(242,160,61,.22); filter:blur(6px); animation:floatY 9s ease-in-out infinite;"></div>
+    <div style="position:absolute; bottom:4%; right:-60px; width:160px; height:160px; border-radius:50%; background:rgba(228,87,46,.16); animation:floatY 7s ease-in-out infinite .8s;"></div>
+
+    <div style="flex:1 1 380px; min-width:0; position:relative; z-index:2;">
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(22,50,79,.06); padding:7px 14px; border-radius:99px; font-size:13px; font-weight:700; animation:riseIn .7s both;">
+        <span style="width:8px; height:8px; border-radius:50%; background:#4C9A6B; display:inline-block;"></span>
+        <span data-t="מוסמכת כלבנות טיפולית · בהסמכה ל‑CBT" data-en="Certified therapy‑dog handler · CBT in progress">מוסמכת כלבנות טיפולית · בהסמכה ל‑CBT</span>
+      </div>
+      <h1 data-t="כלב אחד&#10;פותח שיחה שלמה" data-en="One dog&#10;opens a whole conversation" style="font-size:clamp(38px,6.4vw,68px); line-height:1.02; letter-spacing:-.035em; font-weight:900; margin:18px 0 0; white-space:pre-line; animation:riseIn .7s .08s both;">כלב אחד
+פותח שיחה שלמה</h1>
+      <p data-t="מפגשים קבוצתיים ואישיים לילדים, למשפחות ולמבוגרים — ואילוף כלבים לבית. עם כלבים רגועים שאוהבים אנשים, ועם המון סבלנות." data-en="Group and one‑on‑one sessions for kids, families and older adults — plus everyday dog training at home. With calm dogs who love people, and a lot of patience." style="font-family:'Alef',serif; font-size:clamp(16px,2vw,20px); line-height:1.65; color:#4A5C6F; max-width:30em; margin:18px 0 0; text-wrap:pretty; animation:riseIn .7s .16s both;">מפגשים קבוצתיים ואישיים לילדים, למשפחות ולמבוגרים — ואילוף כלבים לבית. עם כלבים רגועים שאוהבים אנשים, ועם המון סבלנות.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; animation:riseIn .7s .24s both;">
+        <a href="#contact" data-t="בואו נדבר 15 דקות" data-en="Let's talk for 15 minutes" style="background:#16324F; color:#FBF6EE; font-weight:700; font-size:16px; padding:15px 26px; border-radius:99px;" style-hover="background:#E4572E;">בואו נדבר 15 דקות</a>
+        <a href="#services" data-t="מה אפשר לעשות יחד" data-en="What we can do together" style="border:1.5px solid rgba(22,50,79,.2); color:#16324F; font-weight:700; font-size:16px; padding:15px 26px; border-radius:99px;" style-hover="background:rgba(22,50,79,.06);">מה אפשר לעשות יחד</a>
+      </div>
+    </div>
+
+    <div style="flex:1 1 360px; min-width:0; position:relative; z-index:2; display:flex; gap:14px; align-items:flex-start;">
+      <div style="flex:1.35; display:flex; flex-direction:column; gap:14px;">
+        <img src="uploads/photos-1789298673081-6u2m.png" alt="" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:22px; box-shadow:0 22px 44px rgba(22,50,79,.16); animation:floatY 8s ease-in-out infinite;" />
+        <img src="uploads/photos-1789298673063-8ygv.png" alt="" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:22px; box-shadow:0 18px 36px rgba(22,50,79,.14); animation:floatY 8s ease-in-out infinite 1.6s;" />
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:14px; padding-top:34px;">
+        <img src="uploads/photos-1789298673084-j1na.png" alt="" style="width:100%; aspect-ratio:3/4; object-fit:cover; border-radius:22px; box-shadow:0 18px 36px rgba(22,50,79,.14); animation:floatY 9s ease-in-out infinite .7s;" />
+        <div style="background:#F2A03D; border-radius:22px; padding:16px 18px; line-height:1.15; animation:floatY 9s ease-in-out infinite 2.2s;">
+          <div style="font-size:34px; font-weight:900; letter-spacing:-.03em;">3</div>
+          <div data-t="כלבים מקסימים להכיר" data-en="lovely dogs to meet" style="font-size:13px; font-weight:700;">כלבים מקסימים להכיר</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="background:#16324F; color:#FBF6EE; overflow:hidden; padding:14px 0;">
+    <div style="display:flex; width:max-content; animation:marquee 26s linear infinite;">
+      <div style="display:flex; gap:34px; padding-left:34px; font-weight:700; font-size:15px; white-space:nowrap;">
+        <span data-t="גני ילדים ובתי ספר" data-en="Kindergartens &amp; schools">גני ילדים ובתי ספר</span><span style="color:#F2A03D;">·</span>
+        <span data-t="מסגרות לצרכים מיוחדים" data-en="Special‑needs programs">מסגרות לצרכים מיוחדים</span><span style="color:#F2A03D;">·</span>
+        <span data-t="בתי אבות ודיור מוגן" data-en="Senior residences">בתי אבות ודיור מוגן</span><span style="color:#F2A03D;">·</span>
+        <span data-t="משפחות" data-en="Families">משפחות</span><span style="color:#F2A03D;">·</span>
+        <span data-t="אילוף כלבים פרטי" data-en="Private dog training">אילוף כלבים פרטי</span><span style="color:#F2A03D;">·</span>
+      </div>
+      <div style="display:flex; gap:34px; padding-left:34px; font-weight:700; font-size:15px; white-space:nowrap;" aria-hidden="true">
+        <span data-t="גני ילדים ובתי ספר" data-en="Kindergartens &amp; schools">גני ילדים ובתי ספר</span><span style="color:#F2A03D;">·</span>
+        <span data-t="מסגרות לצרכים מיוחדים" data-en="Special‑needs programs">מסגרות לצרכים מיוחדים</span><span style="color:#F2A03D;">·</span>
+        <span data-t="בתי אבות ודיור מוגן" data-en="Senior residences">בתי אבות ודיור מוגן</span><span style="color:#F2A03D;">·</span>
+        <span data-t="משפחות" data-en="Families">משפחות</span><span style="color:#F2A03D;">·</span>
+        <span data-t="אילוף כלבים פרטי" data-en="Private dog training">אילוף כלבים פרטי</span><span style="color:#F2A03D;">·</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="services" style="max-width:1140px; margin:0 auto; padding:clamp(48px,7vw,96px) 20px;">
+    <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);">
+      <div data-t="השירותים" data-en="Services" style="font-size:13px; font-weight:900; letter-spacing:.14em; color:#E4572E;">השירותים</div>
+      <h2 data-t="ארבע דרכים לעבוד יחד" data-en="Four ways to work together" style="font-size:clamp(28px,4vw,44px); font-weight:900; letter-spacing:-.03em; margin:8px 0 0;">ארבע דרכים לעבוד יחד</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:18px; margin-top:34px;">
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .05s, transform .7s cubic-bezier(.2,.7,.2,1) .05s; background:#fff; border-radius:24px; padding:26px; border:1px solid rgba(22,50,79,.07);" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px rgba(22,50,79,.12);">
+        <div style="width:46px; height:46px; border-radius:14px; background:#F2A03D; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900;">1</div>
+        <h3 data-t="קבוצות ילדים" data-en="Children's groups" style="font-size:20px; font-weight:900; margin:16px 0 6px;">קבוצות ילדים</h3>
+        <p data-t="מפגש שבועי קבוע בגן, בבית ספר או במסגרת. ביטחון, תקשורת ויכולת לווסת — דרך משימות עם הכלב." data-en="A weekly session at a kindergarten, school or program. Confidence, communication and self‑regulation through tasks with the dog." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:0;">מפגש שבועי קבוע בגן, בבית ספר או במסגרת. ביטחון, תקשורת ויכולת לווסת — דרך משימות עם הכלב.</p>
+      </div>
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s, transform .7s cubic-bezier(.2,.7,.2,1) .12s; background:#fff; border-radius:24px; padding:26px; border:1px solid rgba(22,50,79,.07);" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px rgba(22,50,79,.12);">
+        <div style="width:46px; height:46px; border-radius:14px; background:#E4572E; color:#FBF6EE; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900;">2</div>
+        <h3 data-t="הורים וילדים" data-en="Parents &amp; children" style="font-size:20px; font-weight:900; margin:16px 0 6px;">הורים וילדים</h3>
+        <p data-t="מפגש משותף שבו הכלב הוא הסיבה לדבר. מתאים למעברים, לחרדות ולתקופות שבהן קשה למצוא שפה משותפת." data-en="A shared session where the dog is the reason to talk. Good for transitions, anxiety, and stretches when a common language is hard to find." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:0;">מפגש משותף שבו הכלב הוא הסיבה לדבר. מתאים למעברים, לחרדות ולתקופות שבהן קשה למצוא שפה משותפת.</p>
+      </div>
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .19s, transform .7s cubic-bezier(.2,.7,.2,1) .19s; background:#fff; border-radius:24px; padding:26px; border:1px solid rgba(22,50,79,.07);" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px rgba(22,50,79,.12);">
+        <div style="width:46px; height:46px; border-radius:14px; background:#4C9A6B; color:#FBF6EE; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900;">3</div>
+        <h3 data-t="קשישים ודיור מוגן" data-en="Older adults" style="font-size:20px; font-weight:900; margin:16px 0 6px;">קשישים ודיור מוגן</h3>
+        <p data-t="ביקורים קבועים בקבוצה קטנה. מגע, זיכרונות ותנועה — בקצב של הדיירים ולא בקצב שלנו." data-en="Regular small‑group visits. Touch, memory and movement — at the residents' pace, not ours." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:0;">ביקורים קבועים בקבוצה קטנה. מגע, זיכרונות ותנועה — בקצב של הדיירים ולא בקצב שלנו.</p>
+      </div>
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .26s, transform .7s cubic-bezier(.2,.7,.2,1) .26s; background:#16324F; color:#FBF6EE; border-radius:24px; padding:26px;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px rgba(22,50,79,.24);">
+        <div style="width:46px; height:46px; border-radius:14px; background:#F2A03D; color:#16324F; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900;">4</div>
+        <h3 data-t="אילוף כלבים לבית" data-en="Dog training at home" style="font-size:20px; font-weight:900; margin:16px 0 6px;">אילוף כלבים לבית</h3>
+        <p data-t="גור חדש, משיכה ברצועה, חרדת נטישה או כלב שלא מסתדר עם הילדים. עובדים עם כל המשפחה, לא רק עם הכלב." data-en="A new puppy, leash pulling, separation anxiety, or a dog that struggles with the kids. We work with the whole family, not just the dog." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:rgba(251,246,238,.82); margin:0;">גור חדש, משיכה ברצועה, חרדת נטישה או כלב שלא מסתדר עם הילדים. עובדים עם כל המשפחה, לא רק עם הכלב.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#fff; border-block:1px solid rgba(22,50,79,.07);">
+    <div style="max-width:1140px; margin:0 auto; padding:clamp(48px,7vw,96px) 20px; display:flex; flex-wrap:wrap; gap:clamp(28px,5vw,64px); align-items:center;">
+      <div style="flex:1 1 320px; min-width:0; position:relative;">
+        <img src="uploads/photos-1789298673065-ghtg.png" alt="" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:28px; box-shadow:0 24px 50px rgba(22,50,79,.16);" />
+        <div style="position:absolute; bottom:-22px; inset-inline-start:-14px; background:#F2A03D; border-radius:20px; padding:14px 18px; box-shadow:0 12px 28px rgba(22,50,79,.18); animation:floatY2 6s ease-in-out infinite;">
+          <div data-t="בהסמכה" data-en="In progress" style="font-size:12px; font-weight:700;">בהסמכה</div>
+          <div style="font-size:20px; font-weight:900; letter-spacing:-.02em;">CBT</div>
+        </div>
+      </div>
+      <div style="flex:1 1 340px; min-width:0;">
+        <div data-t="על עינב" data-en="About Einav" style="font-size:13px; font-weight:900; letter-spacing:.14em; color:#E4572E;">על עינב</div>
+        <h2 data-t="קודם מכירים. אחר כך עובדים." data-en="First we get to know each other. Then we work." style="font-size:clamp(26px,3.6vw,40px); font-weight:900; letter-spacing:-.03em; margin:8px 0 16px; text-wrap:balance;">קודם מכירים. אחר כך עובדים.</h2>
+        <p data-t="עינב מימון היא מאלפת כלבים וכלבנית טיפולית מוסמכת, עם ניסיון בעבודה עם ילדים, משפחות ואוכלוסיות בעלות צרכים מיוחדים. היא עובדת בעיקר בקבוצות, עם הכלבים שלה, וכרגע משלימה תעודת CBT." data-en="Einav Maimon is a certified dog trainer and therapy‑dog handler with experience working with children, families and people with special needs. She works mostly in groups, with her own dogs, and is currently completing a CBT certificate." style="font-family:'Alef',serif; font-size:17px; line-height:1.7; color:#4A5C6F; margin:0 0 18px;">עינב מימון היא מאלפת כלבים וכלבנית טיפולית מוסמכת, עם ניסיון בעבודה עם ילדים, משפחות ואוכלוסיות בעלות צרכים מיוחדים. היא עובדת בעיקר בקבוצות, עם הכלבים שלה, וכרגע משלימה תעודת CBT.</p>
+        <div data-t="הסמכות" data-en="Certifications" style="font-size:12px; font-weight:900; letter-spacing:.14em; color:#8A7A66; margin-bottom:12px;">הסמכות</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; background:#FBF6EE; border:1px solid rgba(22,50,79,.08); border-radius:16px; padding:14px 16px;">
+            <div style="width:34px; height:34px; border-radius:10px; background:#16324F; color:#FBF6EE; display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;">✓</div>
+            <div style="flex:1 1 160px; min-width:0;">
+              <div data-t="תעודת אילוף כלבים" data-en="Dog training certificate" style="font-size:15px; font-weight:900;">תעודת אילוף כלבים</div>
+              <div data-t="[ שם בית הספר / המכללה ] · [ שנה ]" data-en="[ School / college name ] · [ year ]" style="font-size:13px; color:#8A7A66;">[ שם בית הספר / המכללה ] · [ שנה ]</div>
+            </div>
+            <a href="#" data-t="צפייה בתעודה" data-en="View certificate" style="font-size:13px; font-weight:700; border:1.5px solid rgba(22,50,79,.16); padding:7px 13px; border-radius:99px; color:#16324F; white-space:nowrap;" style-hover="background:#16324F; color:#FBF6EE; border-color:#16324F;">צפייה בתעודה</a>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; background:#FBF6EE; border:1px solid rgba(22,50,79,.08); border-radius:16px; padding:14px 16px;">
+            <div style="width:34px; height:34px; border-radius:10px; background:#16324F; color:#FBF6EE; display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;">✓</div>
+            <div style="flex:1 1 160px; min-width:0;">
+              <div data-t="תעודת כלבנות טיפולית" data-en="Therapy‑dog handling certificate" style="font-size:15px; font-weight:900;">תעודת כלבנות טיפולית</div>
+              <div data-t="[ שם המוסד המסמיך ] · [ שנה ]" data-en="[ Certifying institution ] · [ year ]" style="font-size:13px; color:#8A7A66;">[ שם המוסד המסמיך ] · [ שנה ]</div>
+            </div>
+            <a href="#" data-t="צפייה בתעודה" data-en="View certificate" style="font-size:13px; font-weight:700; border:1.5px solid rgba(22,50,79,.16); padding:7px 13px; border-radius:99px; color:#16324F; white-space:nowrap;" style-hover="background:#16324F; color:#FBF6EE; border-color:#16324F;">צפייה בתעודה</a>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; background:#FBF6EE; border:1px dashed rgba(22,50,79,.2); border-radius:16px; padding:14px 16px;">
+            <div style="width:34px; height:34px; border-radius:10px; background:#F2A03D; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; flex:none;">◷</div>
+            <div style="flex:1 1 160px; min-width:0;">
+              <div data-t="תעודת CBT — בתהליך" data-en="CBT certificate — in progress" style="font-size:15px; font-weight:900;">תעודת CBT — בתהליך</div>
+              <div data-t="[ שם המוסד המסמיך ] · צפי סיום [ תאריך ]" data-en="[ Certifying institution ] · expected [ date ]" style="font-size:13px; color:#8A7A66;">[ שם המוסד המסמיך ] · צפי סיום [ תאריך ]</div>
+            </div>
+          </div>
+        </div>
+        <div data-t="הקישורים יובילו לקובץ סרוק של התעודה, כדי שמוסדות והורים יוכלו לוודא שההסמכה אמיתית." data-en="Each link opens a scan of the certificate, so institutions and parents can verify the credentials are real." style="font-size:12px; line-height:1.55; color:#8A7A66; margin-top:12px;">הקישורים יובילו לקובץ סרוק של התעודה, כדי שמוסדות והורים יוכלו לוודא שההסמכה אמיתית.</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1140px; margin:0 auto; padding:clamp(48px,7vw,96px) 20px;">
+    <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);">
+      <div data-t="איך נראה מפגש" data-en="What a session looks like" style="font-size:13px; font-weight:900; letter-spacing:.14em; color:#E4572E;">איך נראה מפגש</div>
+      <h2 data-t="45 דקות, שלושה חלקים" data-en="45 minutes, three parts" style="font-size:clamp(28px,4vw,44px); font-weight:900; letter-spacing:-.03em; margin:8px 0 0;">45 דקות, שלושה חלקים</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:20px; margin-top:34px;">
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .05s, transform .7s cubic-bezier(.2,.7,.2,1) .05s;">
+        <img src="uploads/photos-1789298673051-xg5b.png" alt="" style="width:100%; aspect-ratio:5/4; object-fit:cover; border-radius:22px;" />
+        <div style="display:flex; align-items:baseline; gap:10px; margin-top:14px;"><span style="font-size:13px; font-weight:900; color:#E4572E;">01</span><h3 data-t="פגישה" data-en="Meeting" style="font-size:19px; font-weight:900; margin:0;">פגישה</h3></div>
+        <p data-t="הכלב נכנס לחדר, כולם יושבים במעגל. אף אחד לא חייב לגעת." data-en="The dog walks in, everyone sits in a circle. Nobody has to touch." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:6px 0 0;">הכלב נכנס לחדר, כולם יושבים במעגל. אף אחד לא חייב לגעת.</p>
+      </div>
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s, transform .7s cubic-bezier(.2,.7,.2,1) .12s;">
+        <img src="uploads/photos-1789298668728-f0af.png" alt="" style="width:100%; aspect-ratio:5/4; object-fit:cover; border-radius:22px;" />
+        <div style="display:flex; align-items:baseline; gap:10px; margin-top:14px;"><span style="font-size:13px; font-weight:900; color:#E4572E;">02</span><h3 data-t="משימה" data-en="Task" style="font-size:19px; font-weight:900; margin:0;">משימה</h3></div>
+        <p data-t="כל ילד מקבל תפקיד — להוביל, להאכיל, ללמד פקודה. ההצלחה מיידית ונראית." data-en="Each child gets a role — to lead, to feed, to teach a cue. Success is immediate and visible." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:6px 0 0;">כל ילד מקבל תפקיד — להוביל, להאכיל, ללמד פקודה. ההצלחה מיידית ונראית.</p>
+      </div>
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .19s, transform .7s cubic-bezier(.2,.7,.2,1) .19s;">
+        <img src="uploads/photos-1789298668767-wr45.png" alt="" style="width:100%; aspect-ratio:5/4; object-fit:cover; border-radius:22px;" />
+        <div style="display:flex; align-items:baseline; gap:10px; margin-top:14px;"><span style="font-size:13px; font-weight:900; color:#E4572E;">03</span><h3 data-t="פרידה" data-en="Goodbye" style="font-size:19px; font-weight:900; margin:0;">פרידה</h3></div>
+        <p data-t="מסכמים מה קרה, נפרדים מהכלב, ומסמנים למה נחזור בפעם הבאה." data-en="We review what happened, say goodbye to the dog, and mark what we'll return to next time." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; color:#4A5C6F; margin:6px 0 0;">מסכמים מה קרה, נפרדים מהכלב, ומסמנים למה נחזור בפעם הבאה.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#16324F; color:#FBF6EE;">
+    <div style="max-width:1140px; margin:0 auto; padding:clamp(48px,7vw,88px) 20px;">
+      <div data-t="הצוות הארבע‑רגלי" data-en="The four‑legged team" style="font-size:13px; font-weight:900; letter-spacing:.14em; color:#F2A03D;">הצוות הארבע‑רגלי</div>
+      <h2 data-t="שלושה כלבים, לא אותו תפקיד" data-en="Three dogs, not the same job" style="font-size:clamp(28px,4vw,44px); font-weight:900; letter-spacing:-.03em; margin:8px 0 14px;">שלושה כלבים, לא אותו תפקיד</h2>
+      <p data-t="חלקם עברו אילוף לעבודה טיפולית, וחלקם פשוט כלבים רגועים ונוחים שמתאימים למשימות עם ילדים. עינב מתאימה את הכלב לקבוצה, ולא להפך." data-en="Some are trained for therapy work, and some are simply calm, easygoing dogs that suit tasks with children. Einav matches the dog to the group, not the other way around." style="font-family:'Alef',serif; font-size:17px; line-height:1.7; color:rgba(251,246,238,.78); max-width:34em; margin:0 0 30px;">חלקם עברו אילוף לעבודה טיפולית, וחלקם פשוט כלבים רגועים ונוחים שמתאימים למשימות עם ילדים. עינב מתאימה את הכלב לקבוצה, ולא להפך.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:16px;">
+        <div style="background:rgba(251,246,238,.07); border-radius:22px; padding:16px;">
+          <img src="uploads/photos-1789298668746-8dkc.png" alt="" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:16px;" />
+          <div style="font-size:18px; font-weight:900; margin-top:12px;">[ שם ]</div>
+          <div data-t="גזע · במה הוא טוב" data-en="Breed · what he's good at" style="font-size:13px; color:rgba(251,246,238,.65);">גזע · במה הוא טוב</div>
+        </div>
+        <div style="background:rgba(251,246,238,.07); border-radius:22px; padding:16px;">
+          <img src="uploads/photos-1789298673084-j1na.png" alt="" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:16px;" />
+          <div style="font-size:18px; font-weight:900; margin-top:12px;">[ שם ]</div>
+          <div data-t="גזע · במה הוא טוב" data-en="Breed · what he's good at" style="font-size:13px; color:rgba(251,246,238,.65);">גזע · במה הוא טוב</div>
+        </div>
+        <div style="background:rgba(251,246,238,.07); border-radius:22px; padding:16px;">
+          <img src="uploads/photos-1789298668767-wr45.png" alt="" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:16px;" />
+          <div style="font-size:18px; font-weight:900; margin-top:12px;">[ שם ]</div>
+          <div data-t="גזע · במה הוא טוב" data-en="Breed · what he's good at" style="font-size:13px; color:rgba(251,246,238,.65);">גזע · במה הוא טוב</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1140px; margin:0 auto; padding:clamp(48px,7vw,88px) 20px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:18px;">
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); background:#fff; border-radius:24px; padding:28px; border:1px solid rgba(22,50,79,.07);">
+        <div style="font-size:44px; line-height:.7; color:#F2A03D; font-weight:900;">”</div>
+        <p data-t="[ מקום להמלצה — משפט או שניים מהורה, מגננת או ממנהלת מסגרת. ]" data-en="[ Testimonial placeholder — a sentence or two from a parent, teacher or program director. ]" style="font-family:'Alef',serif; font-size:17px; line-height:1.65; color:#4A5C6F; margin:12px 0 16px;">[ מקום להמלצה — משפט או שניים מהורה, מגננת או ממנהלת מסגרת. ]</p>
+        <div style="font-size:14px; font-weight:700;">[ שם ] <span style="color:#8A7A66; font-weight:400;">· [ תפקיד ]</span></div>
+      </div>
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .1s, transform .7s cubic-bezier(.2,.7,.2,1) .1s; background:#fff; border-radius:24px; padding:28px; border:1px solid rgba(22,50,79,.07);">
+        <div style="font-size:44px; line-height:.7; color:#F2A03D; font-weight:900;">”</div>
+        <p data-t="[ מקום להמלצה — אפשר גם משפט קצר של ילד. ]" data-en="[ Testimonial placeholder — a child's short sentence works too. ]" style="font-family:'Alef',serif; font-size:17px; line-height:1.65; color:#4A5C6F; margin:12px 0 16px;">[ מקום להמלצה — אפשר גם משפט קצר של ילד. ]</p>
+        <div style="font-size:14px; font-weight:700;">[ שם ] <span style="color:#8A7A66; font-weight:400;">· [ תפקיד ]</span></div>
+      </div>
+      <div data-reveal="1" style="opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.2,.7,.2,1) .2s, transform .7s cubic-bezier(.2,.7,.2,1) .2s; background:#F2A03D; border-radius:24px; padding:28px; display:flex; flex-direction:column; justify-content:space-between; gap:20px;">
+        <div>
+          <div data-t="מחירים ואזור פעילות" data-en="Pricing &amp; service area" style="font-size:13px; font-weight:900; letter-spacing:.14em;">מחירים ואזור פעילות</div>
+          <h3 data-t="עוד לא נקבע" data-en="Not set yet" style="font-size:26px; font-weight:900; letter-spacing:-.02em; margin:8px 0 10px;">עוד לא נקבע</h3>
+          <p data-t="בגרסה הסופית כאן ייכנסו טווחי מחיר למפגש בודד ולסדרה, ורשימת היישובים שעינב מגיעה אליהם." data-en="The final version will show price ranges for a single session and a series, plus the towns Einav travels to." style="font-family:'Alef',serif; font-size:15px; line-height:1.6; margin:0;">בגרסה הסופית כאן ייכנסו טווחי מחיר למפגש בודד ולסדרה, ורשימת היישובים שעינב מגיעה אליהם.</p>
+        </div>
+        <div data-t="◍ מקום שמור" data-en="◍ Placeholder" style="font-size:13px; font-weight:700; opacity:.7;">◍ מקום שמור</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" style="background:#fff; border-top:1px solid rgba(22,50,79,.07);">
+    <div style="max-width:1140px; margin:0 auto; padding:clamp(48px,7vw,96px) 20px; display:flex; flex-wrap:wrap; gap:clamp(28px,5vw,56px); align-items:center;">
+      <div style="flex:1 1 320px; min-width:0;">
+        <div data-t="יצירת קשר" data-en="Get in touch" style="font-size:13px; font-weight:900; letter-spacing:.14em; color:#E4572E;">יצירת קשר</div>
+        <h2 data-t="משאירים טלפון, עינב חוזרת אליכם" data-en="Leave a number, Einav will call you back" style="font-size:clamp(26px,3.8vw,42px); font-weight:900; letter-spacing:-.03em; margin:8px 0 14px; text-wrap:balance;">משאירים טלפון, עינב חוזרת אליכם</h2>
+        <p data-t="שיחת היכרות קצרה, בלי התחייבות: מה קורה אצלכם, מה אפשר לעשות עם כלב, ואיך נראית סדרת מפגשים." data-en="A short intro call, no commitment: what's going on with you, what a dog can do about it, and what a series of sessions looks like." style="font-family:'Alef',serif; font-size:17px; line-height:1.7; color:#4A5C6F; margin:0 0 22px; max-width:26em;">שיחת היכרות קצרה, בלי התחייבות: מה קורה אצלכם, מה אפשר לעשות עם כלב, ואיך נראית סדרת מפגשים.</p>
+        <div style="display:flex; align-items:center; gap:14px; background:#FBF6EE; border-radius:18px; padding:16px 18px; max-width:420px;">
+          <div style="position:relative; width:44px; height:44px; flex:none;">
+            <div style="position:absolute; inset:0; border-radius:50%; background:#4C9A6B; animation:pulseRing 2.4s ease-out infinite;"></div>
+            <div style="position:absolute; inset:0; border-radius:50%; background:#16324F; color:#FBF6EE; display:flex; align-items:center; justify-content:center; font-size:20px;">☎</div>
+          </div>
+          <div>
+            <div data-t="הטלפון של עינב" data-en="Einav's phone" style="font-size:12px; font-weight:700; color:#8A7A66;">הטלפון של עינב</div>
+            <div style="font-size:22px; font-weight:900; letter-spacing:.02em; direction:ltr;">05X‑XXX‑XXXX</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1 1 330px; min-width:0; background:#FBF6EE; border-radius:28px; padding:clamp(22px,3vw,34px); border:1px solid rgba(22,50,79,.07);">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <label style="display:flex; flex-direction:column; gap:6px; font-size:13px; font-weight:700;"><span data-t="שם" data-en="Name">שם</span><input type="text" placeholder="ישראלה ישראלי" style="font-family:inherit; font-size:16px; padding:13px 14px; border-radius:14px; border:1.5px solid rgba(22,50,79,.14); background:#fff; color:#16324F;" style-focus="outline:none; border-color:#E4572E;" /></label>
+          <label style="display:flex; flex-direction:column; gap:6px; font-size:13px; font-weight:700;"><span data-t="טלפון" data-en="Phone">טלפון</span><input type="tel" placeholder="050-0000000" style="font-family:inherit; font-size:16px; padding:13px 14px; border-radius:14px; border:1.5px solid rgba(22,50,79,.14); background:#fff; color:#16324F;" style-focus="outline:none; border-color:#E4572E;" /></label>
+          <label style="display:flex; flex-direction:column; gap:6px; font-size:13px; font-weight:700;"><span data-t="במה מדובר?" data-en="What's it about?">במה מדובר?</span><select style="font-family:inherit; font-size:16px; padding:13px 14px; border-radius:14px; border:1.5px solid rgba(22,50,79,.14); background:#fff; color:#16324F;"><option>קבוצת ילדים</option><option>הורים וילדים</option><option>מסגרת לצרכים מיוחדים</option><option>בית אבות / דיור מוגן</option><option>אילוף כלב פרטי</option></select></label>
+          <button onClick="{{ submit }}" style="margin-top:4px; background:#E4572E; color:#FBF6EE; font-family:inherit; font-weight:900; font-size:16px; padding:15px; border:none; border-radius:99px; cursor:pointer;" style-hover="background:#16324F;">{{ submitLabel }}</button>
+          <div data-t="בקונספט הזה הטופס עדיין לא שולח — נחבר אותו לוואטסאפ, למייל או ליומן כשנחליט." data-en="In this concept the form doesn't send yet — we'll connect it to WhatsApp, email or a calendar once we decide." style="font-size:12px; line-height:1.5; color:#8A7A66;">בקונספט הזה הטופס עדיין לא שולח — נחבר אותו לוואטסאפ, למייל או ליומן כשנחליט.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1140px; margin:0 auto; padding:clamp(40px,6vw,80px) 20px;">
+    <div data-t="הלוגו" data-en="The logo" style="font-size:13px; font-weight:900; letter-spacing:.14em; color:#E4572E;">הלוגו</div>
+    <h2 data-t="הכף, וארבע האצבעות שלה" data-en="The paw, and its four toes" style="font-size:clamp(26px,3.6vw,40px); font-weight:900; letter-spacing:-.03em; margin:8px 0 8px;">הכף, וארבע האצבעות שלה</h2>
+    <p data-t="בכף יש ארבע אצבעות. שלוש מהן הן הכלב, והרביעית היא מי שיושב מולו — הילד, ההורה, הדייר. לכן היא היחידה שצבועה אחרת, ולכן היא נכנסת אחרונה באנימציית הפתיחה: קודם מגיע הכלב, ואז מצטרף האדם." data-en="A paw has four toes. Three are the dog; the fourth is whoever sits across from him — the child, the parent, the resident. That's why it is the only one coloured differently, and why it lands last in the opening animation: first the dog arrives, then the person joins." style="font-family:'Alef',serif; font-size:16px; line-height:1.75; color:#4A5C6F; max-width:34em; margin:0 0 28px;">בכף יש ארבע אצבעות. שלוש מהן הן הכלב, והרביעית היא מי שיושב מולו — הילד, ההורה, הדייר. לכן היא היחידה שצבועה אחרת, ולכן היא נכנסת אחרונה באנימציית הפתיחה: קודם מגיע הכלב, ואז מצטרף האדם.</p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:18px;">
+      <div style="background:#16324F; border-radius:24px; padding:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:78px; height:78px;" aria-hidden="true">
+          <g fill="#F2A03D">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)" fill="#E4572E"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+        </svg>
+        <div style="color:#FBF6EE;">
+          <div style="font-size:22px; font-weight:900; letter-spacing:-.02em;">עינב מימון</div>
+          <div data-t="כלבנות טיפולית ואילוף" data-en="Therapy Dogs &amp; Training" style="font-size:12px; font-weight:500; color:rgba(251,246,238,.7); letter-spacing:.08em;">כלבנות טיפולית ואילוף</div>
+        </div>
+        <div data-t="הגרסה הראשית" data-en="Primary version" style="font-size:12px; font-weight:700; color:#F2A03D; letter-spacing:.1em;">הגרסה הראשית</div>
+      </div>
+
+      <div style="background:#fff; border:1px solid rgba(22,50,79,.07); border-radius:24px; padding:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center;">
+        <svg viewBox="0 0 64 64" style="width:60px; height:60px;" aria-hidden="true">
+          <g fill="#16324F">
+            <path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path>
+            <ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse>
+            <ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse>
+            <ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)"></ellipse>
+            <ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse>
+          </g>
+        </svg>
+        <div style="font-size:22px; font-weight:900; letter-spacing:-.03em;">עינב מימון</div>
+        <div data-t="שחור‑לבן, לתעודות ולמסמכים" data-en="Mono, for certificates and documents" style="font-size:12px; font-weight:700; color:#8A7A66; letter-spacing:.06em;">שחור‑לבן, לתעודות ולמסמכים</div>
+      </div>
+
+      <div style="background:#F2A03D; border-radius:24px; padding:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div style="width:66px; height:66px; border-radius:50%; background:#16324F; display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 64 64" style="width:38px; height:38px;" aria-hidden="true"><g fill="#F2A03D"><path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path><ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse><ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse><ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)" fill="#E4572E"></ellipse><ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse></g></svg>
+          </div>
+          <div style="width:38px; height:38px; border-radius:50%; background:#16324F; display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 64 64" style="width:22px; height:22px;" aria-hidden="true"><g fill="#F2A03D"><path d="M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z"></path><ellipse cx="11.5" cy="29" rx="7" ry="8.6" transform="rotate(-24 11.5 29)"></ellipse><ellipse cx="24.5" cy="17" rx="7.4" ry="9.4" transform="rotate(-9 24.5 17)"></ellipse><ellipse cx="39.5" cy="17" rx="7.4" ry="9.4" transform="rotate(9 39.5 17)"></ellipse><ellipse cx="52.5" cy="29" rx="7" ry="8.6" transform="rotate(24 52.5 29)"></ellipse></g></svg>
+          </div>
+        </div>
+        <div data-t="אייקון לוואטסאפ ולאינסטגרם" data-en="Icon for WhatsApp and Instagram" style="font-size:12px; font-weight:700; letter-spacing:.06em; color:#16324F;">אייקון לוואטסאפ ולאינסטגרם</div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background:#16324F; color:rgba(251,246,238,.7);">
+    <div style="max-width:1140px; margin:0 auto; padding:34px 20px; display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between; font-size:13px;">
+      <div><span style="color:#FBF6EE; font-weight:900;">עינב מימון</span> <span data-t="· כלבנות טיפולית ואילוף" data-en="· Therapy Dogs &amp; Training">· כלבנות טיפולית ואילוף</span></div>
+      <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px;">
+        <span data-t="קונספט לדף נחיתה · התמונות והטקסטים זמניים" data-en="Landing page concept · photos and copy are placeholders">קונספט לדף נחיתה · התמונות והטקסטים זמניים</span>
+        <button onClick="{{ replaySplash }}" style="border:1px solid rgba(251,246,238,.28); background:transparent; color:#FBF6EE; font-family:inherit; font-size:12px; font-weight:700; padding:7px 14px; border-radius:99px; cursor:pointer; white-space:nowrap;" style-hover="background:#FBF6EE; color:#16324F;">↻ נגן שוב את אנימציית הכניסה</button>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { en: false, sent: false, splash: false };
+
+  startSplash() {
+    let seen = false;
+    try { seen = localStorage.getItem('einav_intro_v1') === '1'; } catch (e) {}
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (seen || reduce) return;
+    try { localStorage.setItem('einav_intro_v1', '1'); } catch (e) {}
+    this.setState({ splash: true });
+    this._ts = setTimeout(() => this.setState({ splash: false }), 2700);
+  }
+
+  componentDidMount() {
+    this.startSplash();
+    const root = this.rootEl();
+    if (!root) return;
+    const items = root.querySelectorAll('[data-reveal]');
+    const show = (el) => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      items.forEach(el => io.observe(el));
+      this._io = io;
+      this._t = setTimeout(() => items.forEach(show), 4000);
+    } else items.forEach(show);
+  }
+
+  componentWillUnmount() { if (this._io) this._io.disconnect(); clearTimeout(this._t); clearTimeout(this._ts); }
+
+  rootEl() {
+    return document.querySelector('[dir]') && document.body;
+  }
+
+  applyLang(en) {
+    const nodes = document.querySelectorAll('[data-en]');
+    nodes.forEach(n => {
+      if (!n.dataset.t) n.dataset.t = n.textContent;
+      n.textContent = en ? n.dataset.en : n.dataset.t;
+    });
+    const wrap = document.querySelector('[dir]');
+    if (wrap) wrap.setAttribute('dir', en ? 'ltr' : 'rtl');
+  }
+
+  toggleLang = () => {
+    const en = !this.state.en;
+    this.setState({ en }, () => this.applyLang(en));
+  };
+
+  replaySplash = () => {
+    clearTimeout(this._ts);
+    window.scrollTo(0, 0);
+    this.setState({ splash: false });
+    setTimeout(() => {
+      this.setState({ splash: true });
+      this._ts = setTimeout(() => this.setState({ splash: false }), 2700);
+    }, 60);
+  };
+
+  submit = (e) => { e.preventDefault(); this.setState({ sent: true }); };
+
+  renderVals() {
+    const en = this.state.en;
+    return {
+      splash: this.state.splash,
+      replaySplash: this.replaySplash,
+      toggleLang: this.toggleLang,
+      submit: this.submit,
+      langLabel: en ? 'עברית' : 'EN',
+      submitLabel: this.state.sent
+        ? (en ? 'Thanks — this is a concept' : 'תודה — זה עדיין קונספט')
+        : (en ? 'Send my number' : 'שלחו לי את המספר')
+    };
+  }
+}
+</script>
+</body>
+</html>
