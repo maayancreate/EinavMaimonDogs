@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הכלב — צורה וצבע · עינב מימון</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Alef:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   סיבוב צורה + צבע. אין כאן שום אנימציה.
+   NO @keyframes, NO transition, NO transform-driven motion, NO JS.
+   The single interaction is a pure-CSS background toggle (:has on a
+   checkbox). Because nothing animates, no prefers-reduced-motion
+   guard is needed — there is nothing to disable.
+
+   CONSTRUCTION RULE for every dog on this page (this is the structural
+   fix named in dog-original.svg):
+     - The body is ONE path that carries muzzle, skull, neck, back,
+       croup AND tail. No stacked ellipses, no butt-joints.
+     - The four legs are separate paths whose tops are buried 10-22
+       units inside that body path (measured per variant below).
+     - Every interior marking (collar, tag, chest lightening, nose,
+       mouth) is clipped to the body path, so no detail can escape the
+       silhouette.
+     - The ears and the feathering are the ONLY shapes allowed to break
+       the outline — deliberately, because that is what makes a
+       retriever read as a retriever.
+   All variants share one frame: viewBox 0 0 200 150, ground line
+   y=140, dog faces LEFT (right-to-left = "forward" in an RTL page).
+   ===================================================================== */
+:root{
+  --navy:#16324F; --cream:#FBF6EE; --coral:#E4572E; --amber:#F2A03D;
+  --green:#4C9A6B; --slate:#4A5C6F; --brown:#8A7A66;
+  --page:#F1E9DC; --ink:var(--navy); --panel:#FFFFFF; --line:rgba(22,50,79,.15);
+}
+body:has(#bgtog:checked){
+  --page:#0E2439; --ink:var(--cream); --panel:#193A5A; --line:rgba(251,246,238,.18);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:"Heebo","Segoe UI","Noto Sans Hebrew",system-ui,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1260px;margin:0 auto;padding:0 20px 90px}
+
+header.hd{padding:34px 0 6px}
+header.hd h1{margin:0 0 4px;font-size:31px;letter-spacing:-.03em;font-weight:900}
+header.hd .sub{color:var(--brown);font-size:13.5px;font-weight:700;direction:ltr;text-align:right}
+body:has(#bgtog:checked) header.hd .sub{color:#C8B69C}
+header.hd p{margin:14px 0 0;max-width:880px;font-size:14.5px;line-height:1.75;opacity:.88;
+  font-family:"Alef",system-ui,Arial,sans-serif}
+
+.nomo{margin-top:14px;display:inline-block;padding:7px 14px;border-radius:99px;
+  background:rgba(228,87,46,.14);color:var(--coral);font-size:12.5px;font-weight:900}
+body:has(#bgtog:checked) .nomo{background:rgba(228,87,46,.26);color:#FF8A62}
+
+.tog{display:inline-flex;align-items:center;gap:9px;margin:16px 0 0 10px;padding:9px 15px;
+  border:1px solid var(--line);border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;
+  background:var(--panel);color:var(--ink)}
+.tog input{accent-color:var(--coral);width:15px;height:15px;cursor:pointer}
+
+.base{margin-top:20px;border:1px solid var(--line);border-radius:16px;background:var(--panel);
+  padding:16px 18px;max-width:960px}
+.base h4{margin:0 0 8px;font-size:15px;font-weight:900;letter-spacing:-.02em}
+.base ul{margin:0;padding-inline-start:20px;font-size:13.2px;line-height:1.8;
+  font-family:"Alef",system-ui,Arial,sans-serif}
+.base code{font-family:ui-monospace,Consolas,monospace;font-size:11.8px;direction:ltr;display:inline-block}
+
+h3.sec{margin:44px 0 4px;font-size:21px;font-weight:900;letter-spacing:-.03em}
+h3.sec .en{font-size:12.5px;font-weight:700;color:var(--brown);direction:ltr;display:inline-block;
+  margin-inline-start:8px;vertical-align:2px;letter-spacing:0}
+body:has(#bgtog:checked) h3.sec .en{color:#C8B69C}
+h3.sec + p{margin:0 0 14px;font-size:13.6px;opacity:.85;max-width:900px;line-height:1.7;
+  font-family:"Alef",system-ui,Arial,sans-serif}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+@media (max-width:1020px){.grid,.grid.three{grid-template-columns:1fr}}
+
+.card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+.cap{padding:12px 15px 11px;border-bottom:1px solid var(--line)}
+.cap h2{margin:0;font-size:16px;letter-spacing:-.025em;font-weight:900}
+.cap .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+  border-radius:50%;background:var(--coral);color:#fff;font-size:12.5px;font-weight:900;
+  margin-inline-end:8px;vertical-align:-5px;direction:ltr}
+.cap .num.t{background:var(--navy)}
+body:has(#bgtog:checked) .cap .num.t{background:var(--amber);color:var(--navy)}
+.cap .en{font-weight:700;font-size:12px;color:var(--brown);direction:ltr;display:inline-block}
+body:has(#bgtog:checked) .cap .en{color:#C8B69C}
+.cap p{margin:5px 0 0;font-size:12.4px;opacity:.85;line-height:1.55;
+  font-family:"Alef",system-ui,Arial,sans-serif}
+.cap p.m{margin-top:6px;font-size:11.4px;font-weight:700;opacity:.9;direction:rtl;
+  font-family:"Heebo",system-ui,Arial,sans-serif}
+.cap p.m code{font-family:ui-monospace,Consolas,monospace;font-size:11px;direction:ltr;display:inline-block}
+.cap .warn{color:var(--coral);font-weight:900}
+
+.strip{display:flex;align-items:flex-end;gap:18px;padding:14px 16px 11px;--gsh:rgba(22,50,79,.12)}
+.strip.cream{background:var(--cream);color:var(--navy)}
+.strip.navy{background:var(--navy);color:var(--cream);--gsh:rgba(0,0,0,.30)}
+.slot{display:flex;flex-direction:column;align-items:center;gap:4px}
+.slot .lbl{font-size:9.5px;font-weight:700;letter-spacing:.03em;opacity:.42;direction:ltr}
+.slot.real .lbl{opacity:1;color:var(--coral);font-weight:900}
+.strip.navy .slot.real .lbl{color:var(--amber)}
+svg.s200{width:200px;height:150px;display:block}
+svg.s88{width:88px;height:66px;display:block}
+svg.s48{width:48px;height:36px;display:block}
+
+/* ---- the dog's own palette variables ---------------------------------
+   Every path inside a #shN group paints with these and nothing else, so
+   one geometry can be recoloured without touching a single coordinate. */
+svg.dog{--coat:#D69A4A;--coat2:#B37D38;--coat3:#E8B96B;
+        --acc:#E4572E;--tag:#4C9A6B;--eye:#16324F;--sh:var(--gsh)}
+
+/* SECTION B — the five colour treatments, applied to ONE fixed shape. */
+.tOutline{--coat:#F7EDDC;--coat2:#E7D4B2;--coat3:#FFFBF2;--f:url(#contour)}
+.tWheat  {--coat:#DEB77C;--coat2:#C79A5C;--coat3:#EFD8AC}
+.tWhite  {--coat:#FFFFFF;--coat2:#F0E6D4;--coat3:#FFFFFF;--f:url(#softshadow)}
+.tGold   {--coat:#D69A4A;--coat2:#B37D38;--coat3:#E8B96B}
+.tGoldO  {--coat:#D69A4A;--coat2:#B37D38;--coat3:#E8B96B;--f:url(#contour)}
+.tAmber  {--coat:#F2A03D;--coat2:#8A7A66;--coat3:#FBF6EE}
+
+/* pure-silhouette mode: everything collapses to one flat colour */
+.sil{--coat:var(--silc);--coat2:var(--silc);--coat3:var(--silc);
+     --acc:var(--silc);--tag:var(--silc);--eye:var(--silc);--sh:transparent}
+.strip.cream .sil{--silc:#16324F}
+.strip.navy  .sil{--silc:#FBF6EE}
+
+.silrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:22px;padding:16px 18px 12px}
+.silrow .slot .lbl{opacity:.7;font-size:10px;direction:rtl}
+
+table.cx{border-collapse:collapse;width:100%;max-width:960px;margin-top:12px;font-size:12.8px}
+table.cx th,table.cx td{border:1px solid var(--line);padding:7px 10px;text-align:right}
+table.cx th{font-weight:900;font-size:12px;background:rgba(22,50,79,.05)}
+body:has(#bgtog:checked) table.cx th{background:rgba(251,246,238,.07)}
+table.cx td.n{direction:ltr;text-align:center;font-family:ui-monospace,Consolas,monospace}
+table.cx .sw{display:inline-block;width:15px;height:15px;border-radius:4px;vertical-align:-3px;
+  margin-inline-end:6px;border:1px solid var(--line)}
+.ok{color:#2F6244;font-weight:900}
+.mid{color:#8A5A10;font-weight:900}
+.bad{color:var(--coral);font-weight:900}
+body:has(#bgtog:checked) .ok{color:#7FD0A3}
+body:has(#bgtog:checked) .mid{color:var(--amber)}
+
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin-top:12px}
+.notes div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--panel);
+  font-size:12.8px;line-height:1.65;font-family:"Alef",system-ui,Arial,sans-serif}
+.notes b{display:block;font-size:13.4px;margin-bottom:4px;font-family:"Heebo",system-ui,Arial,sans-serif;font-weight:900}
+.pick{margin-top:14px;border:2px solid var(--coral);border-radius:16px;background:var(--panel);
+  padding:16px 18px;max-width:960px}
+.pick h4{margin:0 0 8px;font-size:16px;font-weight:900;color:var(--coral);letter-spacing:-.02em}
+.pick p{margin:0 0 8px;font-size:13.4px;line-height:1.75;font-family:"Alef",system-ui,Arial,sans-serif}
+.pick p:last-child{margin-bottom:0}
+.ask{margin-top:30px;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:16px 20px;max-width:960px}
+.ask h4{margin:0 0 8px;font-size:16px;font-weight:900;letter-spacing:-.02em}
+.ask ol{margin:0;padding-inline-start:20px;font-size:13.4px;line-height:1.85;font-family:"Alef",system-ui,Arial,sans-serif}
+.foot{margin-top:26px;font-size:12.8px;opacity:.82;line-height:1.8;max-width:960px;
+  font-family:"Alef",system-ui,Arial,sans-serif}
+.foot code{font-family:ui-monospace,Consolas,monospace;font-size:11.8px;direction:ltr;display:inline-block}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     ALL GEOMETRY LIVES ONCE IN <defs>. Every tile is a <use>.
+     ===================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+
+  <!-- navy contour: dilate the UNION alpha of the group, flood navy,
+       lay it under the artwork. radius 3.2 in a 200-unit viewBox renders
+       at 3.20px @200 / 1.41px @88 / 0.77px @48. -->
+  <filter id="contour" x="-14%" y="-14%" width="128%" height="128%">
+    <feMorphology in="SourceAlpha" operator="dilate" radius="3.2" result="d"/>
+    <feFlood flood-color="#16324F"/>
+    <feComposite in2="d" operator="in" result="o"/>
+    <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="softshadow" x="-18%" y="-18%" width="136%" height="136%">
+    <feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#16324F" flood-opacity=".34"/>
+  </filter>
+
+  <!-- the muzzle is NOT a patch: it is a gradient that dies out at the
+       stop, so there is no hard edge sitting on the head. -->
+  <linearGradient id="muz" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0"   stop-color="#FFFFFF" stop-opacity=".62"/>
+    <stop offset=".55" stop-color="#FFFFFF" stop-opacity=".26"/>
+    <stop offset="1"   stop-color="#FFFFFF" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="muzV" x1="0" y1="1" x2="0" y2="0">
+    <stop offset="0"   stop-color="#FFFFFF" stop-opacity=".58"/>
+    <stop offset="1"   stop-color="#FFFFFF" stop-opacity="0"/>
+  </linearGradient>
+
+  <!-- ================= clip paths = the body outline of each variant === -->
+  <clipPath id="cp1"><path d="M18,68 C16,60 24,56 34,58 C41,59 45,58 48,55
+    C51,46 58,42 66,44 C73,46 76,52 76,60 C84,60 90,62 96,65
+    C114,65 132,65 146,69 C154,71 160,74 163,78
+    C172,70 184,62 195,58 C199,60 199,67 194,70 C183,75 173,81 166,88
+    C164,94 158,99 150,100 C138,101 128,97 118,96 C106,100 92,102 80,102
+    C72,101 66,98 62,92 C58,84 58,80 56,78
+    C48,79 40,80 32,80 C24,80 17,76 18,68 Z"/></clipPath>
+
+  <clipPath id="cp2"><path d="M18,68 C16,60 24,56 34,58 C41,59 45,58 48,55
+    C51,46 58,42 66,44 C73,46 76,52 76,60 C84,60 90,62 96,65
+    C114,65 132,65 146,69 C154,71 160,74 163,78
+    C171,64 182,52 196,48 C200,52 200,62 193,69 C183,78 172,84 168,97
+    C166,102 158,105 150,103 C138,104 128,98 118,97 C106,101 92,103 80,103
+    C72,102 66,99 62,93 C58,85 58,80 56,78
+    C48,79 40,80 32,80 C24,80 17,76 18,68 Z"/></clipPath>
+
+  <clipPath id="cp3"><path d="M20,68 C18,61 25,57 35,59 C42,60 46,59 49,56
+    C52,48 58,44 66,46 C72,48 75,53 75,61 C83,61 89,63 95,66
+    C113,66 131,66 145,70 C153,72 158,75 161,79
+    C170,73 180,68 190,65 C193,65 193,70 190,71 C181,75 172,80 165,87
+    C163,93 157,97 150,98 C138,99 128,94 118,93 C106,98 92,100 80,100
+    C72,99 66,96 62,90 C58,83 58,79 56,77
+    C48,78 40,79 32,79 C24,79 19,75 20,68 Z"/></clipPath>
+
+  <clipPath id="cp4"><path d="M28,70 C26,63 33,59 42,61 C48,62 52,61 55,58
+    C58,51 63,48 70,50 C76,52 78,57 78,64 C85,63 91,65 97,68
+    C115,68 133,68 147,72 C155,74 161,77 164,81
+    C173,73 185,65 196,61 C200,63 200,70 195,73 C184,78 174,84 167,91
+    C165,97 159,102 151,103 C139,105 129,101 119,100 C107,104 93,107 81,107
+    C73,106 67,102 64,95 C60,87 60,83 58,81
+    C50,82 42,83 36,83 C30,83 27,78 28,70 Z"/></clipPath>
+
+  <clipPath id="cp5"><path d="M12,70 C10,60 19,55 31,57 C39,58 44,57 47,53
+    C50,42 58,37 68,39 C77,41 81,48 81,58 C88,58 92,61 97,64
+    C115,64 133,64 147,68 C155,70 161,73 164,77
+    C173,69 185,61 196,57 C200,59 200,66 195,69 C184,74 174,80 167,87
+    C165,93 159,98 151,99 C139,100 129,96 119,95 C107,99 93,101 81,101
+    C73,100 67,97 63,91 C59,83 59,79 57,77
+    C48,78 38,80 29,81 C20,82 11,78 12,70 Z"/></clipPath>
+
+  <clipPath id="cp6"><path d="M44,56 C41,70 42,82 47,92 C52,101 62,105 74,105
+    C88,106 100,103 112,99 C124,100 136,103 150,101
+    C158,100 164,95 167,89 C174,82 184,76 195,71
+    C200,68 200,60 196,58 C185,62 173,70 164,78
+    C161,74 155,71 147,69 C133,65 115,65 97,65
+    C83,63 71,60 63,56 C56,52 47,51 44,56 Z"/></clipPath>
+
+<!-- ================================================================== -->
+<!-- 1 · הבסיס המתוקן — the corrected baseline                           -->
+<!-- ================================================================== -->
+<g id="sh1">
+  <ellipse cx="104" cy="143" rx="76" ry="6" fill="var(--sh)"/>
+  <g class="dogbody" style="filter:var(--f,none)">
+  <!-- far legs (tops buried: front 18u, hind 14u) -->
+  <path fill="var(--coat2)" d="M64,84 L79,84 L78,114 C78,122 80,126 80,130 C80,134 77,136 73,136 L66,136 C62,136 60,134 60,130 C60,126 63,122 63,114 Z"/>
+  <path fill="var(--coat2)" d="M143,86 L161,88 C162,96 158,104 155,110 C153,117 155,122 156,127 C157,131 154,136 150,136 L145,136 C141,136 139,133 140,130 C142,122 145,117 146,110 C147,101 143,93 143,86 Z"/>
+    <!-- ONE body path: muzzle + skull + neck + back + croup + tail -->
+    <path fill="var(--coat)" d="M18,68 C16,60 24,56 34,58 C41,59 45,58 48,55
+      C51,46 58,42 66,44 C73,46 76,52 76,60 C84,60 90,62 96,65
+      C114,65 132,65 146,69 C154,71 160,74 163,78
+      C172,70 184,62 195,58 C199,60 199,67 194,70 C183,75 173,81 166,88
+      C164,94 158,99 150,100 C138,101 128,97 118,96 C106,100 92,102 80,102
+      C72,101 66,98 62,92 C58,84 58,80 56,78
+      C48,79 40,80 32,80 C24,80 17,76 18,68 Z"/>
+    <!-- light feathering: chest apron + rear breech. Allowed to break the outline. -->
+    <path fill="var(--coat)" d="M62,90 C56,97 54,106 57,113 C61,108 65,102 67,96 Z"/>
+    <path fill="var(--coat)" d="M151,89 C160,96 164,106 161,115 C156,109 150,101 148,94 Z"/>
+    <g clip-path="url(#cp1)">
+      <path fill="var(--coat3)" d="M56,80 C70,95 92,103 118,100 C112,108 82,109 58,98 Z"/>
+      <path fill="url(#muz)" d="M14,58 L54,58 L54,84 L14,84 Z"/>
+      <path d="M74,60 C78,74 82,86 92,94" fill="none" stroke="var(--acc)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="92" cy="97" r="4.4" fill="var(--tag)"/>
+      <path fill="var(--eye)" d="M15,64 C21,61 27,64 27,69 C27,74 21,78 16,75 C12,72 12,67 15,64 Z"/>
+      <path d="M21,77 C27,80 33,80 39,78" fill="none" stroke="var(--eye)" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    <!-- ear: root buried 8-20u inside the skull, tip 8u BELOW the jawline -->
+    <path fill="var(--coat2)" d="M60,52 C72,50 80,58 79,70 C78,82 70,90 62,88 C56,86 55,74 57,64 C58,58 58,54 60,52 Z"/>
+    <!-- near legs (tops buried: front 20u, hind 16u) -->
+    <path fill="var(--coat)" d="M78,82 L93,82 L92,116 C92,124 94,128 94,133 C94,137 91,139 87,139 L79,139 C75,139 73,137 73,133 C73,128 76,124 76,116 Z"/>
+    <path fill="var(--coat)" d="M127,82 L146,84 C148,94 144,102 141,110 C139,118 141,124 142,130 C143,135 140,139 135,139 L129,139 C125,139 123,136 124,132 C126,124 130,118 131,110 C132,100 127,90 127,82 Z"/>
+    <ellipse cx="52" cy="57" rx="4" ry="3.8" fill="var(--eye)"/>
+    <circle cx="53.4" cy="55.5" r="1.3" fill="#FFFFFF" opacity=".9"/>
+  </g>
+</g>
+
+<!-- ================================================================== -->
+<!-- 2 · נוצה מלאה — maximum plume + full feathering                     -->
+<!-- ================================================================== -->
+<g id="sh2">
+  <ellipse cx="104" cy="143" rx="78" ry="6" fill="var(--sh)"/>
+  <g class="dogbody" style="filter:var(--f,none)">
+  <path fill="var(--coat2)" d="M64,84 L79,84 L78,114 C78,122 80,126 80,130 C80,134 77,136 73,136 L66,136 C62,136 60,134 60,130 C60,126 63,122 63,114 Z"/>
+  <path fill="var(--coat2)" d="M143,86 L161,88 C162,96 158,104 155,110 C153,117 155,122 156,127 C157,131 154,136 150,136 L145,136 C141,136 139,133 140,130 C142,122 145,117 146,110 C147,101 143,93 143,86 Z"/>
+    <path fill="var(--coat)" d="M18,68 C16,60 24,56 34,58 C41,59 45,58 48,55
+      C51,46 58,42 66,44 C73,46 76,52 76,60 C84,60 90,62 96,65
+      C114,65 132,65 146,69 C154,71 160,74 163,78
+      C171,64 182,52 196,48 C200,52 200,62 193,69 C183,78 172,84 168,97
+      C166,102 158,105 150,103 C138,104 128,98 118,97 C106,101 92,103 80,103
+      C72,102 66,99 62,93 C58,85 58,80 56,78
+      C48,79 40,80 32,80 C24,80 17,76 18,68 Z"/>
+    <!-- heavy feathering: apron, belly fringe, breeches, foreleg fringe -->
+    <path fill="var(--coat)" d="M62,88 C53,96 49,110 54,121 C61,114 66,103 68,95 Z"/>
+    <path fill="var(--coat)" d="M78,101 C86,110 100,114 116,112 C104,118 84,116 74,108 Z"/>
+    <path fill="var(--coat)" d="M150,90 C163,98 170,113 165,126 C158,117 149,106 146,97 Z"/>
+    <path fill="var(--coat)" d="M92,86 C99,96 100,110 96,120 C92,110 89,98 88,90 Z"/>
+    <g clip-path="url(#cp2)">
+      <path fill="var(--coat3)" d="M56,80 C70,95 92,104 118,101 C112,109 82,110 58,98 Z"/>
+      <path fill="var(--coat3)" d="M166,58 C178,54 190,51 197,50 C190,60 180,68 172,76 C168,70 166,64 166,58 Z" opacity=".55"/>
+      <path fill="url(#muz)" d="M14,58 L54,58 L54,84 L14,84 Z"/>
+      <path d="M74,60 C78,74 82,86 92,94" fill="none" stroke="var(--acc)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="92" cy="97" r="4.4" fill="var(--tag)"/>
+      <path fill="var(--eye)" d="M15,64 C21,61 27,64 27,69 C27,74 21,78 16,75 C12,72 12,67 15,64 Z"/>
+      <path d="M21,77 C27,80 33,80 39,78" fill="none" stroke="var(--eye)" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    <path fill="var(--coat2)" d="M60,51 C73,49 82,58 81,72 C80,86 71,94 62,92 C55,89 54,74 56,63 C57,56 57,53 60,51 Z"/>
+    <path fill="var(--coat)" d="M78,82 L93,82 L92,116 C92,124 94,128 94,133 C94,137 91,139 87,139 L79,139 C75,139 73,137 73,133 C73,128 76,124 76,116 Z"/>
+    <path fill="var(--coat)" d="M127,82 L146,84 C148,94 144,102 141,110 C139,118 141,124 142,130 C143,135 140,139 135,139 L129,139 C125,139 123,136 124,132 C126,124 130,118 131,110 C132,100 127,90 127,82 Z"/>
+    <ellipse cx="52" cy="57" rx="4" ry="3.8" fill="var(--eye)"/>
+    <circle cx="53.4" cy="55.5" r="1.3" fill="#FFFFFF" opacity=".9"/>
+  </g>
+</g>
+
+<!-- ================================================================== -->
+<!-- 3 · צללית נקייה — thin tapered tail, zero feathering, short ear     -->
+<!-- ================================================================== -->
+<g id="sh3">
+  <ellipse cx="102" cy="143" rx="72" ry="6" fill="var(--sh)"/>
+  <g class="dogbody" style="filter:var(--f,none)">
+  <path fill="var(--coat2)" d="M63,83 L78,83 L77,113 C77,121 79,125 79,129 C79,133 76,135 72,135 L65,135 C61,135 59,133 59,129 C59,125 62,121 62,113 Z"/>
+  <path fill="var(--coat2)" d="M142,85 L160,87 C161,95 157,103 154,109 C152,116 154,121 155,126 C156,130 153,135 149,135 L144,135 C140,135 138,132 139,129 C141,121 144,116 145,109 C146,100 142,92 142,85 Z"/>
+    <path fill="var(--coat)" d="M20,68 C18,61 25,57 35,59 C42,60 46,59 49,56
+      C52,48 58,44 66,46 C72,48 75,53 75,61 C83,61 89,63 95,66
+      C113,66 131,66 145,70 C153,72 158,75 161,79
+      C170,73 180,68 190,65 C193,65 193,70 190,71 C181,75 172,80 165,87
+      C163,93 157,97 150,98 C138,99 128,94 118,93 C106,98 92,100 80,100
+      C72,99 66,96 62,90 C58,83 58,79 56,77
+      C48,78 40,79 32,79 C24,79 19,75 20,68 Z"/>
+    <g clip-path="url(#cp3)">
+      <path fill="url(#muz)" d="M16,58 L54,58 L54,83 L16,83 Z"/>
+      <path d="M73,61 C77,74 81,85 91,92" fill="none" stroke="var(--acc)" stroke-width="8.5" stroke-linecap="round"/>
+      <circle cx="91" cy="95" r="4.2" fill="var(--tag)"/>
+      <path fill="var(--eye)" d="M17,64 C23,61 29,64 29,69 C29,74 23,78 18,75 C14,72 14,67 17,64 Z"/>
+      <path d="M23,77 C29,80 35,80 41,78" fill="none" stroke="var(--eye)" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    <!-- short ear: tip at y=82, level with the jawline -->
+    <path fill="var(--coat2)" d="M60,53 C70,52 76,59 75,69 C74,78 68,83 62,81 C57,79 56,70 57,63 C58,58 58,55 60,53 Z"/>
+    <path fill="var(--coat)" d="M77,81 L92,81 L91,115 C91,123 93,127 93,132 C93,136 90,138 86,138 L78,138 C74,138 72,136 72,132 C72,127 75,123 75,115 Z"/>
+    <path fill="var(--coat)" d="M126,81 L145,83 C147,93 143,101 140,109 C138,117 140,123 141,129 C142,134 139,138 134,138 L128,138 C124,138 122,135 123,131 C125,123 129,117 130,109 C131,99 126,89 126,81 Z"/>
+    <ellipse cx="53" cy="58" rx="3.9" ry="3.7" fill="var(--eye)"/>
+    <circle cx="54.4" cy="56.6" r="1.25" fill="#FFFFFF" opacity=".9"/>
+  </g>
+</g>
+
+<!-- ================================================================== -->
+<!-- 4 · ראש קטן, חזה עמוק — smaller head over a deeper chest            -->
+<!-- ================================================================== -->
+<g id="sh4">
+  <ellipse cx="106" cy="143" rx="76" ry="6" fill="var(--sh)"/>
+  <g class="dogbody" style="filter:var(--f,none)">
+  <path fill="var(--coat2)" d="M66,89 L81,89 L80,116 C80,123 82,127 82,131 C82,135 79,137 75,137 L68,137 C64,137 62,135 62,131 C62,127 65,123 65,116 Z"/>
+  <path fill="var(--coat2)" d="M144,90 L162,92 C163,99 159,106 156,112 C154,118 156,123 157,128 C158,132 155,137 151,137 L146,137 C142,137 140,134 141,131 C143,123 146,119 147,112 C148,104 144,96 144,90 Z"/>
+    <path fill="var(--coat)" d="M28,70 C26,63 33,59 42,61 C48,62 52,61 55,58
+      C58,51 63,48 70,50 C76,52 78,57 78,64 C85,63 91,65 97,68
+      C115,68 133,68 147,72 C155,74 161,77 164,81
+      C173,73 185,65 196,61 C200,63 200,70 195,73 C184,78 174,84 167,91
+      C165,97 159,102 151,103 C139,105 129,101 119,100 C107,104 93,107 81,107
+      C73,106 67,102 64,95 C60,87 60,83 58,81
+      C50,82 42,83 36,83 C30,83 27,78 28,70 Z"/>
+    <path fill="var(--coat)" d="M64,93 C58,100 56,109 59,116 C63,111 67,105 69,99 Z"/>
+    <path fill="var(--coat)" d="M152,92 C161,99 165,109 162,118 C157,112 151,104 149,97 Z"/>
+    <g clip-path="url(#cp4)">
+      <path fill="var(--coat3)" d="M58,83 C72,99 94,108 120,105 C114,113 84,114 60,102 Z"/>
+      <path fill="url(#muz)" d="M24,61 L60,61 L60,86 L24,86 Z"/>
+      <path d="M76,64 C80,78 84,90 94,98" fill="none" stroke="var(--acc)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="94" cy="101" r="4.4" fill="var(--tag)"/>
+      <path fill="var(--eye)" d="M25,66 C31,63 37,66 37,71 C37,76 31,80 26,77 C22,74 22,69 25,66 Z"/>
+      <path d="M31,79 C37,82 43,82 48,80" fill="none" stroke="var(--eye)" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    <path fill="var(--coat2)" d="M63,56 C74,54 81,62 80,73 C79,84 72,91 65,89 C60,87 59,76 60,67 C61,61 61,58 63,56 Z"/>
+    <path fill="var(--coat)" d="M80,86 L95,86 L94,117 C94,124 96,128 96,133 C96,137 93,139 89,139 L81,139 C77,139 75,137 75,133 C75,128 78,124 78,117 Z"/>
+    <path fill="var(--coat)" d="M129,86 L148,88 C150,97 146,104 143,111 C141,119 143,124 144,130 C145,135 142,139 137,139 L131,139 C127,139 125,136 126,132 C128,124 132,119 133,111 C134,102 129,93 129,86 Z"/>
+    <ellipse cx="59" cy="60" rx="3.7" ry="3.5" fill="var(--eye)"/>
+    <circle cx="60.3" cy="58.7" r="1.2" fill="#FFFFFF" opacity=".9"/>
+  </g>
+</g>
+
+<!-- ================================================================== -->
+<!-- 5 · ראש גדול, אוזן ארוכה — bigger head, ear 21u below the jaw       -->
+<!-- ================================================================== -->
+<g id="sh5">
+  <ellipse cx="104" cy="143" rx="78" ry="6" fill="var(--sh)"/>
+  <g class="dogbody" style="filter:var(--f,none)">
+  <path fill="var(--coat2)" d="M65,84 L80,84 L79,114 C79,122 81,126 81,130 C81,134 78,136 74,136 L67,136 C63,136 61,134 61,130 C61,126 64,122 64,114 Z"/>
+  <path fill="var(--coat2)" d="M143,85 L161,87 C162,95 158,103 155,109 C153,116 155,121 156,126 C157,130 154,135 150,135 L145,135 C141,135 139,132 140,129 C142,121 145,116 146,109 C147,100 143,92 143,85 Z"/>
+    <path fill="var(--coat)" d="M12,70 C10,60 19,55 31,57 C39,58 44,57 47,53
+      C50,42 58,37 68,39 C77,41 81,48 81,58 C88,58 92,61 97,64
+      C115,64 133,64 147,68 C155,70 161,73 164,77
+      C173,69 185,61 196,57 C200,59 200,66 195,69 C184,74 174,80 167,87
+      C165,93 159,98 151,99 C139,100 129,96 119,95 C107,99 93,101 81,101
+      C73,100 67,97 63,91 C59,83 59,79 57,77
+      C48,78 38,80 29,81 C20,82 11,78 12,70 Z"/>
+    <path fill="var(--coat)" d="M63,89 C57,96 55,105 58,112 C62,107 66,101 68,95 Z"/>
+    <path fill="var(--coat)" d="M152,88 C161,95 165,105 162,114 C157,108 151,100 149,93 Z"/>
+    <g clip-path="url(#cp5)">
+      <path fill="var(--coat3)" d="M57,79 C71,94 93,102 119,99 C113,107 83,108 59,97 Z"/>
+      <path fill="url(#muz)" d="M8,58 L54,58 L54,85 L8,85 Z"/>
+      <path d="M78,58 C82,72 86,85 96,93" fill="none" stroke="var(--acc)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="96" cy="96" r="4.4" fill="var(--tag)"/>
+      <path fill="var(--eye)" d="M9,65 C16,61 23,65 23,70 C23,76 16,80 10,76 C6,73 6,68 9,65 Z"/>
+      <path d="M16,79 C23,82 30,82 36,79" fill="none" stroke="var(--eye)" stroke-width="1.9" stroke-linecap="round"/>
+    </g>
+    <!-- long ear: tip y=102, i.e. 21u below the jawline (y=81) -->
+    <path fill="var(--coat2)" d="M63,48 C77,46 86,55 85,70 C84,86 76,102 66,100 C58,97 57,80 59,66 C60,57 60,51 63,48 Z"/>
+    <path fill="var(--coat)" d="M79,81 L94,81 L93,115 C93,123 95,127 95,132 C95,136 92,138 88,138 L80,138 C76,138 74,136 74,132 C74,127 77,123 77,115 Z"/>
+    <path fill="var(--coat)" d="M127,81 L146,83 C148,93 144,101 141,109 C139,117 141,123 142,129 C143,134 140,138 135,138 L129,138 C125,138 123,135 124,131 C126,123 130,117 131,109 C132,99 127,89 127,81 Z"/>
+    <ellipse cx="50" cy="54" rx="4.4" ry="4.2" fill="var(--eye)"/>
+    <circle cx="51.6" cy="52.3" r="1.45" fill="#FFFFFF" opacity=".9"/>
+  </g>
+</g>
+
+<!-- ================================================================== -->
+<!-- 6 · ראש אל הצופה — profile body, head turned to camera              -->
+<!-- ================================================================== -->
+<g id="sh6">
+  <ellipse cx="110" cy="143" rx="72" ry="6" fill="var(--sh)"/>
+  <g class="dogbody" style="filter:var(--f,none)">
+  <path fill="var(--coat2)" d="M56,86 L71,86 L70,114 C70,122 72,126 72,130 C72,134 69,136 65,136 L58,136 C54,136 52,134 52,130 C52,126 55,122 55,114 Z"/>
+  <path fill="var(--coat2)" d="M143,86 L161,88 C162,96 158,104 155,110 C153,117 155,122 156,127 C157,131 154,136 150,136 L145,136 C141,136 139,133 140,130 C142,122 145,117 146,110 C147,101 143,93 143,86 Z"/>
+    <!-- body: profile, no head — the neck runs up into the frontal skull -->
+    <path fill="var(--coat)" d="M44,56 C41,70 42,82 47,92 C52,101 62,105 74,105
+      C88,106 100,103 112,99 C124,100 136,103 150,101
+      C158,100 164,95 167,89 C174,82 184,76 195,71
+      C200,68 200,60 196,58 C185,62 173,70 164,78
+      C161,74 155,71 147,69 C133,65 115,65 97,65
+      C83,63 71,60 63,56 C56,52 47,51 44,56 Z"/>
+    <path fill="var(--coat)" d="M151,90 C160,97 164,107 161,116 C156,110 150,102 148,95 Z"/>
+    <g clip-path="url(#cp6)">
+      <path fill="var(--coat3)" d="M48,84 C60,98 82,106 110,102 C102,110 72,111 50,100 Z"/>
+      <path d="M46,68 C52,80 60,90 74,96" fill="none" stroke="var(--acc)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="76" cy="99" r="4.4" fill="var(--tag)"/>
+    </g>
+    <!-- frontal head: skull, two hanging ears, gradient muzzle -->
+    <ellipse cx="56" cy="48" rx="27" ry="25" fill="var(--coat)"/>
+    <path fill="var(--coat2)" d="M38,32 C24,38 19,58 25,76 C30,90 43,92 47,78 C51,63 48,36 38,32 Z"/>
+    <path fill="var(--coat2)" d="M74,32 C88,38 93,58 87,76 C82,90 69,92 65,78 C61,63 64,36 74,32 Z"/>
+    <ellipse cx="56" cy="61" rx="18" ry="14" fill="url(#muzV)"/>
+    <path fill="var(--eye)" d="M48,55 C56,52 64,55 64,60 C64,65 59,69 56,69 C52,69 48,65 48,60 Z"/>
+    <path d="M56,69 L56,75 M56,75 C51,81 44,80 42,75 M56,75 C61,81 68,80 70,75" fill="none" stroke="var(--eye)" stroke-width="2.2" stroke-linecap="round"/>
+    <ellipse cx="42" cy="44" rx="4.4" ry="4.2" fill="var(--eye)"/>
+    <ellipse cx="70" cy="44" rx="4.4" ry="4.2" fill="var(--eye)"/>
+    <circle cx="43.6" cy="42.3" r="1.45" fill="#FFFFFF" opacity=".9"/>
+    <circle cx="71.6" cy="42.3" r="1.45" fill="#FFFFFF" opacity=".9"/>
+    <!-- near legs -->
+    <path fill="var(--coat)" d="M70,84 L85,84 L84,116 C84,124 86,128 86,133 C86,137 83,139 79,139 L71,139 C67,139 65,137 65,133 C65,128 68,124 68,116 Z"/>
+    <path fill="var(--coat)" d="M127,82 L146,84 C148,94 144,102 141,110 C139,118 141,124 142,130 C143,135 140,139 135,139 L129,139 C125,139 123,136 124,132 C126,124 130,118 131,110 C132,100 127,90 127,82 Z"/>
+  </g>
+</g>
+
+</defs></svg>
+
+<div class="wrap">
+
+<header class="hd">
+  <h1>הכלב — צורה וצבע</h1>
+  <div class="sub">The dog · shape &amp; palette only · static reference</div>
+  <p>
+    הסיבוב הזה לא מתחיל מאפס ולא פורש עוד עשרה סגנונות. הוא לוקח <b>כיוון צללית אחד</b> — גולדן רטריבר בפרופיל,
+    פונה שמאלה — ודוחף אותו בשש וריאציות. כל וריאציה משנה <b>החלטת צורה אחת אמיתית</b>: מה אורך הזנב ועד כמה הוא
+    נוצתי, איפה יושבת האוזן וכמה היא ארוכה, מה היחס בין הראש לגוף, כמה עמוק החזה, האם יש נוצות, והאם הראש בפרופיל
+    או מופנה אל הצופה.
+    <br>אחר כך, בחלק ב', <b>אותה צללית בדיוק</b> נצבעת בחמישה טיפולי צבע — כדי שההשוואה תהיה הוגנת ותכריע רק בשאלת הצבע.
+  </p>
+  <div class="nomo">אין בדף הזה אנימציה — לא קיפריימים, לא מעברים, לא JavaScript. האנימציה תגיע בסיבוב הבא.</div>
+  <br>
+  <label class="tog"><input type="checkbox" id="bgtog"> החלפת רקע הדף (קרם / נייבי)</label>
+
+  <div class="base">
+    <h4>מה משותף לכל שש הווריאציות — כללי הבנייה</h4>
+    <ul>
+      <li><b>גוף אחד, נתיב אחד.</b> החוטם, הגולגולת, הצוואר, הגב, העצה והזנב הם <b>path יחיד</b>. זה התיקון המבני
+        שזוהה ב־<code>dog-original.svg</code>: בכלב הנוכחי הזנב מתחיל 2 יחידות בלבד בתוך אליפסת האחוריים, והראש
+        מחובר רק דרך צוואר צר — ולכן כל תנועה פותחת את התפר.</li>
+      <li><b>ארבע רגליים נפרדות, שקועות עמוק.</b> לא butt-joint. מדדתי את עומק השקע בפועל בכל שש הווריאציות
+        (העומק המינימלי לאורך רוחב הרגל): <b>קדמית קרובה 18.4–20.9</b> · <b>אחורית קרובה 13.6–18.8</b> ·
+        <b>קדמית רחוקה 9.1–15.2</b> · <b>אחורית רחוקה 8.7–16.9</b>. שתי הרגליים הרחוקות הן החוליה החלשה בכל
+        הווריאציות, כי הן יושבות בקצה הגוף — זה מה שצריך לשים לב אליו כשמרגשים.</li>
+      <li><b>כל פרט פנימי מקוצץ לצללית.</b> הקולר, התג, הבהרת החזה, האף והפה נמצאים בתוך <code>clipPath</code> של
+        קו הגוף — פיזית אי אפשר שמשהו יברח החוצה.</li>
+      <li><b>רק האוזן והנוצות שוברות את קו המתאר</b> — וזה מכוון. זה מה שגורם לכלב להיקרא גולדן ולא "כלב קריקטורה".</li>
+      <li><b>החוטם אינו טלאי.</b> ההבהרה של החוטם היא <code>linearGradient</code> שדועך לאפס בגובה ה־stop — אין
+        קצה חד שיושב על הראש, כפי שקורה היום עם אליפסת השמנת ב־(124,53).</li>
+      <li><b>מסגרת מדידה אחת:</b> <code>viewBox 0 0 200 150</code>, קו קרקע <code>y=140</code>, הכלב פונה שמאלה
+        (ימין־לשמאל = "קדימה" בדף RTL).</li>
+    </ul>
+  </div>
+</header>
+
+<!-- ==================== PART A ==================== -->
+<h3 class="sec">א. צורה <span class="en">· Shape — six pushes on one dog</span></h3>
+<p>
+  כל השש צבועות באותו טיפול צבע (זהוב) בכוונה, כדי שההבדל שרואים יהיה <b>רק צורה</b>. השורה העליונה בכל כרטיס היא
+  רקע הקרם של האתר, התחתונה היא הפס הנייבי. <b>88px הוא הגודל האמיתי באתר וזו התצוגה המכריעה.</b>
+</p>
+<div class="grid">
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num">1</span>הבסיס המתוקן <span class="en">· Corrected baseline</span></h2>
+      <p>כל התיקונים שזוהו בכלב הקיים, במינון מתון: זנב נוצה נישא בגובה הגב, אוזן בגובה העין שיורדת אל מתחת ללסת, חוטם מעורבב, נוצות קלות בחזה ובירך.</p>
+      <p class="m">ראש (חוטם→עורף) <code>58</code> · גוף (כתף→שורש זנב) <code>67</code> · עומק חזה <code>37.0</code> · רגל <code>38.0</code> · יחס חזה:רגל <code>0.97</code> · עובי נוצת הזנב <code>12.3–13.1</code> · קצה אוזן <code>8.3</code> מתחת ללסת</p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num">2</span>נוצה מלאה <span class="en">· Full plume + feathering</span></h2>
+      <p>אותו גוף, אבל הזנב הופך לנוצה רחבה שנישאת מעל קו הגב, ומתווספות נוצות מלאות: סינר חזה, שוליים בבטן, "מכנסיים" מאחורי הירך ושוליים מאחורי הרגל הקדמית. זו קריאת הגזע המקסימלית.</p>
+      <p class="m">עובי נוצת הזנב <code>22.0–28.6</code> (פי <code>1.9</code> מהבסיס) · ארבע הרחבות צללית · עומק חזה <code>38.6</code> · יחס חזה:רגל <code>1.06</code> · קצה אוזן <code>12.3</code> מתחת ללסת</p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num">3</span>צללית נקייה <span class="en">· Clean silhouette, no feathering</span></h2>
+      <p>הביקורת: זנב דק ומתחדד, אפס נוצות, אוזן קצרה שנעצרת בדיוק בקו הלסת, בטן מכווצת יותר. הכלב הכי "נקי" — וגם המבחן הכן ביותר לשאלה האם בכלל צריך את הנוצות.</p>
+      <p class="m">עובי זנב <code>10.3</code> בשורש → <code>6.2</code> בקצה · אפס הרחבות צללית · עומק חזה <code>34.0</code> · רגל <code>40.0</code> · יחס חזה:רגל <code>0.85</code> (הכי "רגלית" מהשש) · קצה אוזן <code>2.4</code> מתחת ללסת — בפועל בקו הלסת</p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num">4</span>ראש קטן, חזה עמוק <span class="en">· Smaller head, deeper chest</span></h2>
+      <p>בדיוק ההמלצה שנרשמה בקובץ המקור: ראש קטן יותר מעל חזה עמוק יותר קורא "רטריבר בוגר" ולא "גור". הכלב הכי מבוגר ומקצועי מהשישה.</p>
+      <p class="m">ראש <code>50.3</code> (‎−14%‎ מהבסיס) · עומק חזה <code>39.0</code> · רגל <code>33.0</code> · יחס חזה:רגל <code>1.18</code> לעומת <code>0.97</code> בבסיס · קצה אוזן <code>6.3</code> מתחת ללסת</p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num">5</span>ראש גדול, אוזן ארוכה <span class="en">· Bigger head, longer ear</span></h2>
+      <p>הכיוון ההפוך: ראש גדול יותר, גולגולת גבוהה יותר, ואוזן שיורדת הרבה מתחת ללסת. יוצא ידידותי ומזמין יותר — וגם צעיר יותר. זו שאלת טון, לא שאלת נכונות.</p>
+      <p class="m">ראש <code>69.3</code> (‎+19%‎ מהבסיס) · גובה ראש <code>42.4</code> לעומת <code>36.5</code> בבסיס · קצה אוזן <code>19.2</code> מתחת ללסת (פי <code>2.3</code> מהבסיס) · יחס חזה:רגל <code>0.95</code></p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num">6</span>ראש אל הצופה <span class="en">· Body in profile, head to camera</span></h2>
+      <p>ההחלטה הכי שונה מהשאר: הגוף נשאר בפרופיל כדי שהנוצה והחזה ייקראו, אבל הראש מסובב אל הצופה — שתי עיניים, קשר עין. זה מה שהופך מסקוט ל"מישהו".</p>
+      <p class="m">גולגולת חזיתית <code>rx27 ry25</code> · שתי אוזניות תלויות <code>14.6</code> מתחת לתחתית הגולגולת · הצוואר קבור לחלוטין בתוך הגולגולת · יחס חזה:רגל <code>1.16</code></p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+</div>
+
+<h3 class="sec">א+. מבחן הצללית הטהורה <span class="en">· Pure silhouette test</span></h3>
+<p>
+  אותן שש, בצבע שטוח אחד — בלי עין, בלי קולר, בלי הבהרות. אם הכלב לא נקרא ככלב כאן, שום צבע לא יציל אותו.
+  זה המבחן האמיתי של הצורה, והוא מוצג בגודל האתר (88px) ובגודל הקטן (48px).
+</p>
+<div class="card">
+  <div class="strip cream silrow">
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">1 · בסיס</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">2 · נוצה</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">3 · נקייה</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">4 · ראש קטן</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">5 · ראש גדול</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">6 · אל הצופה</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">1 · 48px</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">2 · 48px</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">3 · 48px</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">6 · 48px</span></div>
+  </div>
+  <div class="strip navy silrow">
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">1 · בסיס</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">2 · נוצה</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">3 · נקייה</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh4"/></svg><span class="lbl">4 · ראש קטן</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh5"/></svg><span class="lbl">5 · ראש גדול</span></div>
+    <div class="slot"><svg class="s88 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">6 · אל הצופה</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">1 · 48px</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh2"/></svg><span class="lbl">2 · 48px</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh3"/></svg><span class="lbl">3 · 48px</span></div>
+    <div class="slot"><svg class="s48 dog sil" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh6"/></svg><span class="lbl">6 · 48px</span></div>
+  </div>
+</div>
+
+<!-- ==================== PART B ==================== -->
+<h3 class="sec">ב. צבע <span class="en">· Palette — the white-on-cream problem, head on</span></h3>
+<p>
+  כאן <b>הגאומטריה קפואה</b>: כל חמשת הטיפולים הם וריאציה 1 בדיוק, אותם path־ים, אותן קואורדינטות. רק משתני
+  הצבע משתנים. זו השאלה הפתוחה האמיתית שנשארה מהסיבוב הקודם: <b>כלב בהיר על רקע קרם <code>#FBF6EE</code></b>.
+  המספרים שמופיעים בכל כרטיס הם יחסי ניגודיות אמיתיים (WCAG relative luminance), לא הערכה.
+</p>
+<div class="grid three">
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num t">א</span>מתאר נייבי <span class="en">· outlined</span></h2>
+      <p>גוף שמנת <code>#F7EDDC</code> + קו מתאר נייבי שמוסף כ־<code>feMorphology dilate r=3.2</code>.</p>
+      <p class="m">גוף מול קרם <code>1.08:1</code> <span class="warn">— בפועל בלתי נראה</span> · מול נייבי <code>11.3:1</code><br>
+        עובי הקו בפועל: <code>3.20px</code> ב־200 · <code>1.41px</code> ב־88 · <span class="warn"><code>0.77px</code> ב־48</span></p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tOutline" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tOutline" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tOutline" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tOutline" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tOutline" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tOutline" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num t">ב</span>חיטה חמה <span class="en">· warm wheat</span></h2>
+      <p>גוון חול/חיטה <code>#DEB77C</code>, בלי מתאר ובלי צל. נקי — אבל הכלב כבר לא "לבן".</p>
+      <p class="m">מול קרם <code>1.75:1</code> <span class="mid">— גבולי</span> · מול נייבי <code>6.97:1</code> <span class="ok">✓</span></p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tWheat" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tWheat" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tWheat" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tWheat" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tWheat" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tWheat" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num t">ג</span>לבן + צל רך <span class="en">· true white + shadow</span></h2>
+      <p>לבן אמיתי <code>#FFFFFF</code> שמופרד מהרקע רק בעזרת <code>feDropShadow dy2.5 σ3</code>. הכי יפה — והכי שביר.</p>
+      <p class="m">מול קרם <code>1.08:1</code> <span class="warn">— הצל לבדו נושא את הצורה</span> · מול נייבי <code>13.1:1</code> <span class="ok">✓ הכי חזק</span></p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tWhite" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tWhite" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tWhite" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tWhite" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tWhite" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tWhite" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num t">ד</span>זהוב מותגי <span class="en">· brand-anchored golden</span></h2>
+      <p>פרווה <code>#D69A4A</code>, צד מוצל <code>#B37D38</code>, הבהרות <code>#E8B96B</code>. פחות כתום מהענבר <code>#F2A03D</code> — והענבר נשאר ללוגו בלבד, כפי שהומלץ.</p>
+      <p class="m">מול קרם <code>2.28:1</code> <span class="ok">✓ הגבוה מכולם</span> · מול נייבי <code>5.35:1</code> <span class="ok">✓</span> · בלי מתאר ובלי צל</p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGold" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num t">ה</span>זהוב + מתאר <span class="en">· golden, outlined</span></h2>
+      <p>אותו זהוב, פלוס קו המתאר הנייבי. חגורה וכתפיות: הצבע לבדו כבר מספיק, והקו רק מחדד — אבל הוא גם מוסיף משקל גרפי ונעלם ממילא ב־48px.</p>
+      <p class="m">מול קרם <code>2.28:1</code> + מתאר · מול נייבי <code>5.35:1</code>, אך שם המתאר <span class="warn">נעלם לחלוטין</span> (נייבי על נייבי)</p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tGoldO" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGoldO" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGoldO" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tGoldO" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tGoldO" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tGoldO" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+
+  <article class="card">
+    <div class="cap">
+      <h2><span class="num t">ו</span>הפלטה הקיימת <span class="en">· current site palette (reference)</span></h2>
+      <p>לשם השוואה בלבד: ענבר הלוגו <code>#F2A03D</code> לגוף + חום <code>#8A7A66</code> לרגליים הרחוקות ולאוזן — בדיוק מה שיש היום. שימו לב איך החום העכור הוא מה שהופך את זה ל"כלב קליפ־ארט".</p>
+      <p class="m">מול קרם <code>1.98:1</code> · מול נייבי <code>6.16:1</code> — כלומר <b>הזהוב (ד) נותן ניגודיות טובה יותר וגם פחות כתום</b></p>
+    </div>
+    <div class="strip cream"><div class="slot"><svg class="s200 dog tAmber" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tAmber" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tAmber" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+    <div class="strip navy"><div class="slot"><svg class="s200 dog tAmber" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">200px</span></div><div class="slot real"><svg class="s88 dog tAmber" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">88px · באתר</span></div><div class="slot"><svg class="s48 dog tAmber" viewBox="0 0 200 150" aria-hidden="true"><use href="#sh1"/></svg><span class="lbl">48px</span></div></div>
+  </article>
+</div>
+
+<h3 class="sec">הניגודיות — המספרים <span class="en">· Measured contrast, not guessed</span></h3>
+<p>
+  יחסי ניגודיות לפי WCAG relative luminance, מול שני הרקעים של האתר. לצורה מלאה (לא טקסט) הסף המעשי שבו צללית
+  מפסיקה להיקרא הוא בערך <b>1.6:1</b>; מתחת ל־<b>1.3:1</b> היא בפועל בלתי נראית בלי מתאר או צל.
+</p>
+<table class="cx">
+  <tr><th>הצבע</th><th>מול קרם <code>#FBF6EE</code></th><th>מול נייבי <code>#16324F</code></th><th>מסקנה</th></tr>
+  <tr><td><span class="sw" style="background:#D69A4A"></span><code>#D69A4A</code> זהוב מוצע</td><td class="n ok">2.28</td><td class="n ok">5.35</td><td class="ok">היחיד שעובר 2:1 על קרם בלי שום עזרה</td></tr>
+  <tr><td><span class="sw" style="background:#C79A5C"></span><code>#C79A5C</code> טאן כהה</td><td class="n ok">2.38</td><td class="n ok">5.12</td><td>ניגודיות מצוינת, אבל עכור — נשאר כצל בלבד</td></tr>
+  <tr><td><span class="sw" style="background:#F2A03D"></span><code>#F2A03D</code> ענבר הלוגו (היום)</td><td class="n mid">1.98</td><td class="n ok">6.16</td><td class="mid">עובר, אבל כתום מדי לפרווה — להשאיר ללוגו</td></tr>
+  <tr><td><span class="sw" style="background:#DEB77C"></span><code>#DEB77C</code> חיטה</td><td class="n mid">1.75</td><td class="n ok">6.97</td><td class="mid">גבולי על קרם — נקרא, אבל רפה</td></tr>
+  <tr><td><span class="sw" style="background:#E8C48A"></span><code>#E8C48A</code> קרם־זהב בהיר</td><td class="n bad">1.54</td><td class="n ok">7.92</td><td class="bad">נופל על קרם. לא לשימוש כצבע גוף ראשי</td></tr>
+  <tr><td><span class="sw" style="background:#F7EDDC"></span><code>#F7EDDC</code> שמנת</td><td class="n bad">1.08</td><td class="n ok">11.29</td><td class="bad">בלתי נראה על קרם — חייב מתאר</td></tr>
+  <tr><td><span class="sw" style="background:#FFFFFF"></span><code>#FFFFFF</code> לבן</td><td class="n bad">1.08</td><td class="n ok">13.10</td><td class="bad">בלתי נראה על קרם — חייב צל</td></tr>
+  <tr><td><span class="sw" style="background:#16324F"></span><code>#16324F</code> נייבי (המתאר)</td><td class="n ok">12.18</td><td class="n bad">1.00</td><td>מושלם על קרם, <b>נעלם לגמרי על נייבי</b></td></tr>
+</table>
+
+<!-- ==================== NOTES ==================== -->
+<h3 class="sec">הערות כנות לקראת ההחלטה <span class="en">· The honest read</span></h3>
+<div class="notes">
+  <div><b>מה שורד ב-88px (צורה)</b>
+    1, 2, 4 ו-6 קריאים מיד ככלב. 3 (הנקייה) קריאה — אבל ככלב גנרי, לא כגולדן: הזנב הדק מוריד את
+    קריאת הגזע כמעט לגמרי. 5 קריאה אבל מתחילה להיראות גור בגלל יחס הראש.</div>
+  <div><b>מה נשבר ב-48px</b>
+    בווריאציה 2 הנוצות הקטנות (שולי הבטן, השוליים מאחורי הרגל הקדמית) מתמזגות לכתם ומאבדות משמעות — הנוצה
+    הגדולה של הזנב שורדת, הקטנות לא. ב-6 שתי העיניים הופכות לשתי נקודות בלבד, וזה עדיין עובד. ב-4 הראש הקטן
+    מתחיל להיעלם מול החזה העמוק.</div>
+  <div><b>מה קורה על נייבי</b>
+    כל שש שורדות. הפער מתהפך: ככל שהפרווה בהירה יותר כך היא חזקה יותר על נייבי וחלשה יותר על קרם.
+    זו הסיבה שאי אפשר להכריע צבע מתוך מסך אחד — צריך לראות את שתי הרצועות.</div>
+  <div><b>הבעיה שנסגרה: לבן על קרם</b>
+    המספרים סוגרים את הוויכוח. <code>#FFFFFF</code> ו-<code>#F7EDDC</code> נותנים שניהם <code>1.08:1</code> מול
+    הקרם — זה לא "כמעט נעלם", זה <b>נעלם</b>. הם קיימים רק בזכות הצל או המתאר.</div>
+  <div><b>והמתאר לא באמת מציל</b>
+    ב-88px קו המתאר בעובי <code>r=3.2</code> מתורגם ל-<code>1.41px</code>, וב-48px ל-<code>0.77px</code> —
+    כלומר פחות מפיקסל. כדי שיישרוד ב-48px צריך <code>r≥4.5</code>, ואז הוא כבד מדי ב-200px. מתאר הוא פתרון
+    שעובד בגודל אחד בלבד.</div>
+  <div><b>הענבר הקיים — הממצא המפתיע</b>
+    <code>#F2A03D</code> נותן <code>1.98:1</code> על קרם ו-<code>#D69A4A</code> נותן <code>2.28:1</code>.
+    כלומר הזהוב המוצע הוא גם <b>פחות כתום</b> וגם <b>בעל ניגודיות טובה יותר</b>. אין פה טרייד־אוף.</div>
+  <div><b>מה שראיתי בתמונות</b>
+    בתיקיית <code>uploads/</code> יש שני גולדנים אמיתיים: אחד בזהב־בינוני בפעילות קריאה עם ילדים, ואחד
+    <b>קרם בהיר מאוד</b> (כמעט לבן) בפעילות מוסדית. כלומר גם "זהוב" וגם "לבן" נאמנים למציאות — הבחירה היא
+    עיצובית, לא עובדתית. שאר התמונות הן כלבים אחרים לגמרי (בורדר קולי, בוקסר, סטר אירי, קורגי, וכלב חום כהה)
+    וחלקן נראות סטוק.</div>
+  <div><b>מה שהמחקר אומר על הטון</b>
+    ההמלצה במחקר היא להוביל ב<b>אילוף פרטי — בעיות התנהגות של כלבים בוגרים</b>, ושתי מהקהילות הרלוונטיות
+    הן קהילות "נטולות כפייה". מכאן שהמסקוט צריך להיקרא <b>בוגר, רגוע, מקצועי</b> — לא גור, לא חמוד־חמוד.
+    זה שיקול שנוטה לטובת 1 ו-4, ונגד 5.</div>
+</div>
+
+<div class="pick">
+  <h4>אם הייתי צריך להחליט עכשיו — 1 + ד</h4>
+  <p>
+    <b>צורה: וריאציה 1 (הבסיס המתוקן).</b> היא כוללת את כל התיקונים שנמדדו בקובץ המקור, בלי לדחוף אף אחד מהם
+    לקיצון. היא קריאה ב-48px, לא מאבדת שום נוצה, והיא היחידה שבה כל הפרמטרים נמצאים בטווח שאפשר לרגש ממנו
+    לשני הכיוונים בסיבוב הבא. אם רוצים יותר "גולדן" — לקחת ממנה את נוצת הזנב של 2 בלבד (בלי ארבע ההרחבות
+    הקטנות, שממילא מתמוטטות ב-48px). אם רוצים יותר מבוגר ומקצועי — לקחת את יחס הראש של 4.
+  </p>
+  <p>
+    <b>צבע: טיפול ד (זהוב מותגי, <code>#D69A4A</code>).</b> זה הפתרון היחיד שפותר את בעיית הלבן־על־קרם
+    <b>בלי תוספת</b>: בלי מתאר שנעלם ב-48px, בלי צל שנעלם על נייבי. <code>2.28:1</code> על קרם ו-<code>5.35:1</code>
+    על נייבי — עובד בשלושת הגדלים ועל שני הרקעים, ומשאיר את הענבר <code>#F2A03D</code> ללוגו בלבד כפי שהוגדר.
+  </p>
+  <p>
+    <b>מה אני מוותר עליו בהחלטה הזו:</b> "כלב לבן". אם חשוב שהמסקוט יהיה הכלב הקרם הבהיר שבתמונה — צריך ללכת
+    על ג (לבן + צל), ואז להשלים עם זה ש-48px לא באמת יעבוד ושצריך גרסה נפרדת לאייקון קטן.
+  </p>
+</div>
+
+<div class="ask">
+  <h4>מה אני צריך ממך כדי לעבור לאנימציה</h4>
+  <ol>
+    <li><b>איזו צורה?</b> מספר אחד מהשש. ואם אף אחת לא בדיוק — איזו מהן הכי קרובה, ואיזה פרמטר ממנה לשנות
+      (זנב / אוזן / ראש / חזה / נוצות).</li>
+    <li><b>פרופיל או ראש אל הצופה?</b> זו ההחלטה הכי גורלית מבחינת האנימציה: פרופיל (1–5) מאפשר הליכה לאורך
+      הדף; ראש אל הצופה (6) מאפשר מבט וקשר עין אבל כמעט לא מאפשר הליכה. אי אפשר לקבל את שניהם באותו רִיג.</li>
+    <li><b>איזה צבע?</b> ואם ד (זהוב) — האם הכלב הזה אמור להיות <b>הכלב של עינב</b> ספציפית, או "כלב" גנרי?
+      אם ספציפי, צריך לדעת איזה מהכלבים בתמונות הוא שלה כדי לכייל את הגוון.</li>
+    <li><b>בוגר או צעיר?</b> המחקר מושך לכיוון בוגר ומקצועי. את מסכימה, או שאת מעדיפה טון חם/צעיר יותר
+      (וריאציה 5)?</li>
+    <li><b>האם המסקוט מופיע גם ב-48px?</b> אם כן — הוא מגביל את כל ההחלטות למעלה, ובפרט פוסל את (ג) ואת
+      הנוצות הקטנות של (2). אם הוא מופיע רק ב-88px ומעלה, השדה נפתח.</li>
+  </ol>
+</div>
+
+<div class="foot">
+  <b>איך לקרוא את הדף:</b> בכל כרטיס, השורה העליונה היא רקע הקרם של האתר <code>#FBF6EE</code> והתחתונה היא הפס
+  הנייבי <code>#16324F</code>. שלושת הגדלים הם 200px (בדיקת פרטים), 88px (הגודל האמיתי באתר — התצוגה המכריעה)
+  ו-48px (מבחן השבירה). כפתור החלפת הרקע בראש הדף משנה רק את רקע <em>הדף</em>, לא את הרצועות.
+  <br><br>
+  כפת הלוגו וארבע האצבעות שלה — כולל האצבע הקוראלית הרביעית שמייצגת את האדם — <b>אינן בתחום הדף הזה</b> ולא
+  נגעתי בהן. הן סגורות.
+  <br><br>
+  <b>אין בדף הזה שום אנימציה</b> — אין <code>@keyframes</code>, אין <code>transition</code>, אין
+  <code>transform</code> שמזיז משהו, ואין JavaScript. מכיוון שאין מה להשבית, גם אין צורך ב-<code>prefers-reduced-motion</code>.
+  כל ההחלטות כאן הן על הציור העומד בלבד.
+</div>
+
+</div>
+</body>
+</html>
