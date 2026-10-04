@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>לאב — הציור מהלוגו של עינב</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Alef:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16324F; --cream:#FBF6EE; --coral:#E4572E; --amber:#F2A03D;
+    --slate:#4A5C6F; --brown:#8A7A66;
+    --her-green:#054D2C; --her-orange:#F15004;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Heebo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+  h1{font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-.03em;margin:0 0 8px}
+  h2{font-size:clamp(20px,2.6vw,28px);font-weight:900;letter-spacing:-.03em;margin:0 0 6px}
+  .lede{font-family:'Alef',serif;font-size:17px;line-height:1.7;color:var(--slate);margin:0}
+  .eyebrow{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--coral)}
+
+  /* Each option gets a header strip so they can be talked about by number. */
+  .opt{border-top:1px solid rgba(22,50,79,.12);margin-top:56px;padding-top:20px}
+  .opt-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin-bottom:6px}
+  .num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--cream);
+       display:grid;place-items:center;font-size:14px;font-weight:900;flex:none}
+  .note{font-family:'Alef',serif;font-size:15px;line-height:1.65;color:var(--brown);margin:6px 0 22px;max-width:62ch}
+
+  /* ---- the drawing itself ---- */
+  .fig{display:block;width:100%;height:auto}
+  /* Fill is inheritable, but each layer needs its own colour, so every
+     treatment sets the three explicitly rather than relying on inheritance. */
+  .on-cream .fig-woman{fill:var(--her-green)}
+  .on-cream .fig-dog,   .on-cream .fig-heart{fill:var(--her-orange)}
+  .on-navy  .fig-woman{fill:var(--cream)}
+  .on-navy  .fig-dog,   .on-navy  .fig-heart{fill:var(--coral)}
+
+  /* ---- 1. band ---- */
+  .band{background:var(--ink);color:var(--cream);border-radius:28px;overflow:hidden}
+  .band-in{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,4vw,52px);padding:clamp(24px,4vw,52px)}
+  .band .art{flex:1 1 320px;min-width:0}
+  .band .copy{flex:1 1 300px;min-width:0}
+  .band h2{font-size:clamp(24px,3.4vw,38px);margin-bottom:12px}
+  .band p{font-family:'Alef',serif;font-size:17px;line-height:1.7;color:rgba(251,246,238,.78);margin:0}
+
+  /* ---- 2. draws itself ---- */
+  .stage{background:#fff;border:1px solid rgba(22,50,79,.08);border-radius:28px;padding:clamp(20px,4vw,40px)}
+  .stage .art{max-width:520px;margin:0 auto}
+  /* Filled outlines cannot be "drawn" with stroke-dashoffset, so the reveal is
+     a wipe: the clip's leading edge travels right-to-left, matching the way
+     the page reads. */
+  .draw .fig-woman,.draw .fig-dog{clip-path:inset(0 0 0 100%)}
+  .draw .fig-heart{opacity:0;transform:scale(.4);transform-origin:78% 20%}
+  .draw.go .fig-woman{animation:wipe .85s cubic-bezier(.4,0,.2,1) .15s forwards}
+  .draw.go .fig-dog  {animation:wipe .85s cubic-bezier(.4,0,.2,1) .75s forwards}
+  .draw.go .fig-heart{animation:pop .5s cubic-bezier(.2,1.5,.4,1) 1.5s forwards}
+  @keyframes wipe{to{clip-path:inset(0 0 0 0)}}
+  @keyframes pop{to{opacity:1;transform:scale(1)}}
+  .btn{border:1px solid rgba(22,50,79,.28);background:transparent;color:var(--ink);
+       font-family:inherit;font-size:13px;font-weight:700;padding:9px 18px;border-radius:99px;cursor:pointer}
+  .btn:hover{background:var(--ink);color:var(--cream)}
+
+  /* ---- 3. watermark ---- */
+  .mark{position:relative;background:#fff;border:1px solid rgba(22,50,79,.08);border-radius:28px;
+        padding:clamp(28px,5vw,60px);overflow:hidden}
+  .mark .art{position:absolute;inset-inline-end:-6%;top:50%;transform:translateY(-50%);
+             width:min(56%,520px);opacity:.10;pointer-events:none}
+  .mark .copy{position:relative;max-width:56ch}
+
+  /* ---- 4. seal (what is on the page today) ---- */
+  .seal-row{display:flex;flex-wrap:wrap;gap:28px;align-items:center}
+  .seal{width:150px;height:150px;border-radius:50%;background:#fff;flex:none;
+        box-shadow:0 14px 32px rgba(22,50,79,.22);transform:rotate(-7deg);overflow:hidden}
+  .seal img{width:100%;height:100%;display:block}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important}
+    .draw .fig-woman,.draw .fig-dog{clip-path:none}
+    .draw .fig-heart{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" style="padding-top:48px;padding-bottom:80px">
+
+  <div class="eyebrow">לאב</div>
+  <h1>הציור מהלוגו — כווקטור</h1>
+  <p class="lede">
+    הציור חולץ מקובץ המדבקה והומר ל‑SVG (15KB במקום 342KB), בשלוש שכבות נפרדות:
+    עינב, הכלב, והלב. כל שכבה ניתנת לצביעה ולתזמון בנפרד. ארבע דרכים להשתמש בו:
+  </p>
+
+  <!-- 1 -->
+  <section class="opt">
+    <div class="opt-head"><span class="num">1</span><h2>כרזה כהה</h2></div>
+    <p class="note">
+      הציור בגדול על רקע הנייבי של האתר, בקרם ובקורל. זו האפשרות הכי בולטת —
+      הציור הופך לתמונת המפתח של המותג, לא לקישוט. מתאים כפס רוחב מלא לפני
+      "הכלבים" או מיד אחרי ההירו.
+    </p>
+    <div class="band on-navy">
+      <div class="band-in">
+        <div class="art" data-fig></div>
+        <div class="copy">
+          <h2>קודם מכירים.<br>אחר כך עובדים.</h2>
+          <p>מפגשים לילדים, למשפחות ולמבוגרים — עם כלבים רגועים שאוהבים אנשים.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="opt">
+    <div class="opt-head"><span class="num">2</span><h2>הציור מצייר את עצמו</h2></div>
+    <p class="note">
+      עינב נחשפת, אחריה הכלב, והלב קופץ אחרון — בדיוק כמו האצבע הרביעית הכתומה
+      בכף הרגל שנוחתת אחרונה באנימציית הכניסה. אותו רעיון, אותה שפה. תחת
+      prefers‑reduced‑motion הציור פשוט מופיע שלם.
+    </p>
+    <div class="stage on-cream">
+      <div class="art draw" data-fig data-draw></div>
+      <div style="text-align:center;margin-top:18px">
+        <button class="btn" data-replay>↻ הרץ שוב</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="opt">
+    <div class="opt-head"><span class="num">3</span><h2>סימן מים</h2></div>
+    <p class="note">
+      הציור ענק ובעוצמה נמוכה מאחורי טקסט. נוכח בלי להתחרות בתוכן — טוב לקטע
+      "על עינב" או לקטע ההמלצות.
+    </p>
+    <div class="mark on-cream">
+      <div class="art" data-fig></div>
+      <div class="copy">
+        <div class="eyebrow">על עינב</div>
+        <h2 style="margin-top:6px">קודם מכירים. אחר כך עובדים.</h2>
+        <p class="lede" style="margin-top:10px">
+          עינב מימון היא מאלפת כלבים וכלבנית טיפולית מוסמכת, עם ניסיון בעבודה עם
+          ילדים, משפחות ואוכלוסיות בעלות צרכים מיוחדים.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="opt">
+    <div class="opt-head"><span class="num">4</span><h2>חותם — מה שיש באתר עכשיו</h2></div>
+    <p class="note">
+      הלוגו המלא כמדבקה על התמונה. להשוואה: כאן הציור קטן והטקסט שבתוך הטבעת
+      כמעט לא נקרא. זה מה שהוספתי קודם — האפשרויות למעלה בולטות ממנו בהרבה.
+    </p>
+    <div class="seal-row">
+      <div class="seal"><img src="uploads/logo-einav-official.png" alt="הלוגו המלא של עינב מימון"></div>
+      <p class="note" style="margin:0">← 342KB, טקסט לא קריא בגודל הזה<br>↑ 15KB, חד בכל גודל</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // One fetch, then cloned into every slot — keeps this file small and means
+  // the lab always reflects the real einav-drawing.svg on disk.
+  fetch('einav-drawing.svg')
+    .then(r => r.text())
+    .then(txt => {
+      const doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+      const src = doc.querySelector('svg');
+      document.querySelectorAll('[data-fig]').forEach(slot => {
+        const svg = src.cloneNode(true);
+        svg.setAttribute('class', 'fig');
+        svg.removeAttribute('width'); svg.removeAttribute('height');
+        // Drop the baked-in fills so the CSS above decides the colours.
+        svg.querySelectorAll('g').forEach(g => g.removeAttribute('fill'));
+        slot.appendChild(svg);
+      });
+      start();
+    })
+    .catch(e => {
+      document.querySelectorAll('[data-fig]').forEach(s => {
+        s.innerHTML = '<p style="color:#E4572E;font-weight:700">' +
+          'לא הצלחתי לטעון einav-drawing.svg — צריך להגיש את הדף דרך שרת, לא כקובץ.</p>';
+      });
+    });
+
+  function start() {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const draw = document.querySelector('[data-draw]');
+    const run = () => {
+      if (reduce) return;
+      draw.classList.remove('go');
+      void draw.offsetWidth;          // force reflow so the animation restarts
+      draw.classList.add('go');
+    };
+    new IntersectionObserver((es, o) => {
+      es.forEach(e => { if (e.isIntersecting) { run(); o.unobserve(e.target); } });
+    }, { threshold: .35 }).observe(draw);
+    document.querySelector('[data-replay]').addEventListener('click', run);
+  }
+</script>
+</body>
+</html>

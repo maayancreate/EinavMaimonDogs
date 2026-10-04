@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>לאב — מהציור הישן אל כף הרגל</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Alef:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16324F; --cream:#FBF6EE; --coral:#E4572E; --amber:#F2A03D;
+    --slate:#4A5C6F; --brown:#8A7A66;
+    --her-green:#054D2C; --her-orange:#F15004;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Heebo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+  h1{font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-.03em;margin:0 0 8px}
+  h2{font-size:clamp(20px,2.6vw,28px);font-weight:900;letter-spacing:-.03em;margin:0 0 6px}
+  h3{font-size:clamp(16px,1.8vw,19px);font-weight:900;letter-spacing:-.03em;margin:0 0 6px}
+  .lede{font-family:'Alef',serif;font-size:17px;line-height:1.7;color:var(--slate);margin:0}
+  .eyebrow{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--coral)}
+  .note{font-family:'Alef',serif;font-size:15px;line-height:1.65;color:var(--brown);margin:6px 0 0;max-width:62ch}
+
+  .opt{border-top:1px solid rgba(22,50,79,.12);margin-top:56px;padding-top:20px}
+  .opt-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin-bottom:6px}
+  .num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--cream);
+       display:grid;place-items:center;font-size:14px;font-weight:900;flex:none}
+
+  /* ---- the stage ---- */
+  .stage{background:#fff;border:1px solid rgba(22,50,79,.08);border-radius:24px;
+         padding:clamp(16px,3vw,28px);margin-top:22px}
+  .art{max-width:620px;margin:0 auto;position:relative}
+  .art svg{display:block;width:100%;height:auto}
+  /* the ghost of the finished paw, so the target can be checked against the
+     shape that is actually in flight */
+  #ghost{opacity:0;transition:opacity .25s}
+  .show-ghost #ghost{opacity:.14}
+  /* the trajectory diagram: every sampled point's route, start to finish */
+  #paths{opacity:0;transition:opacity .25s}
+  .show-paths #paths{opacity:.5}
+  #paths path{fill:none;stroke-width:.9;stroke-linecap:round}
+
+  /* ---- controls ---- */
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px;
+       padding-top:18px;border-top:1px solid rgba(22,50,79,.08)}
+  .btn{border:1px solid rgba(22,50,79,.28);background:transparent;color:var(--ink);
+       font-family:inherit;font-size:13px;font-weight:700;padding:9px 18px;border-radius:99px;
+       cursor:pointer;transition:background .15s,color .15s;white-space:nowrap}
+  .btn:hover{background:var(--ink);color:var(--cream)}
+  .btn:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+  .btn[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .btn.wide{min-width:104px;text-align:center}
+
+  .scrub{flex:1 1 240px;min-width:180px;display:flex;align-items:center;gap:10px}
+  input[type=range]{flex:1;min-width:0;accent-color:var(--coral);height:22px}
+  .tval{font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:var(--slate);
+        min-width:52px;text-align:center;direction:ltr}
+
+  .seg{display:inline-flex;border:1px solid rgba(22,50,79,.28);border-radius:99px;overflow:hidden}
+  .seg .btn{border:0;border-radius:0;padding:9px 14px}
+  .seg .btn + .btn{border-inline-start:1px solid rgba(22,50,79,.18)}
+
+  .chk{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--slate);cursor:pointer}
+  .chk input{accent-color:var(--coral);width:16px;height:16px}
+
+  /* ---- the speed-profile panel ---- */
+  .tune{margin-top:18px;padding:18px;border:1px solid rgba(22,50,79,.1);
+        border-radius:22px;background:var(--cream);
+        display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+  .tune h4{margin:0 0 2px;font-size:14px;font-weight:900;letter-spacing:-.02em}
+  .tune .hint{font-family:'Alef',serif;font-size:13px;line-height:1.6;color:var(--brown);margin:0 0 12px}
+  .knob{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin-top:9px}
+  .knob label{font-size:12.5px;font-weight:700;color:var(--slate);white-space:nowrap}
+  .knob output{font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;
+               color:var(--brown);direction:ltr;min-width:34px;text-align:end}
+  .curve{background:#fff;border:1px solid rgba(22,50,79,.1);border-radius:16px;padding:10px}
+  .curve svg{display:block;width:100%;height:auto}
+  .curve .key{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:11.5px;color:var(--brown)}
+  .curve .key i{display:inline-block;width:14px;height:3px;border-radius:2px;
+                margin-inline-end:5px;vertical-align:middle}
+  .tune .out{margin-top:12px;font-size:11.5px;color:var(--brown);direction:ltr;text-align:left;
+             word-break:break-all;line-height:1.9}
+
+  /* ---- the mapping switch gets its own, louder block ---- */
+  .swap{background:var(--ink);color:var(--cream);border-radius:24px;
+        padding:clamp(18px,3vw,26px);margin-top:22px}
+  .swap h3{color:var(--cream);margin-bottom:4px}
+  .swap p{font-family:'Alef',serif;font-size:15px;line-height:1.7;color:rgba(251,246,238,.78);margin:0 0 16px;max-width:64ch}
+  .swap .btn{border-color:rgba(251,246,238,.4);color:var(--cream)}
+  .swap .btn:hover{background:var(--cream);color:var(--ink)}
+  .swap .btn[aria-pressed="true"]{background:var(--amber);color:var(--ink);border-color:var(--amber)}
+  .swap .seg{border-color:rgba(251,246,238,.4)}
+  .swap .seg .btn + .btn{border-inline-start-color:rgba(251,246,238,.25)}
+  .who{font-family:'Alef',serif;font-size:15px;line-height:1.7;color:var(--amber);margin:14px 0 0}
+
+  /* ---- legend of the nine pieces ---- */
+  .legend{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));margin-top:18px}
+  .row{display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;
+       border:1px solid rgba(22,50,79,.1);border-radius:99px;background:var(--cream)}
+  .dot{width:12px;height:12px;border-radius:50%;flex:none}
+  .row b{font-weight:700}
+  .row span{color:var(--brown);font-size:12px;margin-inline-start:auto;font-variant-numeric:tabular-nums;direction:ltr}
+
+  .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));margin-top:22px}
+  .card{background:#fff;border:1px solid rgba(22,50,79,.08);border-radius:24px;padding:22px}
+  .card p{font-family:'Alef',serif;font-size:15px;line-height:1.7;color:var(--slate);margin:6px 0 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;direction:ltr;
+       display:inline-block;background:rgba(22,50,79,.07);padding:1px 5px;border-radius:5px}
+
+  .err{color:var(--coral);font-weight:700;font-family:'Alef',serif}
+  .rm-note{display:none}
+
+  @media (prefers-reduced-motion:reduce){
+    /* no autoplay, no transitions — the stage opens on the finished paw and the
+       slider stays available for anyone who wants to step through it by hand */
+    *{animation:none!important;transition:none!important}
+    .rm-note{display:block}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" style="padding-top:48px;padding-bottom:80px">
+
+  <div class="eyebrow">לאב</div>
+  <h1>מהציור הישן אל כף הרגל</h1>
+  <p class="lede">
+    הציור המקורי של עינב — היא, הכלב והלב — נמס אל תוך הלוגו החדש. תשעה קווים
+    הופכים לחמש צורות, וכל קו יודע לאן הוא הולך. זה לא מעבר־צלב בין שתי תמונות:
+    כל נקודה על הקו באמת נוסעת למקום שלה בכף הרגל — ולא בקו ישר.
+  </p>
+
+  <!-- 1 -->
+  <section class="opt">
+    <div class="opt-head"><span class="num">1</span><h2>המורף</h2></div>
+    <p class="note">
+      גררו את הסרגל כדי לעבור פריים־פריים, או לחצו נגן. הכפתורים למטה מוסברים
+      אחד־אחד בסעיף 2.
+    </p>
+    <p class="note rm-note" style="color:var(--coral)">
+      המערכת שלכם מבקשת פחות תנועה, ולכן הדף נפתח על הלוגו המוגמר ולא מנגן לבד.
+      הסרגל עדיין עובד — גררו אותו ידנית.
+    </p>
+
+    <div class="stage" id="stage">
+      <div class="art" id="art">
+        <!-- Padded by 48 units a side. The drawing already fills 581x428 almost to the
+             edge, and the spiral swings pieces wide of where they start or finish —
+             measured worst case is 37 units below the floor on the second mapping.
+             Without the margin the browser simply clips them. -->
+        <svg id="svg" viewBox="-48 -48 677 524" role="img" aria-label="הציור של עינב נמס אל תוך לוגו כף הרגל">
+          <g id="ghost"></g>
+          <g id="paths"></g>
+          <g id="live"></g>
+        </svg>
+      </div>
+
+      <div class="bar">
+        <button class="btn wide" id="play">▶ נגן</button>
+        <button class="btn" id="restart" title="חזרה להתחלה">↻ מהתחלה</button>
+        <div class="scrub">
+          <span class="tval" id="tval">0.000</span>
+          <input type="range" id="scrub" min="0" max="1000" value="0" step="1"
+                 aria-label="מיקום בציר הזמן של המורף">
+        </div>
+      </div>
+
+      <div class="bar" style="border-top:0;padding-top:0;margin-top:10px">
+        <div class="seg" role="group" aria-label="מהירות">
+          <button class="btn" data-speed="0.25">×0.25</button>
+          <button class="btn" data-speed="0.5">×0.5</button>
+          <button class="btn" data-speed="1" aria-pressed="true">×1</button>
+          <button class="btn" data-speed="2">×2</button>
+        </div>
+        <div class="seg" role="group" aria-label="כיוון">
+          <button class="btn" data-dir="1" aria-pressed="true">ציור ← לוגו</button>
+          <button class="btn" data-dir="-1">לוגו ← ציור</button>
+        </div>
+        <label class="chk"><input type="checkbox" id="loop" checked> לולאה</label>
+        <label class="chk"><input type="checkbox" id="flowChk" checked> זרימה</label>
+        <label class="chk"><input type="checkbox" id="loopChk" checked> סיבוב שלם</label>
+        <label class="chk"><input type="checkbox" id="pathsChk"> ציור המסלולים</label>
+        <label class="chk"><input type="checkbox" id="ghostChk"> צל הלוגו ברקע</label>
+      </div>
+
+      <!-- Speed profile. The morph never moved at a constant rate — it runs up to
+           speed, cruises, then settles. These knobs are that curve, live. -->
+      <div class="tune">
+        <div>
+          <h4>פרופיל המהירות</h4>
+          <p class="hint">
+            שינוי המהירות נשאר — רק אפשר לקבוע כמה הוא חד. <b>רצפת מהירות</b> היא
+            הכפתור המשמעותי: ב־0 הצורה עומדת לגמרי בהתחלה ובסוף, ולכן ההתכנסות
+            לגוש נקראת כקפיצה. הרמה שלה מתחילה את הקטע כשהוא כבר בתנועה.
+          </p>
+          <div class="knob">
+            <label for="kFloor">רצפת מהירות</label>
+            <input type="range" id="kFloor" min="0" max="1" step=".01" value="0">
+            <output id="oFloor">0.00</output>
+          </div>
+          <div class="knob">
+            <label for="kHead">אורך ההאצה</label>
+            <input type="range" id="kHead" min=".02" max=".45" step=".01" value=".10">
+            <output id="oHead">0.10</output>
+          </div>
+          <div class="knob">
+            <label for="kTail">תחילת ההאטה</label>
+            <input type="range" id="kTail" min=".50" max=".98" step=".01" value=".70">
+            <output id="oTail">0.70</output>
+          </div>
+          <div class="knob">
+            <label for="kIn">התכנסות לגוש עד</label>
+            <input type="range" id="kIn" min=".10" max=".55" step=".01" value=".26">
+            <output id="oIn">0.26</output>
+          </div>
+          <div class="knob">
+            <label for="kOut">פתיחת הגוש מ־</label>
+            <input type="range" id="kOut" min=".60" max=".96" step=".01" value=".88">
+            <output id="oOut">0.88</output>
+          </div>
+          <div class="knob" style="grid-template-columns:auto 1fr">
+            <label>ערכות</label>
+            <div class="seg" role="group" aria-label="ערכות פרופיל" style="justify-self:start">
+              <button class="btn" data-preset="sharp" aria-pressed="true">חד</button>
+              <button class="btn" data-preset="soft">רך</button>
+              <button class="btn" data-preset="fluid">נוזלי</button>
+              <button class="btn" data-preset="even">אחיד</button>
+            </div>
+          </div>
+          <p class="out" id="tuneOut"></p>
+        </div>
+
+        <div class="curve">
+          <!-- u runs left to right; the box is 0..1 in both axes. Drawn LTR on
+               purpose — it is a graph, not text. -->
+          <svg viewBox="0 0 300 150" role="img" aria-label="גרף המהירות וההתקדמות לאורך המעבר">
+            <path id="gGrid" stroke="rgba(22,50,79,.1)" stroke-width="1" fill="none"/>
+            <path id="gRate" stroke="#E4572E" stroke-width="2.4" fill="none" stroke-linejoin="round"/>
+            <path id="gEase" stroke="#16324F" stroke-width="2.4" fill="none" stroke-linejoin="round"/>
+            <path id="gBall" stroke="#F2A03D" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+          </svg>
+          <div class="key">
+            <span><i style="background:#E4572E"></i>מהירות</span>
+            <span><i style="background:#16324F"></i>התקדמות</span>
+            <span><i style="background:#F2A03D"></i>כמה זה גוש</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend" id="legend"></div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="opt">
+    <div class="opt-head"><span class="num">2</span><h2>שני כיווני קריאה — ויש כאן סתירה</h2></div>
+    <p class="note">
+      בכף הרגל יש ארבע אצבעות. שלוש בענבר, ואחת — הרביעית — בקורל. לפי ההסבר
+      שמופיע באתר עצמו, הקורל הוא <b>האדם</b> שיושב מול הכלב, ושלוש הענבר הן הכלב.
+      הבקשה למעבדה הזו הייתה הפוך: שהכלב יתכנס לאצבע הקורל. שתי הקריאות בנויות כאן,
+      והכפתור מחליף ביניהן בשידור חי — כך אפשר להשוות בעיניים במקום להתווכח.
+    </p>
+
+    <div class="swap">
+      <h3>מי הופך למה</h3>
+      <p>
+        המיפוי הוא קבוע יחיד בראש הסקריפט (<code>MAPPING</code>). ההחלפה בונה מחדש
+        את כל תשעת המשפכים, ולכן יש רגע קצר של חישוב.
+      </p>
+      <div class="seg" role="group" aria-label="מיפוי">
+        <button class="btn" data-map="dog-is-coral" aria-pressed="true">הכלב = האצבע הכתומה</button>
+        <button class="btn" data-map="person-is-coral">עינב = האצבע הכתומה</button>
+      </div>
+      <p class="who" id="who"></p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>▶ נגן / ⏸ עצור</h3>
+        <p>מריץ את ציר הזמן. בסוף — עוצר, או חוזר להתחלה אם הלולאה מסומנת.</p>
+      </div>
+      <div class="card">
+        <h3>הסרגל</h3>
+        <p>גרירה ידנית, באלף צעדים. זה הכלי האמיתי לבדיקה: אפשר לעצור בדיוק ברגע
+           שמשהו נראה לא טוב, ולקרוא את ערך ה‑<code>t</code> שליד הסרגל.</p>
+      </div>
+      <div class="card">
+        <h3>מהירות</h3>
+        <p>×0.25 עד ×2. ×1 = שלוש שניות למעבר מלא.</p>
+      </div>
+      <div class="card">
+        <h3>כיוון</h3>
+        <p>קדימה זה הציור שהופך ללוגו; אחורה זה הלוגו שנפרם בחזרה לציור. שווה
+           לראות את שניהם — האחורה קריא יותר, כי העין יודעת לאן להסתכל.</p>
+      </div>
+      <div class="card">
+        <h3>זרימה</h3>
+        <p>הכפתור החשוב כאן. כשהוא כבוי, כל נקודה נוסעת בקו ישר ובקצב אחיד — זו
+           התנהגות ברירת המחדל של הספרייה, והיא נראית כמו נייר שמתקמט לצורה חדשה.
+           כשהוא דלוק נכנס מודל הזרימה שמתואר בסעיף 3. כבו והדליקו תוך כדי ניגון:
+           זה ההבדל בין נייר למים, והוא גדול.</p>
+      </div>
+      <div class="card">
+        <h3>ציור המסלולים</h3>
+        <p>מצייר את הדרך שכל נקודה עוברת, מההתחלה ועד הסוף — נקודה אחת מכל שלוש־עשרה
+           לאורך כל קו, בערך מאה מסלולים. הצבע של כל מסלול הוא הצבע שאליו החתיכה
+           מגיעה, כך שרואים מיד מה נוסע לאצבע הקורל ומה לכרית. הדליקו את זה יחד עם
+           "סיבוב שלם" וכבו והדליקו: בלי הסיבוב אלה קשתות רכות שמתכנסות פנימה, ועם
+           הסיבוב רואים את הלולאה המלאה שכל גוש עושה ממש לפני הנחיתה. אותו קוד
+           בדיוק מחשב את הציור ואת האנימציה, כך שמה שרואים הוא באמת המסלולים
+           ולא שרטוט נפרד.</p>
+      </div>
+      <div class="card">
+        <h3>סיבוב שלם</h3>
+        <p>דלוק — כל גוש טס לולאה שלמה, מעגל מלא, בסוף הדרך ו
+           לפני שהוא נפתח לצורתו הסופית. כבוי — הגוש פשוט נוחת. שווה לכבות
+           ולהדליק בין <code>t=0.6</code> ל‑<code>t=0.85</code>; שם הלולאה קורית.</p>
+      </div>
+      <div class="card">
+        <h3>צל הלוגו ברקע</h3>
+        <p>מדפיס את כף הרגל המוגמרת בעוצמה נמוכה מתחת לאנימציה, כדי לראות כמה כל
+           חתיכה עוד רחוקה מהמקום הסופי שלה.</p>
+      </div>
+      <div class="card">
+        <h3>הרשימה מתחת לבמה</h3>
+        <p>תשע שורות — קו אחד מהציור בכל שורה, לאן הוא נוסע, ואיזה אחוז מהדרך הוא
+           כבר עשה ברגע הזה.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="opt">
+    <div class="opt-head"><span class="num">3</span><h2>איך זה עובד בפועל</h2></div>
+    <div class="cards">
+      <div class="card">
+        <h3>אותה מערכת צירים</h3>
+        <p>הציור חי ב‑<code>581×428</code> והלוגו ב‑<code>64×64</code>. בלי תיאום
+           ביניהם המורף פשוט קורס. כף הרגל מוגדלת פי ~5.8 וממורכזת בתוך התיבה של
+           הציור, וכל החישוב קורה במרחב אחד.</p>
+      </div>
+      <div class="card">
+        <h3>אליפסות → נתיבים</h3>
+        <p>ארבע האצבעות הן <code>&lt;ellipse&gt;</code> עם <code>rotate()</code>.
+           הספרייה יודעת לעבוד רק על נתיבים, ולכן כל אליפסה מומרת לארבע עקומות
+           קוביות עם הסיבוב אפוי פנימה.</p>
+      </div>
+      <div class="card">
+        <h3>רבים → אחד</h3>
+        <p>ארבעה קווים שצריכים להיות אצבע אחת זו לא אינטרפולציה רגילה. הפונקציה
+           <code>combine()</code> חותכת את צורת היעד לארבע פיסות ונותנת לכל קו פיסה
+           משלו, כך שבסוף הן מתחברות בחזרה לאליפסה שלמה.</p>
+      </div>
+      <div class="card">
+        <h3>החורים נסגרים מיד</h3>
+        <p>הלב והראש של הכלב הם קווי מתאר — צורה חיצונית עם חור בפנים. החור אינו
+           מצטרף לגוש: הוא נשאר במקומו ומתכווץ. לכן הוא חייב להיסגר בתוך העשירית
+           הראשונה של המסע, לפני שהחתיכה מספיקה לזוז — אחרת החתיכה עפה להתכנס
+           והחור הנטוש ממשיך לצייר נקודה במקום שהיא עזבה. בדקתי: החור האחרון
+           נסגר ב‑<code>0.086</code> מהדרך, והגוש נוצר רק ב‑<code>0.26</code>.</p>
+      </div>
+      <div class="card">
+        <h3>אין פינות חדות בדרך</h3>
+        <p>אינטרפולציה נקודה־אל־נקודה מייצרת באמצע הדרך קו מלא ברעש: קוצים, קיפולים
+           ושיניים קטנות. לכן כל פריים עובר שתי פעולות — מיצוע של כל נקודה מול
+           שכנותיה, שממיס את הרעש, והפליטה עצמה היא עקומות בזייה ולא קטעים ישרים,
+           כך שאין רגע שבו יש חיבור חד. שתיהן מכוילות להיות אפס מוחלט בשני הקצוות,
+           ולכן הציור המקורי והלוגו המוגמר נשארים חדים ומדויקים.</p>
+      </div>
+      <div class="card">
+        <h3>מים, לא נייר</h3>
+        <p>הספרייה בעצמה מזיזה כל נקודה בקו ישר ובאותו קצב בדיוק. התוצאה היא צורה
+           שעומדת במקום ומתעוותת — נייר שמתקמט. אז נקודות הקצה נשמרות והמסע עצמו
+           נכתב מחדש, בארבעה שלבים: <b>התכנסות</b> לגוש, <b>נשיאה</b> בקשת,
+           <b>לולאה</b> שלמה, ורק אז — מאוחר מאוד, ב‑<code>0.88</code> מהדרך —
+           <b>פתיחה</b> לצורה הסופית. רוב המסע הוא גוש.</p>
+      </div>
+      <div class="card">
+        <h3>כולם לגוש אחד</h3>
+        <p>כל הקווים שנוסעים לאותה צורה בכף הרגל מתאספים לגוש אחד, מוקדם ככל
+           האפשר. הם חולקים בדיוק את אותו מרכז ואת אותו קו־מתאר, ולכן הם יושבים זה
+           על זה ונקראים כגוש אחד ולא כארבעה שברים. השטח שלו הוא בדיוק השטח של
+           הצורה שאליה הוא יהפוך — אותה כמות דיו, מגולגלת.</p>
+      </div>
+      <div class="card">
+        <h3>גוש, לא אליפסה</h3>
+        <p>הגוש אינו עיגול. הרדיוס שלו משתנה עם הזווית לפי שלוש הרמוניות נמוכות
+           עם פאזות קבועות, וכך יוצא משהו לא־סימטרי ואורגני — אבל עדיין כוכבי,
+           כלומר לעולם לא מקפל את עצמו פנימה. הוא תלוי בזווית בלבד, וזה מה שמאפשר
+           לכל החתיכות שנוסעות לאותו יעד לצייר בדיוק את אותו קו־מתאר ולהיערם לגוש
+           יחיד. הרדיוס מחולק בחזרה בתוספת שהגליות מוסיפות לממוצע הריבועי, כך
+           שגוש מגובנן עדיין נושא בדיוק את השטח של הצורה הסופית.</p>
+      </div>
+      <div class="card">
+        <h3>מעגל שלם לפני הנחיתה</h3>
+        <p>בסוף הנשיאה הגוש טס לולאה אחת מלאה. המעגל משיק למסלול גם בכניסה וגם
+           ביציאה, כך שאין פינה באף אחד מהשניים, והוא נסגר בדיוק ברגע שהגוש מתחיל
+           להיפתח — קודם הסיבוב, אחר כך המקום. הנקודה שאליה הוא נפתח נבחרת בנוסחה
+           סגורה: הזווית שמשאירה כל נקודה על הגוש הכי קרוב שאפשר למקום הסופי שלה,
+           כדי שהפתיחה תהיה פריחה ולא בלגן.</p>
+      </div>
+      <div class="card">
+        <h3>מהירות קבועה, נחיתה רכה</h3>
+        <p>עקומת תנועה בצורת S מבזבזת את כל חייה או בהאצה או בבלימה, וזה נקרא
+           כריחוף. כאן יש ריצה קצרה של 10% עד למהירות מלאה, אחר כך מהירות
+           <b>קבועה לגמרי</b> עד 70% מהדרך, ורק משם האטה ארוכה עד לעצירה. המתיחה
+           נגזרת מאותה פונקציית מהירות בדיוק — לא מהתקדמות — ולכן חתיכה נמתחת
+           כשהיא באמת זזה ומתעגלת ברגע שהיא נעצרת. בדקתי נומרית שהנגזרת של עקומת
+           המיקום שווה לפונקציית המהירות; אם השתיים היו נפרדות, חתיכה הייתה
+           נמתחת בזמן שהיא עומדת.</p>
+      </div>
+      <div class="card">
+        <h3>לא כולם יוצאים יחד</h3>
+        <p>הכרית יוצאת ראשונה, אחריה שלוש הענבר בהפרש קטן, והקורל אחרונה — בדיוק
+           כמו האצבע הרביעית שנוחתת אחרונה באנימציית הכניסה של האתר.</p>
+      </div>
+      <div class="card">
+        <h3>גם הצבע נוסע</h3>
+        <p>הירוק של עינב <code>#054D2C</code> והכתום שלה <code>#F15004</code> זזים
+           לענבר <code>#F2A03D</code> ולקורל <code>#E4572E</code> באותה עקומת האטה
+           כמו הצורה, כך שאין רגע שבו הצבע כבר הגיע והצורה עוד לא.</p>
+      </div>
+    </div>
+    <p class="note" style="margin-top:22px">
+      מה שנשאר, בכנות: רוב הדרך היא חמישה גושים, וזה מכוון — אבל זה אומר שמ‑
+      <code>t=0.3</code> ועד <code>t=0.8</code> בערך אי אפשר לזהות לא את הציור
+      ולא את הלוגו. הקריאות עוברת דרך התנועה, לא דרך הצורה. אם זה ירגיש ריק מדי,
+      <code>BALL_IN</code> ו‑<code>BALL_OUT</code> בראש הסקריפט מקצרים את שלב
+      הגוש משני הצדדים. ובגלל המהירות הקבועה הציור מתפרק כבר סביב
+      <code>t=0.15</code> ולא מחזיק עד <code>t=0.25</code> כמו קודם — זה המחיר
+      של תנועה בקצב אחיד במקום עקומת S.
+      <br><br>
+      הערה על ציור המסלולים: הוא מראה את הדרך שהנקודה עוברת, אבל לא את המתיחה —
+      המתיחה היא עיוות שמופעל על החתיכה כולה ברגע הציור, לא תכונה של מסלול של
+      נקודה בודדת.
+      <br><br>
+      ודבר שלישי: המסגרת מרווחת ב‑48 יחידות מכל צד, כי הלולאה מעיפה גושים אל
+      מחוץ לגבולות הציור — נמדדו 19 יחידות מתחת לרצפה. בלי השוליים הדפדפן פשוט
+      היה חותך אותם. זו גם הסיבה שרדיוס הלולאה נגזר מגודל כף הרגל ולא מגודל
+      הגוש: כשהוא נגזר מהגוש, ללולאה של הכרית יצא קוטר כמעט כמו הלוגו כולו,
+      והיא עפה 105 יחידות מחוץ למסגרת.
+      <br><br>
+      ודבר שני: בשלב הגוש, שתי חתיכות שנוסעות לאותו יעד יושבות זו על זו בדיוק.
+      הן באותו צבע בערך, אבל לא בדיוק — הירוק של עינב והכתום שלה לא מגיעים לענבר
+      באותו קצב — ולכן בפועל רואים את הצבע של זו שמצוירת אחרונה. זה נראה כמו גוש
+      אחד נקי, אבל טכנית זו הסתרה ולא מיזוג.
+    </p>
+  </section>
+
+</div>
+
+<!-- ===================================================================== -->
+<!-- VENDORED THIRD-PARTY CODE — flubber 0.4.2, MIT, Noah Veltman.         -->
+<!-- https://github.com/veltman/flubber  ·  build/flubber.min.js, inlined  -->
+<!-- verbatim because this bundle is offline-only: no CDN, no build step.  -->
+<!-- Do not edit. Exposes the global `flubber`.                            -->
+<!-- ===================================================================== -->
+<script>!function(t,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports):"function"==typeof define&&define.amd?define(["exports"],n):n(t.flubber=t.flubber||{})}(this,function(t){"use strict";function n(t){return 10===t||13===t||8232===t||8233===t||32===t||9===t||11===t||12===t||160===t||t>=5760&&an.indexOf(t)>=0}function e(t){switch(32|t){case 109:case 122:case 108:case 104:case 118:case 99:case 115:case 113:case 116:case 97:case 114:return!0}return!1}function r(t){return t>=48&&t<=57}function i(t){return t>=48&&t<=57||43===t||45===t||46===t}function a(t){this.index=0,this.path=t,this.max=t.length,this.result=[],this.param=0,this.err="",this.segmentStart=0,this.data=[]}function o(t){for(;t.index<t.max&&n(t.path.charCodeAt(t.index));)t.index++}function s(t){var n,e=t.index,i=e,a=t.max,o=!1,s=!1,h=!1,u=!1;if(i>=a)return void(t.err="SvgPath: missed param (at pos "+i+")");if(n=t.path.charCodeAt(i),43!==n&&45!==n||(i++,n=i<a?t.path.charCodeAt(i):0),!r(n)&&46!==n)return void(t.err="SvgPath: param should start with 0..9 or `.` (at pos "+i+")");if(46!==n){if(o=48===n,i++,n=i<a?t.path.charCodeAt(i):0,o&&i<a&&n&&r(n))return void(t.err="SvgPath: numbers started with `0` such as `09` are ilegal (at pos "+e+")");for(;i<a&&r(t.path.charCodeAt(i));)i++,s=!0;n=i<a?t.path.charCodeAt(i):0}if(46===n){for(u=!0,i++;r(t.path.charCodeAt(i));)i++,h=!0;n=i<a?t.path.charCodeAt(i):0}if(101===n||69===n){if(u&&!s&&!h)return void(t.err="SvgPath: invalid float exponent (at pos "+i+")");if(i++,n=i<a?t.path.charCodeAt(i):0,43!==n&&45!==n||i++,!(i<a&&r(t.path.charCodeAt(i))))return void(t.err="SvgPath: invalid float exponent (at pos "+i+")");for(;i<a&&r(t.path.charCodeAt(i));)i++}t.index=i,t.param=parseFloat(t.path.slice(e,i))+0}function h(t){var n,e;n=t.path[t.segmentStart],e=n.toLowerCase();var r=t.data;if("m"===e&&r.length>2&&(t.result.push([n,r[0],r[1]]),r=r.slice(2),e="l",n="m"===n?"l":"L"),"r"===e)t.result.push([n].concat(r));else for(;r.length>=rn[e]&&(t.result.push([n].concat(r.splice(0,rn[e]))),rn[e]););}function u(t){var n,r,a,u,c=t.max;if(t.segmentStart=t.index,n=t.path.charCodeAt(t.index),!e(n))return void(t.err="SvgPath: bad command "+t.path[t.index]+" (at pos "+t.index+")");if(a=rn[t.path[t.index].toLowerCase()],t.index++,o(t),t.data=[],!a)return void h(t);for(r=!1;;){for(u=a;u>0;u--){if(s(t),t.err.length)return;t.data.push(t.param),o(t),r=!1,t.index<c&&44===t.path.charCodeAt(t.index)&&(t.index++,o(t),r=!0)}if(!r){if(t.index>=t.max)break;if(!i(t.path.charCodeAt(t.index)))break}}h(t)}function c(t,n){return[t[0]*n[0]+t[2]*n[1],t[1]*n[0]+t[3]*n[1],t[0]*n[2]+t[2]*n[3],t[1]*n[2]+t[3]*n[3],t[0]*n[4]+t[2]*n[5]+t[4],t[1]*n[4]+t[3]*n[5]+t[5]]}function f(){if(!(this instanceof f))return new f;this.queue=[],this.cache=null}function l(t,n,e,r){var i=t*r-n*e<0?-1:1,a=Math.sqrt(t*t+n*n),o=Math.sqrt(t*t+n*n),s=t*e+n*r,h=s/(a*o);return h>1&&(h=1),h<-1&&(h=-1),i*Math.acos(h)}function p(t,n,e,r,i,a,o,s,h,u){var c=u*(t-e)/2+h*(n-r)/2,f=-h*(t-e)/2+u*(n-r)/2,p=o*o,g=s*s,v=c*c,x=f*f,y=p*g-p*x-g*v;y<0&&(y=0),y/=p*x+g*v,y=Math.sqrt(y)*(i===a?-1:1);var d=y*o/s*f,m=y*-s/o*c,M=u*d-h*m+(t+e)/2,w=h*d+u*m+(n+r)/2,b=(c-d)/o,L=(f-m)/s,A=(-c-d)/o,q=(-f-m)/s,k=l(1,0,b,L),P=l(b,L,A,q);return 0===a&&P>0&&(P-=ln),1===a&&P<0&&(P+=ln),[M,w,k,P]}function g(t,n){var e=4/3*Math.tan(n/4),r=Math.cos(t),i=Math.sin(t),a=Math.cos(t+n),o=Math.sin(t+n);return[r,i,r-i*e,i+r*e,a+o*e,o-a*e,a,o]}function v(t,n,e){if(!(this instanceof v))return new v(t,n,e);this.rx=t,this.ry=n,this.ax=e}function x(t){if(!(this instanceof x))return new x(t);var n=on(t);this.segments=n.segments,this.err=n.err,this.__stack=[]}function y(t){var n=t.match(wn);return n?n.map(Number):[]}function d(t,n,e,r,i,a,o,s){this.a={x:t,y:n},this.b={x:e,y:r},this.c={x:i,y:a},this.d={x:o,y:s},null!==o&&void 0!==o&&null!==s&&void 0!==s?(this.getArcLength=_,this.getPoint=L,this.getDerivative=M):(this.getArcLength=A,this.getPoint=b,this.getDerivative=m),this.init()}function m(t,n,e){return{x:2*(1-e)*(t[1]-t[0])+2*e*(t[2]-t[1]),y:2*(1-e)*(n[1]-n[0])+2*e*(n[2]-n[1])}}function M(t,n,e){return b([3*(t[1]-t[0]),3*(t[2]-t[1]),3*(t[3]-t[2])],[3*(n[1]-n[0]),3*(n[2]-n[1]),3*(n[3]-n[2])],e)}function w(t,n,e,r,i){for(var a=1,o=t/n,s=(t-e(r,i,o))/n;a>.001;){var h=e(r,i,o+s),u=e(r,i,o-s),c=Math.abs(t-h)/n,f=Math.abs(t-u)/n;c<a?(a=c,o+=s):f<a?(a=f,o-=s):s/=2}return o}function b(t,n,e){return{x:(1-e)*(1-e)*t[0]+2*(1-e)*e*t[1]+e*e*t[2],y:(1-e)*(1-e)*n[0]+2*(1-e)*e*n[1]+e*e*n[2]}}function L(t,n,e){return{x:(1-e)*(1-e)*(1-e)*t[0]+3*(1-e)*(1-e)*e*t[1]+3*(1-e)*e*e*t[2]+e*e*e*t[3],y:(1-e)*(1-e)*(1-e)*n[0]+3*(1-e)*(1-e)*e*n[1]+3*(1-e)*e*e*n[2]+e*e*e*n[3]}}function A(t,n,e){void 0===e&&(e=1);var r=t[0]-2*t[1]+t[2],i=n[0]-2*n[1]+n[2],a=2*t[1]-2*t[0],o=2*n[1]-2*n[0],s=4*(r*r+i*i),h=4*(r*a+i*o),u=a*a+o*o;if(0===s)return e*Math.sqrt(Math.pow(t[2]-t[0],2)+Math.pow(n[2]-n[0],2));var c=h/(2*s),f=u/s,l=e+c,p=f-c*c;return Math.sqrt(s)/2*(l*Math.sqrt(l*l+p)-c*Math.sqrt(c*c+p)+p*Math.log(Math.abs((l+Math.sqrt(l*l+p))/(c+Math.sqrt(c*c+p)))))}function q(t,n){return qn[t][n]}function k(t,n,e){var r,i,a,o=e.length-1;if(0===o)return 0;if(0===t){for(i=0,a=0;a<=o;a++)i+=q(o,a)*Math.pow(1-n,o-a)*Math.pow(n,a)*e[a];return i}for(r=new Array(o),a=0;a<o;a++)r[a]=o*(e[a+1]-e[a]);return k(t-1,n,r)}function P(t,n,e){var r=k(1,e,t),i=k(1,e,n),a=r*r+i*i;return Math.sqrt(a)}function _(t,n,e){var r,i,a,o;void 0===e&&(e=1);for(r=e/2,i=0,a=0;a<20;a++)o=r*Ln[20][a]+r,i+=An[20][a]*P(t,n,o);return r*i}function E(t,n,e,r){var i=t*r-n*e<0?-1:1,a=t*e+n*r;return a>1&&(a=1),a<-1&&(a=-1),i*Math.acos(a)}function S(t,n,e,r,i,a,o,s,h,u){var c=u*(t-e)/2+h*(n-r)/2,f=-h*(t-e)/2+u*(n-r)/2,l=o*o,p=s*s,g=c*c,v=f*f,x=l*p-l*v-p*g;x<0&&(x=0),x/=l*v+p*g,x=Math.sqrt(x)*(i===a?-1:1);var y=x*o/s*f,d=x*-s/o*c,m=u*y-h*d+(t+e)/2,M=h*y+u*d+(n+r)/2,w=(c-y)/o,b=(f-d)/s,L=(-c-y)/o,A=(-f-d)/s,q=E(1,0,w,b),k=E(w,b,L,A);return 0===a&&k>0&&(k-=kn),1===a&&k<0&&(k+=kn),[m,M,q,k]}function C(t,n){var e=4/3*Math.tan(n/4),r=Math.cos(t),i=Math.sin(t),a=Math.cos(t+n),o=Math.sin(t+n);return[r,i,r-i*e,i+r*e,a+o*e,o-a*e,a,o]}function Z(t,n,e,r,i,a,o,s,h){var u=0,c=[],f=[];Pn(t,n,e,r,i,a,o,s,h).forEach(function(t){var n=new bn(t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7]),e=n.getTotalLength();u+=e,c.push(e),f.push(n)}),this.length=u,this.partialLengths=c,this.curves=f}function T(t,n,e,r){this.x0=t,this.x1=n,this.y0=e,this.y1=r}function F(t,n){return Math.sqrt((t[0]-n[0])*(t[0]-n[0])+(t[1]-n[1])*(t[1]-n[1]))}function z(t,n,e){return[t[0]+(n[0]-t[0])*e,t[1]+(n[1]-t[1])*e]}function j(t,n){return F(t,n)<1e-9}function I(t,n,e){var r=t.map(function(t,e){return V(t,n[e])});return function(t){var n=r.map(function(n){return n(t)});return e?H(n):n}}function V(t,n){return function(e){return t.map(function(t,r){return t+e*(n[r]-t)})}}function X(t){return"number"==typeof t&&isFinite(t)}function Y(t){return G(t)?nn(t):[(t[0][0]+t[t.length-1][0])/2,(t[0][1]+t[t.length-1][1])/2]}function G(t){for(var n=0;n<t.length-2;n++){var e=t[n],r=t[n+1],i=t[n+2];if(e[0]*(r[1]-i[1])+r[0]*(i[1]-e[1])+i[0]*(e[1]-r[1]))return!0}return!1}function O(t){return new yn(t).abs()}function D(t){return t.toString().split("M").map(function(t,n){return t=t.trim(),n&&t?"M"+t:t}).filter(function(t){return t})}function H(t){return"M"+t.join("L")+"Z"}function N(t){return D(O(t))}function Q(t,n){var e=O(t);return U(e)||R(e,n)}function U(t){var n=t.segments||[],e=[];if(!n.length||"M"!==n[0][0])return!1;for(var r=0;r<n.length;r++){var i=n[r],a=i[0],o=i[1],s=i[2];if("M"===a&&r||"Z"===a)break;if("M"===a||"L"===a)e.push([o,s]);else if("H"===a)e.push([o,e[e.length-1][1]]);else{if("V"!==a)return!1;e.push([e[e.length-1][0],o])}}return!!e.length&&{ring:e}}function R(t,n){var e,r,i=D(t)[0],a=[],o=3;if(!i)throw new TypeError(Cn);r=B(i),e=r.getTotalLength(),n&&X(n)&&n>0&&(o=Math.max(o,Math.ceil(e/n)));for(var s=0;s<o;s++){var h=r.getPointAtLength(e*s/o);a.push([h.x,h.y])}return{ring:a,skipBisect:!0}}function B(t){if("undefined"!=typeof window&&window&&window.document)try{var n=window.document.createElementNS("http://www.w3.org/2000/svg","path");return n.setAttributeNS(null,"d",t),n}catch(t){}return Sn(t)}function W(t,n){for(var e=t.length+n,r=en(t)/n,i=0,a=0,o=r/2;t.length<e;){var s=t[i],h=t[(i+1)%t.length],u=F(s,h);o<=a+u?(t.splice(i+1,0,u?z(s,h,(o-a)/u):s.slice(0)),o+=r):(a+=u,i++)}}function $(t,n){void 0===n&&(n=1/0);for(var e=0;e<t.length;e++)for(var r=t[e],i=e===t.length-1?t[0]:t[e+1];F(r,i)>n;)i=z(r,i,.5),t.splice(e+1,0,i)}function J(t,n){var e,r,i;if("string"==typeof t){var a=Q(t,n);t=a.ring,i=a.skipBisect}else if(!Array.isArray(t))throw new TypeError(Cn);if(e=t.slice(0),!K(e))throw new TypeError(Cn);return e.length>1&&j(e[0],e[e.length-1])&&e.pop(),r=tn(e),r>0&&e.reverse(),!i&&n&&X(n)&&n>0&&$(e,n),e}function K(t){return t.every(function(t){return Array.isArray(t)&&t.length>=2&&X(t[0])&&X(t[1])})}function tt(t,n,e){var r;return r=t.length-n.length,W(t,r<0?-1*r:0),W(n,r>0?r:0),Tn(t,n),I(t,n,e)}function nt(t,n,e){e=e||2;var r=n&&n.length,i=r?n[0]*e:t.length,a=et(t,0,i,e,!0),o=[];if(!a)return o;var s,h,u,c,f,l,p;if(r&&(a=ut(t,n,a,e)),t.length>80*e){s=u=t[0],h=c=t[1];for(var g=e;g<i;g+=e)f=t[g],l=t[g+1],f<s&&(s=f),l<h&&(h=l),f>u&&(u=f),l>c&&(c=l);p=Math.max(u-s,c-h)}return it(a,o,e,s,h,p),o}function et(t,n,e,r,i){var a,o;if(i===Et(t,n,e,r)>0)for(a=n;a<e;a+=r)o=kt(a,t[a],t[a+1],o);else for(a=e-r;a>=n;a-=r)o=kt(a,t[a],t[a+1],o);return o&&Mt(o,o.next)&&(Pt(o),o=o.next),o}function rt(t,n){if(!t)return t;n||(n=t);var e,r=t;do{if(e=!1,r.steiner||!Mt(r,r.next)&&0!==mt(r.prev,r,r.next))r=r.next;else{if(Pt(r),(r=n=r.prev)===r.next)return null;e=!0}}while(e||r!==n);return n}function it(t,n,e,r,i,a,o){if(t){!o&&a&&pt(t,r,i,a);for(var s,h,u=t;t.prev!==t.next;)if(s=t.prev,h=t.next,a?ot(t,r,i,a):at(t))n.push(s.i/e),n.push(t.i/e),n.push(h.i/e),Pt(t),t=h.next,u=h.next;else if((t=h)===u){o?1===o?(t=st(t,n,e),it(t,n,e,r,i,a,2)):2===o&&ht(t,n,e,r,i,a):it(rt(t),n,e,r,i,a,1);break}}}function at(t){var n=t.prev,e=t,r=t.next;if(mt(n,e,r)>=0)return!1;for(var i=t.next.next;i!==t.prev;){if(yt(n.x,n.y,e.x,e.y,r.x,r.y,i.x,i.y)&&mt(i.prev,i,i.next)>=0)return!1;i=i.next}return!0}function ot(t,n,e,r){var i=t.prev,a=t,o=t.next;if(mt(i,a,o)>=0)return!1;for(var s=i.x<a.x?i.x<o.x?i.x:o.x:a.x<o.x?a.x:o.x,h=i.y<a.y?i.y<o.y?i.y:o.y:a.y<o.y?a.y:o.y,u=i.x>a.x?i.x>o.x?i.x:o.x:a.x>o.x?a.x:o.x,c=i.y>a.y?i.y>o.y?i.y:o.y:a.y>o.y?a.y:o.y,f=vt(s,h,n,e,r),l=vt(u,c,n,e,r),p=t.nextZ;p&&p.z<=l;){if(p!==t.prev&&p!==t.next&&yt(i.x,i.y,a.x,a.y,o.x,o.y,p.x,p.y)&&mt(p.prev,p,p.next)>=0)return!1;p=p.nextZ}for(p=t.prevZ;p&&p.z>=f;){if(p!==t.prev&&p!==t.next&&yt(i.x,i.y,a.x,a.y,o.x,o.y,p.x,p.y)&&mt(p.prev,p,p.next)>=0)return!1;p=p.prevZ}return!0}function st(t,n,e){var r=t;do{var i=r.prev,a=r.next.next;!Mt(i,a)&&wt(i,r,r.next,a)&&Lt(i,a)&&Lt(a,i)&&(n.push(i.i/e),n.push(r.i/e),n.push(a.i/e),Pt(r),Pt(r.next),r=t=a),r=r.next}while(r!==t);return r}function ht(t,n,e,r,i,a){var o=t;do{for(var s=o.next.next;s!==o.prev;){if(o.i!==s.i&&dt(o,s)){var h=qt(o,s);return o=rt(o,o.next),h=rt(h,h.next),it(o,n,e,r,i,a),void it(h,n,e,r,i,a)}s=s.next}o=o.next}while(o!==t)}function ut(t,n,e,r){var i,a,o,s,h,u=[];for(i=0,a=n.length;i<a;i++)o=n[i]*r,s=i<a-1?n[i+1]*r:t.length,h=et(t,o,s,r,!1),h===h.next&&(h.steiner=!0),u.push(xt(h));for(u.sort(ct),i=0;i<u.length;i++)ft(u[i],e),e=rt(e,e.next);return e}function ct(t,n){return t.x-n.x}function ft(t,n){if(n=lt(t,n)){var e=qt(n,t);rt(e,e.next)}}function lt(t,n){var e,r=n,i=t.x,a=t.y,o=-1/0;do{if(a<=r.y&&a>=r.next.y){var s=r.x+(a-r.y)*(r.next.x-r.x)/(r.next.y-r.y);if(s<=i&&s>o){if(o=s,s===i){if(a===r.y)return r;if(a===r.next.y)return r.next}e=r.x<r.next.x?r:r.next}}r=r.next}while(r!==n);if(!e)return null;if(i===o)return e.prev;var h,u=e,c=e.x,f=e.y,l=1/0;for(r=e.next;r!==u;)i>=r.x&&r.x>=c&&yt(a<f?i:o,a,c,f,a<f?o:i,a,r.x,r.y)&&((h=Math.abs(a-r.y)/(i-r.x))<l||h===l&&r.x>e.x)&&Lt(r,t)&&(e=r,l=h),r=r.next;return e}function pt(t,n,e,r){var i=t;do{null===i.z&&(i.z=vt(i.x,i.y,n,e,r)),i.prevZ=i.prev,i.nextZ=i.next,i=i.next}while(i!==t);i.prevZ.nextZ=null,i.prevZ=null,gt(i)}function gt(t){var n,e,r,i,a,o,s,h,u=1;do{for(e=t,t=null,a=null,o=0;e;){for(o++,r=e,s=0,n=0;n<u&&(s++,r=r.nextZ);n++);for(h=u;s>0||h>0&&r;)0===s?(i=r,r=r.nextZ,h--):0!==h&&r?e.z<=r.z?(i=e,e=e.nextZ,s--):(i=r,r=r.nextZ,h--):(i=e,e=e.nextZ,s--),a?a.nextZ=i:t=i,i.prevZ=a,a=i;e=r}a.nextZ=null,u*=2}while(o>1);return t}function vt(t,n,e,r,i){return t=32767*(t-e)/i,n=32767*(n-r)/i,t=16711935&(t|t<<8),t=252645135&(t|t<<4),t=858993459&(t|t<<2),t=1431655765&(t|t<<1),n=16711935&(n|n<<8),n=252645135&(n|n<<4),n=858993459&(n|n<<2),n=1431655765&(n|n<<1),t|n<<1}function xt(t){var n=t,e=t;do{n.x<e.x&&(e=n),n=n.next}while(n!==t);return e}function yt(t,n,e,r,i,a,o,s){return(i-o)*(n-s)-(t-o)*(a-s)>=0&&(t-o)*(r-s)-(e-o)*(n-s)>=0&&(e-o)*(a-s)-(i-o)*(r-s)>=0}function dt(t,n){return t.next.i!==n.i&&t.prev.i!==n.i&&!bt(t,n)&&Lt(t,n)&&Lt(n,t)&&At(t,n)}function mt(t,n,e){return(n.y-t.y)*(e.x-n.x)-(n.x-t.x)*(e.y-n.y)}function Mt(t,n){return t.x===n.x&&t.y===n.y}function wt(t,n,e,r){return!!(Mt(t,n)&&Mt(e,r)||Mt(t,r)&&Mt(e,n))||mt(t,n,e)>0!=mt(t,n,r)>0&&mt(e,r,t)>0!=mt(e,r,n)>0}function bt(t,n){var e=t;do{if(e.i!==t.i&&e.next.i!==t.i&&e.i!==n.i&&e.next.i!==n.i&&wt(e,e.next,t,n))return!0;e=e.next}while(e!==t);return!1}function Lt(t,n){return mt(t.prev,t,t.next)<0?mt(t,n,t.next)>=0&&mt(t,t.prev,n)>=0:mt(t,n,t.prev)<0||mt(t,t.next,n)<0}function At(t,n){var e=t,r=!1,i=(t.x+n.x)/2,a=(t.y+n.y)/2;do{e.y>a!=e.next.y>a&&i<(e.next.x-e.x)*(a-e.y)/(e.next.y-e.y)+e.x&&(r=!r),e=e.next}while(e!==t);return r}function qt(t,n){var e=new _t(t.i,t.x,t.y),r=new _t(n.i,n.x,n.y),i=t.next,a=n.prev;return t.next=n,n.prev=t,e.next=i,i.prev=e,r.next=e,e.prev=r,a.next=r,r.prev=a,r}function kt(t,n,e,r){var i=new _t(t,n,e);return r?(i.next=r.next,i.prev=r,r.next.prev=i,r.next=i):(i.prev=i,i.next=i),i}function Pt(t){t.next.prev=t.prev,t.prev.next=t.next,t.prevZ&&(t.prevZ.nextZ=t.nextZ),t.nextZ&&(t.nextZ.prevZ=t.prevZ)}function _t(t,n,e){this.i=t,this.x=n,this.y=e,this.prev=null,this.next=null,this.z=null,this.prevZ=null,this.nextZ=null,this.steiner=!1}function Et(t,n,e,r){for(var i=0,a=n,o=e-r;a<e;a+=r)i+=(t[o]-t[a])*(t[a+1]+t[o+1]),o=a;return i}function St(t,n){var e=n.id,r=n.bbox,i=null==n.properties?{}:n.properties,a=Ct(t,n);return null==e&&null==r?{type:"Feature",properties:i,geometry:a}:null==r?{type:"Feature",id:e,properties:i,geometry:a}:{type:"Feature",id:e,bbox:r,properties:i,geometry:a}}function Ct(t,n){function e(t,n){n.length&&n.pop();for(var e=u[t<0?~t:t],r=0,i=e.length;r<i;++r)n.push(h(e[r],r));t<0&&Vn(n,i)}function r(t){return h(t)}function i(t){for(var n=[],r=0,i=t.length;r<i;++r)e(t[r],n);return n.length<2&&n.push(n[0]),n}function a(t){for(var n=i(t);n.length<4;)n.push(n[0]);return n}function o(t){return t.map(a)}function s(t){var n,e=t.type;switch(e){case"GeometryCollection":return{type:e,geometries:t.geometries.map(s)};case"Point":n=r(t.coordinates);break;case"MultiPoint":n=t.coordinates.map(r);break;case"LineString":n=i(t.arcs);break;case"MultiLineString":n=t.arcs.map(i);break;case"Polygon":n=o(t.arcs);break;case"MultiPolygon":n=t.arcs.map(o);break;default:return null}return{type:e,coordinates:n}}var h=In(t.transform),u=t.arcs;return s(n)}function Zt(t){for(var n,e=-1,r=t.length,i=t[r-1],a=0;++e<r;)n=i,i=t[e],a+=n[0]*i[1]-n[1]*i[0];return Math.abs(a)}function Tt(t,n){function e(t){switch(t.type){case"GeometryCollection":t.geometries.forEach(e);break;case"Polygon":r(t.arcs);break;case"MultiPolygon":t.arcs.forEach(r)}}function r(t){t.forEach(function(n){n.forEach(function(n){(a[n=n<0?~n:n]||(a[n]=[])).push(t)})}),o.push(t)}function i(n){return Zt(Ct(t,{type:"Polygon",arcs:[n]}).coordinates[0])}var a={},o=[],s=[];return n.forEach(e),o.forEach(function(t){if(!t._){var n=[],e=[t];for(t._=1,s.push(n);t=e.pop();)n.push(t),t.forEach(function(t){t.forEach(function(t){a[t<0?~t:t].forEach(function(t){t._||(t._=1,e.push(t))})})})}}),o.forEach(function(t){delete t._}),{type:"MultiPolygon",arcs:s.map(function(n){var e,r=[];if(n.forEach(function(t){t.forEach(function(t){t.forEach(function(t){a[t<0?~t:t].length<2&&r.push(t)})})}),r=Yn(t,r),(e=r.length)>1)for(var o,s,h=1,u=i(r[0]);h<e;++h)(o=i(r[h]))>u&&(s=r[0],r[0]=r[h],r[h]=s,u=o);return r})}}function Ft(t){return function(n,e){return Dn(t(n),e)}}function zt(t,n){var e={},r={type:"Topology",objects:{triangles:{type:"GeometryCollection",geometries:[]}},arcs:[]};return t.forEach(function(t){var i=[];t.forEach(function(t,a){var o=t[0]<t[1]?t.join(","):t[1]+","+t[0],s=t.map(function(t){return n[t]});o in e?i.push(~e[o]):(i.push(e[o]=r.arcs.length),r.arcs.push(s))}),r.objects.triangles.geometries.push({type:"Polygon",area:Math.abs(tn(t.map(function(t){return n[t[0]]}))),arcs:[i]})}),r.objects.triangles.geometries.sort(function(t,n){return t.area-n.area}),r}function jt(t,n){for(var e=t.objects.triangles.geometries,r=Hn(function(t){return t.area}).left;e.length>n;)!function(){var n=e[0],i=On(e)[0][0],a=e[i],o=Tt(t,[n,a]);o.area=n.area+a.area,o.type="Polygon",o.arcs=o.arcs[0],e.splice(i,1),e.shift(),e.splice(r(e,o.area),0,o)}();if(n>e.length)throw new RangeError("Can't collapse topology into "+n+" pieces.");return Xn(t,t.objects.triangles).features.map(function(t){return t.geometry.coordinates[0].pop(),t.geometry.coordinates[0]})}function It(t){for(var n=zn(t.reduce(function(t,n){return t.concat([n[0]],[n[1]])},[])),e=[],r=0,i=n.length;r<i;r+=3)e.push([[n[r],n[r+1]],[n[r+1],n[r+2]],[n[r+2],n[r]]]);return e}function Vt(t,n,e){function r(t,n,o){void 0===n&&(n=[]),void 0===o&&(o=0);for(var s=0;s<t.length;s++){var h=t.splice(s,1),u=e[h[0]][n.length];o+u<i&&(t.length?r(t.slice(),n.concat(h),o+u):(i=o+u,a=n.concat(h))),t.length&&t.splice(s,0,h[0])}}var i=1/0,a=t.map(function(t,n){return n});return r(a),a}function Xt(t,n){var e=F(Y(t),Y(n));return e*e}function Yt(t,n,e){void 0===e&&(e={});var r=e.maxSegmentLength;void 0===r&&(r=10);var i=e.string;void 0===i&&(i=!0);var a=e.single;void 0===a&&(a=!1);var o=J(t,r);o.length<n.length+2&&W(o,n.length+2-o.length);var s,h=Qn(o,n.length),u=n.map(function(t){return J(t,r)}),c="string"==typeof t&&t;return a&&!n.every(function(t){return"string"==typeof t})||(s=n.slice(0)),Dt(h,u,{match:!0,string:i,single:a,t0:c,t1:s})}function Gt(t,n,e){void 0===e&&(e={});var r=e.maxSegmentLength;void 0===r&&(r=10);var i=e.string;void 0===i&&(i=!0);var a=e.single;void 0===a&&(a=!1);var o=Yt(n,t,{maxSegmentLength:r,string:i,single:a});return a?function(t){return o(1-t)}:o.map(function(t){return function(n){return t(1-n)}})}function Ot(t,n,e){void 0===e&&(e={});var r=e.maxSegmentLength;void 0===r&&(r=10);var i=e.string;void 0===i&&(i=!0);var a=e.single;if(void 0===a&&(a=!1),!Array.isArray(t)||!Array.isArray(n)||t.length!==n.length||!t.length)throw new TypeError(Zn);var o,s,h=function(t){return J(t,r)},u=t.map(h),c=n.map(h);return a?(t.every(function(t){return"string"==typeof t})&&(o=t.slice(0)),n.every(function(t){return"string"==typeof t})&&(s=n.slice(0))):(o=t.slice(0),s=n.slice(0)),Dt(u,c,{string:i,single:a,t0:o,t1:s,match:!1})}function Dt(t,n,e){void 0===e&&(e={});var r=e.string,i=e.single,a=e.t0,o=e.t1,s=e.match,h=s?Un(t,n):t.map(function(t,n){return n}),u=h.map(function(e,i){return tt(t[e],n[i],r)});if(s&&Array.isArray(a)&&(a=h.map(function(t){return a[t]})),i&&r&&(Array.isArray(a)&&(a=a.join(" ")),Array.isArray(o)&&(o=o.join(" "))),i){var c=r?function(t){return u.map(function(n){return n(t)}).join(" ")}:function(t){return u.map(function(n){return n(t)})};return r&&(a||o)?function(t){return t<1e-4&&a||1-t<1e-4&&o||c(t)}:c}return r?(a=Array.isArray(a)?a.map(function(t){return"string"==typeof t&&t}):[],o=Array.isArray(o)?o.map(function(t){return"string"==typeof t&&t}):[],u.map(function(t,n){return a[n]||o[n]?function(e){return e<1e-4&&a[n]||1-e<1e-4&&o[n]||t(e)}:t})):u}function Ht(t,n,e,r,i){return Rt(Bt(t,n,e),r,Jt(t,n,e),2*Math.PI*e,i)}function Nt(t,n,e,r,i){var a=Ht(n,e,r,t,i);return function(t){return a(1-t)}}function Qt(t,n,e,r,i,a){return Rt(Wt(t,n,e,r),i,Kt(t,n,e,r),2*e+2*r,a)}function Ut(t,n,e,r,i,a){var o=Qt(n,e,r,i,t,a);return function(t){return o(1-t)}}function Rt(t,n,e,r,i){void 0===i&&(i={});var a=i.maxSegmentLength;void 0===a&&(a=10);var o=i.string;void 0===o&&(o=!0);var s,h,u=J(n,a);return X(r)&&u.length<r/a&&W(u,Math.ceil(r/a-u.length)),s=t(u),h=I(s,u,o),o?function(t){return t<1e-4?e:h(t)}:h}function Bt(t,n,e){return function(r){var i=Y(r),a=en(r.concat([r[0]])),o=Math.atan2(r[0][1]-i[1],r[0][0]-i[0]),s=0;return r.map(function(i,h){var u;return h&&(s+=F(i,r[h-1])),u=o+2*Math.PI*(a?s/a:h/r.length),[Math.cos(u)*e+t,Math.sin(u)*e+n]})}}function Wt(t,n,e,r){return function(i){var a=Y(i),o=en(i.concat([i[0]])),s=Math.atan2(i[0][1]-a[1],i[0][0]-a[0]),h=0;s<0&&(s=2*Math.PI+s);var u=s/(2*Math.PI);return i.map(function(a,s){s&&(h+=F(a,i[s-1]));var c=$t((u+(o?h/o:s/i.length))%1);return[t+c[0]*e,n+c[1]*r]})}}function $t(t){return t<=1/8?[1,.5+4*t]:t<=3/8?[1.5-4*t,1]:t<=5/8?[0,2.5-4*t]:t<=7/8?[4*t-2.5,0]:[1,4*t-3.5]}function Jt(t,n,e){var r=t-e+","+n,i=t+e+","+n,a="A"+e+","+e+",0,1,1,";return"M"+r+a+i+a+r+"Z"}function Kt(t,n,e,r){var i=t+e,a=n+r;return"M"+t+","+n+"L"+i+","+n+"L"+i+","+a+"L"+t+","+a+"Z"}var tn=function(t){for(var n,e=-1,r=t.length,i=t[r-1],a=0;++e<r;)n=i,i=t[e],a+=n[1]*i[0]-n[0]*i[1];return a/2},nn=function(t){for(var n,e,r=-1,i=t.length,a=0,o=0,s=t[i-1],h=0;++r<i;)n=s,s=t[r],h+=e=n[0]*s[1]-s[0]*n[1],a+=(n[0]+s[0])*e,o+=(n[1]+s[1])*e;return h*=3,[a/h,o/h]},en=function(t){for(var n,e,r=-1,i=t.length,a=t[i-1],o=a[0],s=a[1],h=0;++r<i;)n=o,e=s,a=t[r],o=a[0],s=a[1],n-=o,e-=s,h+=Math.sqrt(n*n+e*e);return h},rn={a:7,c:6,h:1,l:2,m:2,r:4,q:4,s:4,t:2,v:1,z:0},an=[5760,6158,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8239,8287,12288,65279],on=function(t){var n=new a(t),e=n.max;for(o(n);n.index<e&&!n.err.length;)u(n);return n.err.length?n.result=[]:n.result.length&&("mM".indexOf(n.result[0][0])<0?(n.err="SvgPath: string should start with `M` or `m`",n.result=[]):n.result[0][0]="M"),{err:n.err,segments:n.result}};f.prototype.matrix=function(t){return 1===t[0]&&0===t[1]&&0===t[2]&&1===t[3]&&0===t[4]&&0===t[5]?this:(this.cache=null,this.queue.push(t),this)},f.prototype.translate=function(t,n){return 0===t&&0===n||(this.cache=null,this.queue.push([1,0,0,1,t,n])),this},f.prototype.scale=function(t,n){return 1===t&&1===n||(this.cache=null,this.queue.push([t,0,0,n,0,0])),this},f.prototype.rotate=function(t,n,e){var r,i,a;return 0!==t&&(this.translate(n,e),r=t*Math.PI/180,i=Math.cos(r),a=Math.sin(r),this.queue.push([i,a,-a,i,0,0]),this.cache=null,this.translate(-n,-e)),this},f.prototype.skewX=function(t){return 0!==t&&(this.cache=null,this.queue.push([1,0,Math.tan(t*Math.PI/180),1,0,0])),this},f.prototype.skewY=function(t){return 0!==t&&(this.cache=null,this.queue.push([1,Math.tan(t*Math.PI/180),0,1,0,0])),this},f.prototype.toArray=function(){var t=this;if(this.cache)return this.cache;if(!this.queue.length)return this.cache=[1,0,0,1,0,0],this.cache;if(this.cache=this.queue[0],1===this.queue.length)return this.cache;for(var n=1;n<this.queue.length;n++)t.cache=c(t.cache,t.queue[n]);return this.cache},f.prototype.calc=function(t,n,e){var r;return this.queue.length?(this.cache||(this.cache=this.toArray()),r=this.cache,[t*r[0]+n*r[2]+(e?0:r[4]),t*r[1]+n*r[3]+(e?0:r[5])]):[t,n]};var sn=f,hn={matrix:!0,scale:!0,rotate:!0,translate:!0,skewX:!0,skewY:!0},un=/\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/,cn=/[\s,]+/,fn=function(t){var n,e,r=new sn;return t.split(un).forEach(function(t){if(t.length){if(void 0!==hn[t])return void(n=t);switch(e=t.split(cn).map(function(t){return+t||0}),n){case"matrix":return void(6===e.length&&r.matrix(e));case"scale":return void(1===e.length?r.scale(e[0],e[0]):2===e.length&&r.scale(e[0],e[1]));case"rotate":return void(1===e.length?r.rotate(e[0],0,0):3===e.length&&r.rotate(e[0],e[1],e[2]));case"translate":return void(1===e.length?r.translate(e[0],0):2===e.length&&r.translate(e[0],e[1]));case"skewX":return void(1===e.length&&r.skewX(e[0]));case"skewY":return void(1===e.length&&r.skewY(e[0]))}}}),r},ln=2*Math.PI,pn=function(t,n,e,r,i,a,o,s,h){var u=Math.sin(h*ln/360),c=Math.cos(h*ln/360),f=c*(t-e)/2+u*(n-r)/2,l=-u*(t-e)/2+c*(n-r)/2;if(0===f&&0===l)return[];if(0===o||0===s)return[];o=Math.abs(o),s=Math.abs(s);var v=f*f/(o*o)+l*l/(s*s);v>1&&(o*=Math.sqrt(v),s*=Math.sqrt(v));var x=p(t,n,e,r,i,a,o,s,u,c),y=[],d=x[2],m=x[3],M=Math.max(Math.ceil(Math.abs(m)/(ln/4)),1);m/=M;for(var w=0;w<M;w++)y.push(g(d,m)),d+=m;return y.map(function(t){for(var n=0;n<t.length;n+=2){var e=t[n+0],r=t[n+1];e*=o,r*=s;var i=c*e-u*r,a=u*e+c*r;t[n+0]=i+x[0],t[n+1]=a+x[1]}return t})},gn=Math.PI/180;v.prototype.transform=function(t){var n=Math.cos(this.ax*gn),e=Math.sin(this.ax*gn),r=[this.rx*(t[0]*n+t[2]*e),this.rx*(t[1]*n+t[3]*e),this.ry*(-t[0]*e+t[2]*n),this.ry*(-t[1]*e+t[3]*n)],i=r[0]*r[0]+r[2]*r[2],a=r[1]*r[1]+r[3]*r[3],o=((r[0]-r[3])*(r[0]-r[3])+(r[2]+r[1])*(r[2]+r[1]))*((r[0]+r[3])*(r[0]+r[3])+(r[2]-r[1])*(r[2]-r[1])),s=(i+a)/2;if(o<1e-10*s)return this.rx=this.ry=Math.sqrt(s),this.ax=0,this;var h=r[0]*r[1]+r[2]*r[3];o=Math.sqrt(o);var u=s+o/2,c=s-o/2;return this.ax=Math.abs(h)<1e-10&&Math.abs(u-a)<1e-10?90:180*Math.atan(Math.abs(h)>Math.abs(u-a)?(u-i)/h:h/(u-a))/Math.PI,this.ax>=0?(this.rx=Math.sqrt(u),this.ry=Math.sqrt(c)):(this.ax+=90,this.rx=Math.sqrt(c),this.ry=Math.sqrt(u)),this},v.prototype.isDegenerate=function(){return this.rx<1e-10*this.ry||this.ry<1e-10*this.rx};var vn=v;x.prototype.__matrix=function(t){var n,e=this;t.queue.length&&this.iterate(function(r,i,a,o){var s,h,u,c;switch(r[0]){case"v":s=t.calc(0,r[1],!0),h=0===s[0]?["v",s[1]]:["l",s[0],s[1]];break;case"V":s=t.calc(a,r[1],!1),h=s[0]===t.calc(a,o,!1)[0]?["V",s[1]]:["L",s[0],s[1]];break;case"h":s=t.calc(r[1],0,!0),h=0===s[1]?["h",s[0]]:["l",s[0],s[1]];break;case"H":s=t.calc(r[1],o,!1),h=s[1]===t.calc(a,o,!1)[1]?["H",s[0]]:["L",s[0],s[1]];break;case"a":case"A":var f=t.toArray(),l=vn(r[1],r[2],r[3]).transform(f);if(f[0]*f[3]-f[1]*f[2]<0&&(r[5]=r[5]?"0":"1"),s=t.calc(r[6],r[7],"a"===r[0]),"A"===r[0]&&r[6]===a&&r[7]===o||"a"===r[0]&&0===r[6]&&0===r[7]){h=["a"===r[0]?"l":"L",s[0],s[1]];break}h=l.isDegenerate()?["a"===r[0]?"l":"L",s[0],s[1]]:[r[0],l.rx,l.ry,l.ax,r[4],r[5],s[0],s[1]];break;case"m":c=i>0,s=t.calc(r[1],r[2],c),h=["m",s[0],s[1]];break;default:for(u=r[0],h=[u],c=u.toLowerCase()===u,n=1;n<r.length;n+=2)s=t.calc(r[n],r[n+1],c),h.push(s[0],s[1])}e.segments[i]=h},!0)},x.prototype.__evaluateStack=function(){var t,n,e=this;if(this.__stack.length){if(1===this.__stack.length)return this.__matrix(this.__stack[0]),void(this.__stack=[]);for(t=sn(),n=this.__stack.length;--n>=0;)t.matrix(e.__stack[n].toArray());this.__matrix(t),this.__stack=[]}},x.prototype.toString=function(){var t,n,e=this,r=[];this.__evaluateStack();for(var i=0;i<this.segments.length;i++)n=e.segments[i][0],t=i>0&&"m"!==n&&"M"!==n&&n===e.segments[i-1][0],r=r.concat(t?e.segments[i].slice(1):e.segments[i]);return r.join(" ").replace(/ ?([achlmqrstvz]) ?/gi,"$1").replace(/ \-/g,"-").replace(/zm/g,"z m")},x.prototype.translate=function(t,n){return this.__stack.push(sn().translate(t,n||0)),this},x.prototype.scale=function(t,n){return this.__stack.push(sn().scale(t,n||0===n?n:t)),this},x.prototype.rotate=function(t,n,e){return this.__stack.push(sn().rotate(t,n||0,e||0)),this},x.prototype.skewX=function(t){return this.__stack.push(sn().skewX(t)),this},x.prototype.skewY=function(t){return this.__stack.push(sn().skewY(t)),this},x.prototype.matrix=function(t){return this.__stack.push(sn().matrix(t)),this},x.prototype.transform=function(t){return t.trim()?(this.__stack.push(fn(t)),this):this},x.prototype.round=function(t){var n,e=0,r=0,i=0,a=0;return t=t||0,this.__evaluateStack(),this.segments.forEach(function(o){var s=o[0].toLowerCase()===o[0];switch(o[0]){case"H":case"h":return s&&(o[1]+=i),i=o[1]-o[1].toFixed(t),void(o[1]=+o[1].toFixed(t));case"V":case"v":return s&&(o[1]+=a),a=o[1]-o[1].toFixed(t),void(o[1]=+o[1].toFixed(t));case"Z":case"z":return i=e,void(a=r);case"M":case"m":return s&&(o[1]+=i,o[2]+=a),i=o[1]-o[1].toFixed(t),a=o[2]-o[2].toFixed(t),e=i,r=a,o[1]=+o[1].toFixed(t),void(o[2]=+o[2].toFixed(t));case"A":case"a":return s&&(o[6]+=i,o[7]+=a),i=o[6]-o[6].toFixed(t),a=o[7]-o[7].toFixed(t),o[1]=+o[1].toFixed(t),o[2]=+o[2].toFixed(t),o[3]=+o[3].toFixed(t+2),o[6]=+o[6].toFixed(t),void(o[7]=+o[7].toFixed(t));default:return n=o.length,s&&(o[n-2]+=i,o[n-1]+=a),i=o[n-2]-o[n-2].toFixed(t),a=o[n-1]-o[n-1].toFixed(t),void o.forEach(function(n,e){e&&(o[e]=+o[e].toFixed(t))})}}),this},x.prototype.iterate=function(t,n){var e,r,i,a=this.segments,o={},s=!1,h=0,u=0,c=0,f=0;if(n||this.__evaluateStack(),a.forEach(function(n,e){var r=t(n,e,h,u);Array.isArray(r)&&(o[e]=r,s=!0);var i=n[0]===n[0].toLowerCase();switch(n[0]){case"m":case"M":return h=n[1]+(i?h:0),u=n[2]+(i?u:0),c=h,void(f=u);case"h":case"H":return void(h=n[1]+(i?h:0));case"v":case"V":return void(u=n[1]+(i?u:0));case"z":case"Z":return h=c,void(u=f);default:h=n[n.length-2]+(i?h:0),u=n[n.length-1]+(i?u:0)}}),!s)return this;for(i=[],e=0;e<a.length;e++)if(void 0!==o[e])for(r=0;r<o[e].length;r++)i.push(o[e][r]);else i.push(a[e]);return this.segments=i,this},x.prototype.abs=function(){return this.iterate(function(t,n,e,r){var i,a=t[0],o=a.toUpperCase();if(a!==o)switch(t[0]=o,a){case"v":return void(t[1]+=r);case"a":return t[6]+=e,void(t[7]+=r);default:for(i=1;i<t.length;i++)t[i]+=i%2?e:r}},!0),this},x.prototype.rel=function(){return this.iterate(function(t,n,e,r){var i,a=t[0],o=a.toLowerCase();if(a!==o&&(0!==n||"M"!==a))switch(t[0]=o,a){case"V":return void(t[1]-=r);case"A":return t[6]-=e,void(t[7]-=r);default:for(i=1;i<t.length;i++)t[i]-=i%2?e:r}},!0),this},x.prototype.unarc=function(){return this.iterate(function(t,n,e,r){var i,a,o,s=[],h=t[0];return"A"!==h&&"a"!==h?null:("a"===h?(a=e+t[6],o=r+t[7]):(a=t[6],o=t[7]),i=pn(e,r,a,o,t[4],t[5],t[1],t[2],t[3]),0===i.length?[["a"===t[0]?"l":"L",t[6],t[7]]]:(i.forEach(function(t){s.push(["C",t[2],t[3],t[4],t[5],t[6],t[7]])}),s))}),this},x.prototype.unshort=function(){var t,n,e,r,i,a=this.segments;return this.iterate(function(o,s,h,u){var c,f=o[0],l=f.toUpperCase();s&&("T"===l?(c="t"===f,e=a[s-1],"Q"===e[0]?(t=e[1]-h,n=e[2]-u):"q"===e[0]?(t=e[1]-e[3],n=e[2]-e[4]):(t=0,n=0),r=-t,i=-n,c||(r+=h,i+=u),a[s]=[c?"q":"Q",r,i,o[1],o[2]]):"S"===l&&(c="s"===f,e=a[s-1],"C"===e[0]?(t=e[3]-h,n=e[4]-u):"c"===e[0]?(t=e[3]-e[5],n=e[4]-e[6]):(t=0,n=0),r=-t,i=-n,c||(r+=h,i+=u),a[s]=[c?"c":"C",r,i,o[1],o[2],o[3],o[4]]))}),this};var xn=x,yn=xn,dn={a:7,c:6,h:1,l:2,m:2,q:4,s:4,t:2,v:1,z:0},mn=/([astvzqmhlc])([^astvzqmhlc]*)/gi,Mn=function(t){var n=[];return t.replace(mn,function(t,e,r){var i=e.toLowerCase();for(r=y(r),"m"===i&&r.length>2&&(n.push([e].concat(r.splice(0,2))),i="l",e="m"===e?"l":"L");r.length>=0;){if(r.length===dn[i])return r.unshift(e),n.push(r);if(r.length<dn[i])throw new Error("malformed path data");n.push([e].concat(r.splice(0,dn[i])))}}),n},wn=/-?[0-9]*\.?[0-9]+(?:e[-+]?\d+)?/gi,bn=function(t,n,e,r,i,a,o,s){return new d(t,n,e,r,i,a,o,s)};d.prototype={constructor:d,init:function(){this.length=this.getArcLength([this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y])},getTotalLength:function(){return this.length},getPointAtLength:function(t){var n=w(t,this.length,this.getArcLength,[this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y]);return this.getPoint([this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y],n)},getTangentAtLength:function(t){var n=w(t,this.length,this.getArcLength,[this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y]),e=this.getDerivative([this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y],n),r=Math.sqrt(e.x*e.x+e.y*e.y);return r>0?{x:e.x/r,y:e.y/r}:{x:0,y:0}},getPropertiesAtLength:function(t){var n,e=w(t,this.length,this.getArcLength,[this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y]),r=this.getDerivative([this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y],e),i=Math.sqrt(r.x*r.x+r.y*r.y);n=i>0?{x:r.x/i,y:r.y/i}:{
+x:0,y:0};var a=this.getPoint([this.a.x,this.b.x,this.c.x,this.d.x],[this.a.y,this.b.y,this.c.y,this.d.y],e);return{x:a.x,y:a.y,tangentX:n.x,tangentY:n.y}}};var Ln=[[],[],[-.5773502691896257,.5773502691896257],[0,-.7745966692414834,.7745966692414834],[-.33998104358485626,.33998104358485626,-.8611363115940526,.8611363115940526],[0,-.5384693101056831,.5384693101056831,-.906179845938664,.906179845938664],[.6612093864662645,-.6612093864662645,-.2386191860831969,.2386191860831969,-.932469514203152,.932469514203152],[0,.4058451513773972,-.4058451513773972,-.7415311855993945,.7415311855993945,-.9491079123427585,.9491079123427585],[-.1834346424956498,.1834346424956498,-.525532409916329,.525532409916329,-.7966664774136267,.7966664774136267,-.9602898564975363,.9602898564975363],[0,-.8360311073266358,.8360311073266358,-.9681602395076261,.9681602395076261,-.3242534234038089,.3242534234038089,-.6133714327005904,.6133714327005904],[-.14887433898163122,.14887433898163122,-.4333953941292472,.4333953941292472,-.6794095682990244,.6794095682990244,-.8650633666889845,.8650633666889845,-.9739065285171717,.9739065285171717],[0,-.26954315595234496,.26954315595234496,-.5190961292068118,.5190961292068118,-.7301520055740494,.7301520055740494,-.8870625997680953,.8870625997680953,-.978228658146057,.978228658146057],[-.1252334085114689,.1252334085114689,-.3678314989981802,.3678314989981802,-.5873179542866175,.5873179542866175,-.7699026741943047,.7699026741943047,-.9041172563704749,.9041172563704749,-.9815606342467192,.9815606342467192],[0,-.2304583159551348,.2304583159551348,-.44849275103644687,.44849275103644687,-.6423493394403402,.6423493394403402,-.8015780907333099,.8015780907333099,-.9175983992229779,.9175983992229779,-.9841830547185881,.9841830547185881],[-.10805494870734367,.10805494870734367,-.31911236892788974,.31911236892788974,-.5152486363581541,.5152486363581541,-.6872929048116855,.6872929048116855,-.827201315069765,.827201315069765,-.9284348836635735,.9284348836635735,-.9862838086968123,.9862838086968123],[0,-.20119409399743451,.20119409399743451,-.3941513470775634,.3941513470775634,-.5709721726085388,.5709721726085388,-.7244177313601701,.7244177313601701,-.8482065834104272,.8482065834104272,-.937273392400706,.937273392400706,-.9879925180204854,.9879925180204854],[-.09501250983763744,.09501250983763744,-.2816035507792589,.2816035507792589,-.45801677765722737,.45801677765722737,-.6178762444026438,.6178762444026438,-.755404408355003,.755404408355003,-.8656312023878318,.8656312023878318,-.9445750230732326,.9445750230732326,-.9894009349916499,.9894009349916499],[0,-.17848418149584785,.17848418149584785,-.3512317634538763,.3512317634538763,-.5126905370864769,.5126905370864769,-.6576711592166907,.6576711592166907,-.7815140038968014,.7815140038968014,-.8802391537269859,.8802391537269859,-.9506755217687678,.9506755217687678,-.9905754753144174,.9905754753144174],[-.0847750130417353,.0847750130417353,-.2518862256915055,.2518862256915055,-.41175116146284263,.41175116146284263,-.5597708310739475,.5597708310739475,-.6916870430603532,.6916870430603532,-.8037049589725231,.8037049589725231,-.8926024664975557,.8926024664975557,-.9558239495713977,.9558239495713977,-.9915651684209309,.9915651684209309],[0,-.16035864564022537,.16035864564022537,-.31656409996362983,.31656409996362983,-.46457074137596094,.46457074137596094,-.600545304661681,.600545304661681,-.7209661773352294,.7209661773352294,-.8227146565371428,.8227146565371428,-.9031559036148179,.9031559036148179,-.96020815213483,.96020815213483,-.9924068438435844,.9924068438435844],[-.07652652113349734,.07652652113349734,-.22778585114164507,.22778585114164507,-.37370608871541955,.37370608871541955,-.5108670019508271,.5108670019508271,-.636053680726515,.636053680726515,-.7463319064601508,.7463319064601508,-.8391169718222188,.8391169718222188,-.912234428251326,.912234428251326,-.9639719272779138,.9639719272779138,-.9931285991850949,.9931285991850949],[0,-.1455618541608951,.1455618541608951,-.2880213168024011,.2880213168024011,-.4243421202074388,.4243421202074388,-.5516188358872198,.5516188358872198,-.6671388041974123,.6671388041974123,-.7684399634756779,.7684399634756779,-.8533633645833173,.8533633645833173,-.9200993341504008,.9200993341504008,-.9672268385663063,.9672268385663063,-.9937521706203895,.9937521706203895],[-.06973927331972223,.06973927331972223,-.20786042668822127,.20786042668822127,-.34193582089208424,.34193582089208424,-.469355837986757,.469355837986757,-.5876404035069116,.5876404035069116,-.6944872631866827,.6944872631866827,-.7878168059792081,.7878168059792081,-.8658125777203002,.8658125777203002,-.926956772187174,.926956772187174,-.9700604978354287,.9700604978354287,-.9942945854823992,.9942945854823992],[0,-.1332568242984661,.1332568242984661,-.26413568097034495,.26413568097034495,-.3903010380302908,.3903010380302908,-.5095014778460075,.5095014778460075,-.6196098757636461,.6196098757636461,-.7186613631319502,.7186613631319502,-.8048884016188399,.8048884016188399,-.8767523582704416,.8767523582704416,-.9329710868260161,.9329710868260161,-.9725424712181152,.9725424712181152,-.9947693349975522,.9947693349975522],[-.06405689286260563,.06405689286260563,-.1911188674736163,.1911188674736163,-.3150426796961634,.3150426796961634,-.4337935076260451,.4337935076260451,-.5454214713888396,.5454214713888396,-.6480936519369755,.6480936519369755,-.7401241915785544,.7401241915785544,-.820001985973903,.820001985973903,-.8864155270044011,.8864155270044011,-.9382745520027328,.9382745520027328,-.9747285559713095,.9747285559713095,-.9951872199970213,.9951872199970213]],An=[[],[],[1,1],[.8888888888888888,.5555555555555556,.5555555555555556],[.6521451548625461,.6521451548625461,.34785484513745385,.34785484513745385],[.5688888888888889,.47862867049936647,.47862867049936647,.23692688505618908,.23692688505618908],[.3607615730481386,.3607615730481386,.46791393457269104,.46791393457269104,.17132449237917036,.17132449237917036],[.4179591836734694,.3818300505051189,.3818300505051189,.27970539148927664,.27970539148927664,.1294849661688697,.1294849661688697],[.362683783378362,.362683783378362,.31370664587788727,.31370664587788727,.22238103445337448,.22238103445337448,.10122853629037626,.10122853629037626],[.3302393550012598,.1806481606948574,.1806481606948574,.08127438836157441,.08127438836157441,.31234707704000286,.31234707704000286,.26061069640293544,.26061069640293544],[.29552422471475287,.29552422471475287,.26926671930999635,.26926671930999635,.21908636251598204,.21908636251598204,.1494513491505806,.1494513491505806,.06667134430868814,.06667134430868814],[.2729250867779006,.26280454451024665,.26280454451024665,.23319376459199048,.23319376459199048,.18629021092773426,.18629021092773426,.1255803694649046,.1255803694649046,.05566856711617366,.05566856711617366],[.24914704581340277,.24914704581340277,.2334925365383548,.2334925365383548,.20316742672306592,.20316742672306592,.16007832854334622,.16007832854334622,.10693932599531843,.10693932599531843,.04717533638651183,.04717533638651183],[.2325515532308739,.22628318026289723,.22628318026289723,.2078160475368885,.2078160475368885,.17814598076194574,.17814598076194574,.13887351021978725,.13887351021978725,.09212149983772845,.09212149983772845,.04048400476531588,.04048400476531588],[.2152638534631578,.2152638534631578,.2051984637212956,.2051984637212956,.18553839747793782,.18553839747793782,.15720316715819355,.15720316715819355,.12151857068790319,.12151857068790319,.08015808715976021,.08015808715976021,.03511946033175186,.03511946033175186],[.2025782419255613,.19843148532711158,.19843148532711158,.1861610000155622,.1861610000155622,.16626920581699392,.16626920581699392,.13957067792615432,.13957067792615432,.10715922046717194,.10715922046717194,.07036604748810812,.07036604748810812,.03075324199611727,.03075324199611727],[.1894506104550685,.1894506104550685,.18260341504492358,.18260341504492358,.16915651939500254,.16915651939500254,.14959598881657674,.14959598881657674,.12462897125553388,.12462897125553388,.09515851168249279,.09515851168249279,.062253523938647894,.062253523938647894,.027152459411754096,.027152459411754096],[.17944647035620653,.17656270536699264,.17656270536699264,.16800410215645004,.16800410215645004,.15404576107681028,.15404576107681028,.13513636846852548,.13513636846852548,.11188384719340397,.11188384719340397,.08503614831717918,.08503614831717918,.0554595293739872,.0554595293739872,.02414830286854793,.02414830286854793],[.1691423829631436,.1691423829631436,.16427648374583273,.16427648374583273,.15468467512626524,.15468467512626524,.14064291467065065,.14064291467065065,.12255520671147846,.12255520671147846,.10094204410628717,.10094204410628717,.07642573025488905,.07642573025488905,.0497145488949698,.0497145488949698,.02161601352648331,.02161601352648331],[.1610544498487837,.15896884339395434,.15896884339395434,.15276604206585967,.15276604206585967,.1426067021736066,.1426067021736066,.12875396253933621,.12875396253933621,.11156664554733399,.11156664554733399,.09149002162245,.09149002162245,.06904454273764123,.06904454273764123,.0448142267656996,.0448142267656996,.019461788229726478,.019461788229726478],[.15275338713072584,.15275338713072584,.14917298647260374,.14917298647260374,.14209610931838204,.14209610931838204,.13168863844917664,.13168863844917664,.11819453196151841,.11819453196151841,.10193011981724044,.10193011981724044,.08327674157670475,.08327674157670475,.06267204833410907,.06267204833410907,.04060142980038694,.04060142980038694,.017614007139152118,.017614007139152118],[.14608113364969041,.14452440398997005,.14452440398997005,.13988739479107315,.13988739479107315,.13226893863333747,.13226893863333747,.12183141605372853,.12183141605372853,.10879729916714838,.10879729916714838,.09344442345603386,.09344442345603386,.0761001136283793,.0761001136283793,.057134425426857205,.057134425426857205,.036953789770852494,.036953789770852494,.016017228257774335,.016017228257774335],[.13925187285563198,.13925187285563198,.13654149834601517,.13654149834601517,.13117350478706238,.13117350478706238,.12325237681051242,.12325237681051242,.11293229608053922,.11293229608053922,.10041414444288096,.10041414444288096,.08594160621706773,.08594160621706773,.06979646842452049,.06979646842452049,.052293335152683286,.052293335152683286,.03377490158481415,.03377490158481415,.0146279952982722,.0146279952982722],[.13365457218610619,.1324620394046966,.1324620394046966,.12890572218808216,.12890572218808216,.12304908430672953,.12304908430672953,.11499664022241136,.11499664022241136,.10489209146454141,.10489209146454141,.09291576606003515,.09291576606003515,.07928141177671895,.07928141177671895,.06423242140852585,.06423242140852585,.04803767173108467,.04803767173108467,.030988005856979445,.030988005856979445,.013411859487141771,.013411859487141771],[.12793819534675216,.12793819534675216,.1258374563468283,.1258374563468283,.12167047292780339,.12167047292780339,.1155056680537256,.1155056680537256,.10744427011596563,.10744427011596563,.09761865210411388,.09761865210411388,.08619016153195327,.08619016153195327,.0733464814110803,.0733464814110803,.05929858491543678,.05929858491543678,.04427743881741981,.04427743881741981,.028531388628933663,.028531388628933663,.0123412297999872,.0123412297999872]],qn=[[1],[1,1],[1,2,1],[1,3,3,1]],kn=2*Math.PI,Pn=function(t,n,e,r,i,a,o,s,h){var u=Math.sin(i*kn/360),c=Math.cos(i*kn/360),f=c*(t-s)/2+u*(n-h)/2,l=-u*(t-s)/2+c*(n-h)/2;if(0===f&&0===l)return[];if(0===e||0===r)return[];e=Math.abs(e),r=Math.abs(r);var p=f*f/(e*e)+l*l/(r*r);p>1&&(e*=Math.sqrt(p),r*=Math.sqrt(p));var g=S(t,n,s,h,a,o,e,r,u,c),v=[],x=g[2],y=g[3],d=Math.max(Math.ceil(Math.abs(y)/(kn/4)),1);y/=d;for(var m=0;m<d;m++)v.push(C(x,y)),x+=y;return v.map(function(t){for(var n=0;n<t.length;n+=2){var i=t[n+0],a=t[n+1];i*=e,a*=r;var o=c*i-u*a,s=u*i+c*a;t[n+0]=o+g[0],t[n+1]=s+g[1]}return t})},_n=function(t,n,e,r,i,a,o,s,h){return new Z(t,n,e,r,i,a,o,s,h)};Z.prototype={constructor:Z,init:function(){},getTotalLength:function(){return this.length},getPointAtLength:function(t){var n=this;t<0?t=0:t>this.length&&(t=this.length);for(var e=this.partialLengths.length-1;this.partialLengths[e]>=t&&this.partialLengths[e]>0;)e--;e<this.partialLengths.length-1&&e++;for(var r=0,i=0;i<e;i++)r+=n.partialLengths[i];return this.curves[e].getPointAtLength(t-r)},getTangentAtLength:function(t){var n=this;t<0?t=0:t>this.length&&(t=this.length);for(var e=this.partialLengths.length-1;this.partialLengths[e]>=t&&this.partialLengths[e]>0;)e--;e<this.partialLengths.length-1&&e++;for(var r=0,i=0;i<e;i++)r+=n.partialLengths[i];return this.curves[e].getTangentAtLength(t-r)},getPropertiesAtLength:function(t){var n=this.getTangentAtLength(t),e=this.getPointAtLength(t);return{x:e.x,y:e.y,tangentX:n.x,tangentY:n.y}}};var En=function(t,n,e,r){return new T(t,n,e,r)};T.prototype.getTotalLength=function(){return Math.sqrt(Math.pow(this.x0-this.x1,2)+Math.pow(this.y0-this.y1,2))},T.prototype.getPointAtLength=function(t){var n=t/Math.sqrt(Math.pow(this.x0-this.x1,2)+Math.pow(this.y0-this.y1,2)),e=(this.x1-this.x0)*n,r=(this.y1-this.y0)*n;return{x:this.x0+e,y:this.y0+r}},T.prototype.getTangentAtLength=function(){var t=Math.sqrt((this.x1-this.x0)*(this.x1-this.x0)+(this.y1-this.y0)*(this.y1-this.y0));return{x:(this.x1-this.x0)/t,y:(this.y1-this.y0)/t}},T.prototype.getPropertiesAtLength=function(t){var n=this.getPointAtLength(t),e=this.getTangentAtLength();return{x:n.x,y:n.y,tangentX:e.x,tangentY:e.y}};var Sn=function(t){function n(t){if(!t)return null;for(var a,o=Mn(t),s=[0,0],h=[0,0],u=0;u<o.length;u++)"M"===o[u][0]?(s=[o[u][1],o[u][2]],i.push(null)):"m"===o[u][0]?(s=[o[u][1]+s[0],o[u][2]+s[1]],i.push(null)):"L"===o[u][0]?(e+=Math.sqrt(Math.pow(s[0]-o[u][1],2)+Math.pow(s[1]-o[u][2],2)),i.push(new En(s[0],o[u][1],s[1],o[u][2])),s=[o[u][1],o[u][2]]):"l"===o[u][0]?(e+=Math.sqrt(Math.pow(o[u][1],2)+Math.pow(o[u][2],2)),i.push(new En(s[0],o[u][1]+s[0],s[1],o[u][2]+s[1])),s=[o[u][1]+s[0],o[u][2]+s[1]]):"H"===o[u][0]?(e+=Math.abs(s[0]-o[u][1]),i.push(new En(s[0],o[u][1],s[1],s[1])),s[0]=o[u][1]):"h"===o[u][0]?(e+=Math.abs(o[u][1]),i.push(new En(s[0],s[0]+o[u][1],s[1],s[1])),s[0]=o[u][1]+s[0]):"V"===o[u][0]?(e+=Math.abs(s[1]-o[u][1]),i.push(new En(s[0],s[0],s[1],o[u][1])),s[1]=o[u][1]):"v"===o[u][0]?(e+=Math.abs(o[u][1]),i.push(new En(s[0],s[0],s[1],s[1]+o[u][1])),s[1]=o[u][1]+s[1]):"z"===o[u][0]||"Z"===o[u][0]?(e+=Math.sqrt(Math.pow(o[0][1]-s[0],2)+Math.pow(o[0][2]-s[1],2)),i.push(new En(s[0],o[0][1],s[1],o[0][2])),s=[o[0][1],o[0][2]]):"C"===o[u][0]?(a=new bn(s[0],s[1],o[u][1],o[u][2],o[u][3],o[u][4],o[u][5],o[u][6]),e+=a.getTotalLength(),s=[o[u][5],o[u][6]],i.push(a)):"c"===o[u][0]?(a=new bn(s[0],s[1],s[0]+o[u][1],s[1]+o[u][2],s[0]+o[u][3],s[1]+o[u][4],s[0]+o[u][5],s[1]+o[u][6]),e+=a.getTotalLength(),s=[o[u][5]+s[0],o[u][6]+s[1]],i.push(a)):"S"===o[u][0]?(a=u>0&&["C","c","S","s"].indexOf(o[u-1][0])>-1?new bn(s[0],s[1],2*s[0]-o[u-1][o[u-1].length-4],2*s[1]-o[u-1][o[u-1].length-3],o[u][1],o[u][2],o[u][3],o[u][4]):new bn(s[0],s[1],s[0],s[1],o[u][1],o[u][2],o[u][3],o[u][4]),e+=a.getTotalLength(),s=[o[u][3],o[u][4]],i.push(a)):"s"===o[u][0]?(a=u>0&&["C","c","S","s"].indexOf(o[u-1][0])>-1?new bn(s[0],s[1],s[0]+a.d.x-a.c.x,s[1]+a.d.y-a.c.y,s[0]+o[u][1],s[1]+o[u][2],s[0]+o[u][3],s[1]+o[u][4]):new bn(s[0],s[1],s[0],s[1],s[0]+o[u][1],s[1]+o[u][2],s[0]+o[u][3],s[1]+o[u][4]),e+=a.getTotalLength(),s=[o[u][3]+s[0],o[u][4]+s[1]],i.push(a)):"Q"===o[u][0]?(a=new bn(s[0],s[1],o[u][1],o[u][2],o[u][3],o[u][4]),e+=a.getTotalLength(),i.push(a),s=[o[u][3],o[u][4]],h=[o[u][1],o[u][2]]):"q"===o[u][0]?(a=new bn(s[0],s[1],s[0]+o[u][1],s[1]+o[u][2],s[0]+o[u][3],s[1]+o[u][4]),e+=a.getTotalLength(),h=[s[0]+o[u][1],s[1]+o[u][2]],s=[o[u][3]+s[0],o[u][4]+s[1]],i.push(a)):"T"===o[u][0]?(a=u>0&&["Q","q","T","t"].indexOf(o[u-1][0])>-1?new bn(s[0],s[1],2*s[0]-h[0],2*s[1]-h[1],o[u][1],o[u][2]):new En(s[0],o[u][1],s[1],o[u][2]),i.push(a),e+=a.getTotalLength(),h=[2*s[0]-h[0],2*s[1]-h[1]],s=[o[u][1],o[u][2]]):"t"===o[u][0]?(a=u>0&&["Q","q","T","t"].indexOf(o[u-1][0])>-1?new bn(s[0],s[1],2*s[0]-h[0],2*s[1]-h[1],s[0]+o[u][1],s[1]+o[u][2]):new En(s[0],s[0]+o[u][1],s[1],s[1]+o[u][2]),e+=a.getTotalLength(),h=[2*s[0]-h[0],2*s[1]-h[1]],s=[o[u][1]+s[0],o[u][2]+s[0]],i.push(a)):"A"===o[u][0]?(a=new _n(s[0],s[1],o[u][1],o[u][2],o[u][3],o[u][4],o[u][5],o[u][6],o[u][7]),e+=a.getTotalLength(),s=[o[u][6],o[u][7]],i.push(a)):"a"===o[u][0]&&(a=new _n(s[0],s[1],o[u][1],o[u][2],o[u][3],o[u][4],o[u][5],s[0]+o[u][6],s[1]+o[u][7]),e+=a.getTotalLength(),s=[s[0]+o[u][6],s[1]+o[u][7]],i.push(a)),r.push(e);return n}var e=0,r=[],i=[];n.getTotalLength=function(){return e},n.getPointAtLength=function(t){var n=a(t);return i[n.i].getPointAtLength(n.fraction)},n.getTangentAtLength=function(t){var n=a(t);return i[n.i].getTangentAtLength(n.fraction)},n.getPropertiesAtLength=function(t){var n=a(t);return i[n.i].getPropertiesAtLength(n.fraction)};var a=function(t){t<0?t=0:t>e&&(t=e);for(var n=r.length-1;r[n]>=t&&r[n]>0;)n--;return n++,{fraction:t-r[n-1],i:n}};return n(t)},Cn='All shapes must be supplied as arrays of [x, y] points or an SVG path string (https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d).\nExample valid ways of supplying a shape would be:\n[[0, 0], [10, 0], [10, 10]]\n"M0,0 L10,0 L10,10Z"\n',Zn="flubber.all() expects two arrays of equal length as arguments. Each element in both arrays should be an array of [x, y] points or an SVG path string (https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d).",Tn=function(t,n){for(var e,r,i,a=t.length,o=1/0,s=0;s<a;s++)!function(i){r=0,n.forEach(function(n,e){var o=F(t[(i+e)%a],n);r+=o*o}),r<o&&(o=r,e=i)}(s);e&&(i=t.splice(0,e),t.splice.apply(t,[t.length,0].concat(i)))},Fn=function(t,n,e){void 0===e&&(e={});var r=e.maxSegmentLength;void 0===r&&(r=10);var i=e.string;void 0===i&&(i=!0);var a=J(t,r),o=J(n,r),s=tt(a,o,i);return!i||"string"!=typeof t&&"string"!=typeof n?s:function(e){return e<1e-4&&"string"==typeof t?t:1-e<1e-4&&"string"==typeof n?n:s(e)}},zn=nt;nt.deviation=function(t,n,e,r){var i=n&&n.length,a=i?n[0]*e:t.length,o=Math.abs(Et(t,0,a,e));if(i)for(var s=0,h=n.length;s<h;s++){var u=n[s]*e,c=s<h-1?n[s+1]*e:t.length;o-=Math.abs(Et(t,u,c,e))}var f=0;for(s=0;s<r.length;s+=3){var l=r[s]*e,p=r[s+1]*e,g=r[s+2]*e;f+=Math.abs((t[l]-t[g])*(t[p+1]-t[l+1])-(t[l]-t[p])*(t[g+1]-t[l+1]))}return 0===o&&0===f?0:Math.abs((f-o)/o)},nt.flatten=function(t){for(var n=t[0][0].length,e={vertices:[],holes:[],dimensions:n},r=0,i=0;i<t.length;i++){for(var a=0;a<t[i].length;a++)for(var o=0;o<n;o++)e.vertices.push(t[i][a][o]);i>0&&(r+=t[i-1].length,e.holes.push(r))}return e};var jn=function(t){return t},In=function(t){if(null==t)return jn;var n,e,r=t.scale[0],i=t.scale[1],a=t.translate[0],o=t.translate[1];return function(t,s){s||(n=e=0);var h=2,u=t.length,c=new Array(u);for(c[0]=(n+=t[0])*r+a,c[1]=(e+=t[1])*i+o;h<u;)c[h]=t[h],++h;return c}},Vn=function(t,n){for(var e,r=t.length,i=r-n;i<--r;)e=t[i],t[i++]=t[r],t[r]=e},Xn=function(t,n){return"GeometryCollection"===n.type?{type:"FeatureCollection",features:n.geometries.map(function(n){return St(t,n)})}:St(t,n)},Yn=function(t,n){function e(n){var e,r=t.arcs[n<0?~n:n],i=r[0];return t.transform?(e=[0,0],r.forEach(function(t){e[0]+=t[0],e[1]+=t[1]})):e=r[r.length-1],n<0?[e,i]:[i,e]}function r(t,n){for(var e in t){var r=t[e];delete n[r.start],delete r.start,delete r.end,r.forEach(function(t){i[t<0?~t:t]=1}),s.push(r)}}var i={},a={},o={},s=[],h=-1;return n.forEach(function(e,r){var i,a=t.arcs[e<0?~e:e];a.length<3&&!a[1][0]&&!a[1][1]&&(i=n[++h],n[h]=e,n[r]=i)}),n.forEach(function(t){var n,r,i=e(t),s=i[0],h=i[1];if(n=o[s])if(delete o[n.end],n.push(t),n.end=h,r=a[h]){delete a[r.start];var u=r===n?n:n.concat(r);a[u.start=n.start]=o[u.end=r.end]=u}else a[n.start]=o[n.end]=n;else if(n=a[h])if(delete a[n.start],n.unshift(t),n.start=s,r=o[s]){delete o[r.end];var c=r===n?n:r.concat(n);a[c.start=r.start]=o[c.end=n.end]=c}else a[n.start]=o[n.end]=n;else n=[t],a[n.start=s]=o[n.end=h]=n}),r(o,a),r(a,o),n.forEach(function(t){i[t<0?~t:t]||s.push([t])}),s},Gn=function(t,n){for(var e=0,r=t.length;e<r;){var i=e+r>>>1;t[i]<n?e=i+1:r=i}return e},On=function(t){function n(t,n){t.forEach(function(t){t<0&&(t=~t);var e=i[t];e?e.push(n):i[t]=[n]})}function e(t,e){t.forEach(function(t){n(t,e)})}function r(t,n){"GeometryCollection"===t.type?t.geometries.forEach(function(t){r(t,n)}):t.type in o&&o[t.type](t.arcs,n)}var i={},a=t.map(function(){return[]}),o={LineString:n,MultiLineString:e,Polygon:e,MultiPolygon:function(t,n){t.forEach(function(t){e(t,n)})}};t.forEach(r);for(var s in i)for(var h=i[s],u=h.length,c=0;c<u;++c)for(var f=c+1;f<u;++f){var l,p=h[c],g=h[f];(l=a[p])[s=Gn(l,g)]!==g&&l.splice(s,0,g),(l=a[g])[s=Gn(l,p)]!==p&&l.splice(s,0,p)}return a},Dn=function(t,n){return t<n?-1:t>n?1:t>=n?0:NaN},Hn=function(t){return 1===t.length&&(t=Ft(t)),{left:function(n,e,r,i){for(null==r&&(r=0),null==i&&(i=n.length);r<i;){var a=r+i>>>1;t(n[a],e)<0?r=a+1:i=a}return r},right:function(n,e,r,i){for(null==r&&(r=0),null==i&&(i=n.length);r<i;){var a=r+i>>>1;t(n[a],e)>0?i=a:r=a+1}return r}}},Nn=Hn(Dn),Qn=(Nn.right,Math.sqrt(50),Math.sqrt(10),Math.sqrt(2),function(t,n){return jt(zt(It(t),t),n)}),Un=function(t,n){if(t.length>8)return t.map(function(t,n){return n});var e=t.map(function(t){return n.map(function(n){return Xt(t,n)})});return Vt(t,n,e)};t.interpolate=Fn,t.separate=Yt,t.combine=Gt,t.interpolateAll=Ot,t.splitPathString=N,t.toPathString=H,t.fromCircle=Ht,t.toCircle=Nt,t.fromRect=Qt,t.toRect=Ut,Object.defineProperty(t,"__esModule",{value:!0})});</script>
+
+<script>
+/* ======================================================================= *
+ *  The morph itself. Nothing below is vendored.
+ * ======================================================================= */
+
+/* ---------------------------------------------------------------------- *
+ *  THE KNOB. Which half of the drawing becomes the odd coral toe.
+ *
+ *  'dog-is-coral'    — the dog collapses into the coral toe, Einav spreads
+ *                      across the pad and the three amber toes.
+ *  'person-is-coral' — the reading printed on the landing page: the three
+ *                      amber toes are the dog, the coral fourth one is the
+ *                      person sitting opposite.
+ *
+ *  The buttons in section 2 write to this and rebuild.
+ * ---------------------------------------------------------------------- */
+let MAPPING = 'dog-is-coral';
+
+/* ---- the new logo, in its own 64x64 space ---------------------------- */
+const PAW = {
+  pad:  { kind:'path', d:'M32 32c10.5 0 18 7 18 14.6 0 4.9-3.4 8.1-7.7 9.2-3.2 .8-5.3 2.6-10.3 2.6s-7.1-1.8-10.3-2.6C17.4 54.7 14 51.5 14 46.6 14 39 21.5 32 32 32z' },
+  toeA: { cx:11.5, cy:29, rx:7,   ry:8.6, rot:-24 },
+  toeB: { cx:24.5, cy:17, rx:7.4, ry:9.4, rot: -9 },
+  toeC: { cx:52.5, cy:29, rx:7,   ry:8.6, rot: 24 },
+  toeD: { cx:39.5, cy:17, rx:7.4, ry:9.4, rot:  9 }   // the coral one
+};
+const AMBER='#F2A03D', CORAL='#E4572E', HER_GREEN='#054D2C', HER_ORANGE='#F15004';
+
+/* ---- one coordinate space -------------------------------------------- *
+ *  The drawing is 581x428, the paw 64x64. Everything happens in the
+ *  drawing's box; the paw is scaled up and parked in the middle of it.
+ *  Getting this wrong is the quickest way to make the whole thing garbage. */
+const W = 581, H = 428;
+const PAW_SIZE = 372;
+const PAW_S  = PAW_SIZE / 64;
+const PAW_TX = W / 2 - 32 * PAW_S;
+const PAW_TY = H / 2 - 32 * PAW_S + 6;      // nudged down; the paw's mass sits low
+
+/* ellipse -> cubic path, with rotate() baked in and the placement applied */
+const K = 0.5522847498307936;
+function ellipseToPath(e){
+  const {cx,cy,rx,ry,rot} = e;
+  const a = rot*Math.PI/180, ca = Math.cos(a), sa = Math.sin(a);
+  const f = n => Math.round(n*100)/100;
+  const P = (x,y) => {
+    const dx=x-cx, dy=y-cy;
+    return [ (cx+dx*ca-dy*sa)*PAW_S+PAW_TX, (cy+dx*sa+dy*ca)*PAW_S+PAW_TY ];
+  };
+  const p = [
+    [cx+rx,cy],[cx+rx,cy+ry*K],[cx+rx*K,cy+ry],[cx,cy+ry],
+    [cx-rx*K,cy+ry],[cx-rx,cy+ry*K],[cx-rx,cy],
+    [cx-rx,cy-ry*K],[cx-rx*K,cy-ry],[cx,cy-ry],
+    [cx+rx*K,cy-ry],[cx+rx,cy-ry*K],[cx+rx,cy]
+  ].map(q => P(q[0],q[1]));
+  let d = 'M'+f(p[0][0])+','+f(p[0][1]);
+  for (let i=1;i<13;i+=3)
+    d += 'C'+f(p[i][0])+','+f(p[i][1])+' '+f(p[i+1][0])+','+f(p[i+1][1])+' '+f(p[i+2][0])+','+f(p[i+2][1]);
+  return d+'Z';
+}
+
+/* the pad is written with relative shorthand (c / s); walk it rather than
+   pull in a whole path parser, since this is the only such string here */
+function padPath(){
+  const tok = PAW.pad.d.match(/[a-zA-Z]|-?\d*\.?\d+(?:e-?\d+)?/g);
+  let i=0, cmd=null, x=0, y=0, prev=null; const out=[];
+  const f = n => Math.round(n*100)/100;
+  const map = (px,py) => f(px*PAW_S+PAW_TX)+','+f(py*PAW_S+PAW_TY);
+  const num = () => parseFloat(tok[i++]);
+  while (i < tok.length){
+    if (/[a-zA-Z]/.test(tok[i])) cmd = tok[i++];
+    if (cmd==='M'||cmd==='m'){
+      const nx=num(), ny=num();
+      x = cmd==='M'?nx:x+nx; y = cmd==='M'?ny:y+ny;
+      out.push('M'+map(x,y)); prev=null; cmd = cmd==='M'?'L':'l';
+    } else if (cmd==='c'||cmd==='C'||cmd==='s'||cmd==='S'){
+      const rel = cmd==='c'||cmd==='s', smooth = cmd==='s'||cmd==='S';
+      let x1,y1;
+      if (smooth){ x1 = prev? 2*x-prev[0] : x; y1 = prev? 2*y-prev[1] : y; }
+      else { x1 = num()+(rel?x:0); y1 = num()+(rel?y:0); }
+      const x2=num()+(rel?x:0), y2=num()+(rel?y:0);
+      const nx=num()+(rel?x:0), ny=num()+(rel?y:0);
+      out.push('C'+map(x1,y1)+' '+map(x2,y2)+' '+map(nx,ny));
+      prev=[x2,y2]; x=nx; y=ny;
+    } else if (cmd==='z'||cmd==='Z'){ out.push('Z'); prev=null; i++; }
+    else { i++; }
+  }
+  return out.join('');
+}
+const pawTargets = () => ({
+  pad:padPath(), toeA:ellipseToPath(PAW.toeA), toeB:ellipseToPath(PAW.toeB),
+  toeC:ellipseToPath(PAW.toeC), toeD:ellipseToPath(PAW.toeD)
+});
+
+/* ---- the nine source paths ------------------------------------------- */
+function readDrawing(svgText){
+  const out = {};
+  for (const key of ['woman','dog','heart']){
+    const g = svgText.match(new RegExp('<g class="fig-'+key+'"[^>]*>([\\s\\S]*?)<\\/g>'));
+    if (!g) throw new Error('לא נמצאה השכבה fig-'+key);
+    out[key] = (g[1].match(/ d="([^"]+)"/g) || []).map(s => s.slice(4,-1));
+  }
+  return out;
+}
+
+/* ---- the two mappings ------------------------------------------------ */
+const MAPPINGS = {
+  'dog-is-coral': {
+    he:'הכלב הוא האצבע הכתומה',
+    who:'הכלב והלב (חמישה קווים) מתכנסים יחד לאצבע הקורל · עינב נפרשת לכרית ולשלוש אצבעות הענבר.',
+    pad:['woman:0'], toeA:['woman:1'], toeB:['woman:2'], toeC:['woman:3'],
+    toeD:['dog:0','dog:1','dog:2','dog:3','heart:0']
+  },
+  'person-is-coral': {
+    he:'עינב היא האצבע הכתומה',
+    who:'הקריאה שבאתר: עינב (ארבעה קווים) מתכנסת לאצבע הקורל · הכלב נפרש לכרית ולשלוש אצבעות הענבר · הלב הולך עם הכלב, אל הכרית.',
+    pad:['dog:0','heart:0'], toeA:['dog:1'], toeB:['dog:2'], toeC:['dog:3'],
+    toeD:['woman:0','woman:1','woman:2','woman:3']
+  }
+};
+const TARGET_FILL = { pad:AMBER, toeA:AMBER, toeB:AMBER, toeC:AMBER, toeD:CORAL };
+
+/* when each piece leaves and when it settles. The coral toe lands LAST,
+   echoing the intro animation on the landing page. */
+/* which side each destination's bow and loop swing to */
+const TURN_SIDE = { pad:1, toeA:-1, toeB:1, toeC:-1, toeD:1 };
+/* and a fixed seed each, so every blob is lumpy in its own way but identically
+   so on every run — nothing here is allowed to be random between reloads */
+const TARGET_SEED = { pad:7, toeA:19, toeB:43, toeC:61, toeD:97 };
+
+const TIMING = { pad:[0,.74], toeB:[.04,.78], toeA:[.08,.82], toeC:[.12,.86], toeD:[.2,1] };
+
+const HE_TARGET = { pad:'הכרית', toeA:'אצבע חיצונית שמאל', toeB:'אצבע פנימית שמאל',
+                    toeC:'אצבע חיצונית ימין', toeD:'האצבע הכתומה' };
+const HE_SRC = { woman:'עינב', dog:'הכלב', heart:'הלב' };
+
+/* ---- build ----------------------------------------------------------- */
+function roughBox(d){
+  const n = (d.match(/-?\d*\.?\d+/g)||[]).map(Number);
+  let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+  for (let i=0;i+1<n.length;i+=2){
+    x0=Math.min(x0,n[i]); x1=Math.max(x1,n[i]);
+    y0=Math.min(y0,n[i+1]); y1=Math.max(y1,n[i+1]);
+  }
+  return {area:(x1-x0)*(y1-y0), cx:(x0+x1)/2, cy:(y0+y1)/2};
+}
+/* ---- the journey ------------------------------------------------------ *
+ *  flubber hands back a function of t, but under the hood every point simply
+ *  travels in a straight line at the same rate as every other point (verified:
+ *  fn(t) is exactly lerp(fn(0), fn(1), t) — the correspondence is fixed once, at
+ *  build time). That uniformity is why the raw version reads like paper being
+ *  crumpled. So the endpoints are cached and the journey is taken over here.
+ *
+ *  The choreography, per destination:
+ *    1. GATHER  — every line heading for the same paw shape pulls together into
+ *                 a single round ball, as early as it can.
+ *    2. CARRY   — the ball crosses on a bowed path, not a straight one.
+ *    3. LOOP    — near the end of the carry it flies one complete circle.
+ *    4. UNFOLD  — only then does it open out into the pad or the toe.
+ *
+ *  Everything is keyed so the ball has no influence at all at e=0 and e=1, which
+ *  is what keeps her drawing and the finished logo exact.
+ * ---------------------------------------------------------------------- */
+/* Master switch for the whole model. 0 puts every point back on a straight line
+   at a uniform rate — flubber's raw behaviour. The page's checkbox flips it,
+   which is the only honest way to show what the model is actually doing. */
+let FLOW = 1;
+let LOOP = 1;           // the complete circle at the end of the carry
+
+const SPREAD    = .08;  // small front-to-back lag while gathering and unfolding
+const ARC_FRAC  = .16;  // sideways bow on the carry, as a fraction of distance
+/* The gather/unfold windows are live knobs — the speed panel under the stage
+   writes them. Widening BALL_IN is the single most direct cure for the gather
+   reading as a snap: the same journey, taken over more of the timeline. */
+let BALL_IN   = .26;    // gathered into one ball by here — "as soon as possible"
+let BALL_OUT  = .88;    // stays a blob until here — deliberately late, so the
+                        // final shape only appears near the very end
+let LOOP_FROM = .50;    // the complete circle runs between these two — it closes
+let LOOP_TO   = .88;    // exactly as BALL_OUT begins, so the circle is finished
+                        // before the blob starts opening into its final shape
+const LOOP_SPAN = LOOP_TO - LOOP_FROM;  // kept constant as BALL_OUT moves, so the
+                        // spin never has to speed up just because the window did
+/* Re-anchors the loop to whatever BALL_OUT now is, keeping the same width and
+   never letting it start before the ball has finished forming. */
+function relockLoop(){
+  LOOP_TO   = BALL_OUT;
+  LOOP_FROM = Math.max(BALL_IN, LOOP_TO - LOOP_SPAN);
+}
+const LUMPS     = 3;    // harmonics that knock the blob out of being a circle
+const LUMP_AMP  = .17;  // how far its edge wanders, as a fraction of the radius
+const LOOP_R    = .10;  // radius of that circle, as a fraction of the paw. Tied to
+                        // the paw and not to the ball on purpose: the pad ball is
+                        // three times the radius of a toe ball, and scaling off it
+                        // gave the pad a loop nearly as wide as the whole logo.'s own
+
+/* 0 while it is still her line art, 1 while it is a ball, 0 again once it has
+   opened into its final shape. The ramps are smootherstep, so there is no kink
+   at the moment it finishes gathering or starts to unfold. */
+function ball(e){
+  if (e <= 0 || e >= 1) return 0;
+  if (e < BALL_IN)  return smooth(e/BALL_IN);
+  if (e > BALL_OUT) return smooth((1-e)/(1-BALL_OUT));
+  return 1;
+}
+
+/* The blob's outline: a radius that wanders with the angle instead of a constant
+   one. Three low harmonics with fixed phases give something lumpy and organic
+   that is still star-shaped, so it can never fold through itself. It depends
+   only on the angle, which is what lets every part heading to the same place
+   trace the SAME outline and stack into one blob rather than several. */
+function blobR(sh, a){
+  let m = 1;
+  for (let j=0;j<sh.lk.length;j++) m += sh.la[j]*Math.sin(sh.lk[j]*a + sh.lp[j]);
+  return sh.r * m;
+}
+
+/* Where the blob's centre is at e: along the bowed carry, plus — inside the loop
+   window — one full turn of a circle tangent to the path at both its start and
+   its end, so it enters and leaves the loop without a corner. */
+const CENTRE = [0,0];
+function ballCentre(sh, e){
+  const bow = Math.sin(Math.PI*e)*sh.arc;
+  let X = sh.sAx + (sh.sBx-sh.sAx)*e + sh.px*bow;
+  let Y = sh.sAy + (sh.sBy-sh.sAy)*e + sh.py*bow;
+  if (LOOP && e > LOOP_FROM && e < LOOP_TO){
+    const w = (e-LOOP_FROM)/(LOOP_TO-LOOP_FROM);
+    const ang = 2*Math.PI*w, R = sh.loopR;
+    const lx = R*Math.sin(ang), ly = R*(1-Math.cos(ang));
+    X += lx*sh.ux + ly*sh.px;
+    Y += lx*sh.uy + ly*sh.py;
+  }
+  CENTRE[0]=X; CENTRE[1]=Y; return CENTRE;
+}
+
+/* One part: cache its endpoints, its lag, and where each of its points sits on
+   the shared ball. Every part bound for the same paw shape gets the SAME centre
+   and the SAME radius, so during the ball phase they lie exactly on top of one
+   another and read as a single lump rather than as four separate scraps. */
+function flow(fn, sh){
+  const A = fn(0), B = fn(1), n = A.length;
+  const ax=new Float64Array(n), ay=new Float64Array(n),
+        dx=new Float64Array(n), dy=new Float64Array(n), ph=new Float64Array(n);
+  for (let i=0;i<n;i++){
+    ax[i]=A[i][0]; ay[i]=A[i][1];
+    dx[i]=B[i][0]-A[i][0]; dy[i]=B[i][1]-A[i][1];
+  }
+  if (sh && sh.L > 1){
+    let lo=Infinity, hi=-Infinity; const pr=new Float64Array(n);
+    for (let i=0;i<n;i++){ const v=ax[i]*sh.ux+ay[i]*sh.uy; pr[i]=v; if(v<lo)lo=v; if(v>hi)hi=v; }
+    const span=(hi-lo)||1;
+    for (let i=0;i<n;i++) ph[i] = 1 - (pr[i]-lo)/span;
+  }
+  const out = {n, ax, ay, dx, dy, ph, sh};
+  if (!sh) return out;
+
+  /* Put the points round the ball in the same rotational direction the target
+     ring runs in, otherwise the shape turns itself inside out as it unfolds. */
+  let sa = 0;
+  for (let i=0;i<n;i++){ const j=(i+1)%n; sa += B[i][0]*B[j][1] - B[j][0]*B[i][1]; }
+  const dir = sa >= 0 ? 1 : -1;
+  /* and pick the starting angle that leaves every point as close as it can be to
+     where it has to end up, so the unfold is a bloom rather than a scramble.
+     Closed form: the rotation that maximises the sum of the dot products. */
+  let P=0, Q=0;
+  for (let i=0;i<n;i++){
+    const rx=B[i][0]-sh.sBx, ry=B[i][1]-sh.sBy, a=dir*2*Math.PI*i/n;
+    P += rx*Math.cos(a) + ry*Math.sin(a);
+    Q += -rx*Math.sin(a) + ry*Math.cos(a);
+  }
+  const phi0 = Math.atan2(Q,P);
+  const cxr=new Float64Array(n), cyr=new Float64Array(n);
+  for (let i=0;i<n;i++){
+    const a = phi0 + dir*2*Math.PI*i/n, rr = blobR(sh, a);
+    cxr[i] = rr*Math.cos(a); cyr[i] = rr*Math.sin(a);
+  }
+  out.cxr=cxr; out.cyr=cyr;
+  return out;
+}
+
+/* Shrink a contour onto its own centre. This has to finish EARLY — inside the
+   first tenth of the window — because a hole does not join the blob: it stays
+   where it was and shrinks. Leave it running any longer and the piece flies off
+   to gather while its abandoned hole is still painting a speck on the spot it
+   left. See "החורים נסגרים ראשונים" above */
+function collapsed(d, f){
+  const b = roughBox(d);
+  let k = 0;
+  return d.replace(/-?\d*\.?\d+/g, m => {
+    const c = (k++ % 2 === 0) ? b.cx : b.cy;
+    return (c + (parseFloat(m) - c) * f).toFixed(2);
+  });
+}
+
+function buildMorph(src, mappingName){
+  const tgt = pawTargets(), map = MAPPINGS[mappingName], elements = [];
+  for (const target of ['pad','toeA','toeB','toeC','toeD']){
+    const [gt0,gt1] = TIMING[target];
+    /* one <path> in the drawing can hold several subpaths. Only the biggest
+       ring of each travels to the paw; the rest are holes, and they close. */
+    const travellers = [], holes = [];
+    for (const ref of map[target]){
+      const parts = ref.split(':'), grp = parts[0];
+      const pieces = flubber.splitPathString(src[grp][+parts[1]]);
+      let big = 0;
+      pieces.forEach((p,i) => { if (roughBox(p).area > roughBox(pieces[big]).area) big = i; });
+      pieces.forEach((p,i) => (i===big ? travellers : holes).push({ref, grp, d:p}));
+    }
+    /* string:false — we want the raw rings, not flubber's polyline path string,
+       because every frame is de-crinkled and re-emitted by hand (see frameAt).
+       The sampling stays fine at 6: her line art is only about eight units
+       thick, and anything coarser eats the strokes before the morph even
+       starts. Thinning happens later, and only in the middle of the journey. */
+    const OPT = {maxSegmentLength:6, string:false};
+    const interps = travellers.length === 1
+      ? [flubber.interpolate(travellers[0].d, tgt[target], OPT)]
+      : flubber.combine(travellers.map(r=>r.d), tgt[target], Object.assign({single:false}, OPT));
+
+    /* The shared ball for this destination. Every line heading here gathers into
+       it, so its centre is the average of where they all start, its landing
+       point the average of where they all finish, and its area the area of the
+       finished shape — the same amount of ink, rolled up. */
+    const rings = interps.map(fn => ({A:fn(0), B:fn(1)}));
+    let sAx=0, sAy=0, sBx=0, sBy=0, cnt=0, area=0;
+    for (const rg of rings){
+      for (let i=0;i<rg.A.length;i++){
+        sAx+=rg.A[i][0]; sAy+=rg.A[i][1]; sBx+=rg.B[i][0]; sBy+=rg.B[i][1]; cnt++;
+      }
+      let a=0;
+      for (let i=0;i<rg.B.length;i++){
+        const j=(i+1)%rg.B.length;
+        a += rg.B[i][0]*rg.B[j][1] - rg.B[j][0]*rg.B[i][1];
+      }
+      area += Math.abs(a)/2;      // combine()'s slices tile the target, so these sum to it
+    }
+    sAx/=cnt; sAy/=cnt; sBx/=cnt; sBy/=cnt;
+    const vx = sBx-sAx, vy = sBy-sAy, L = Math.hypot(vx,vy);
+    const ux = L>1 ? vx/L : 1, uy = L>1 ? vy/L : 0;
+    /* the loop and the bow lean to alternate sides from one destination to the
+       next, so the five pieces do not all describe the same gesture in unison */
+    const spin = TURN_SIDE[target];
+    /* Each destination gets its own lumps, from a fixed seed so the blob is the
+       same every run and the same for every part heading here. The radius is
+       divided back down by the amount the wobble adds to the mean square, so a
+       lumpy blob still carries the same area as the shape it will become. */
+    const lk=[], la=[], lp=[];
+    let seed = 1 + TARGET_SEED[target], pow = 0;
+    const rnd = () => (seed = (seed*1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    for (let j=0;j<LUMPS;j++){
+      lk.push(2+j);
+      const amp = LUMP_AMP*(1 - j*.28)*(.75 + .5*rnd());
+      la.push(amp); lp.push(rnd()*Math.PI*2); pow += amp*amp/2;
+    }
+    const r = Math.sqrt(area/Math.PI) / Math.sqrt(1 + pow);
+    const sh = {sAx, sAy, sBx, sBy, L, ux, uy, px:-uy*spin, py:ux*spin,
+                arc: ARC_FRAC*L*spin, r, lk, la, lp,
+                loopR: LOOP_R*PAW_SIZE*spin};
+
+    const tb = roughBox(tgt[target]);
+    const byRef = new Map();
+    const slot = r => {
+      if (!byRef.has(r.ref))
+        byRef.set(r.ref, {ref:r.ref, grp:r.grp, target, parts:[], t0:gt0, t1:gt1,
+                          cx:tb.cx, cy:tb.cy,
+                          from: r.grp==='woman'?HER_GREEN:HER_ORANGE, to:TARGET_FILL[target]});
+      return byRef.get(r.ref);
+    };
+    travellers.forEach((r,i) => slot(r).parts.push(
+      Object.assign(flow(interps[i], sh), {t0:gt0, t1:gt1})));
+    holes.forEach(r => slot(r).parts.push(
+      Object.assign(flow(flubber.interpolate(r.d, collapsed(r.d, .02), OPT), null),
+                    {hole:true, t0:gt0, t1:Math.min(1, gt0 + (gt1-gt0)*.12)})));
+    byRef.forEach(el => { el.ux = ux; el.uy = uy; el.sh = sh; elements.push(el); });
+  }
+  return {elements, label:map.he, who:map.who};
+}
+
+/* ---- easing ----------------------------------------------------------- *
+ *  Not an S-curve. A piece gets up to speed over a short head, then travels at
+ *  a FLAT rate for most of its journey, and only eases off over a long tail as
+ *  it settles. An S-curve spends its whole life either accelerating or braking,
+ *  which reads as drifting; a flat middle reads as something actually moving.
+ *
+ *  rate() is the speed at u, normalised to 1 through the flat middle, and ease()
+ *  is its integral scaled so ease(0)=0 and ease(1)=1. Keeping them as an exact
+ *  pair matters: they have to agree about where a piece is and how fast it is
+ *  going, or the model stops describing one motion.
+ *  smooth() stays smootherstep, and is used for blends rather than for travel. */
+const clamp01 = u => u<=0 ? 0 : u>=1 ? 1 : u;
+const smooth  = u => (u = clamp01(u), u*u*u*(u*(u*6-15)+10));
+const sstep   = x => x*x*(3-2*x);
+
+/* Live knobs — the speed panel under the stage writes these. The defaults are
+   the profile the lab shipped with. */
+let HEAD  = .10;   // short run-up, just enough to avoid a jolt
+let TAIL  = .70;   // from here on it slows into its place
+let FLOOR = 0;     // the slowest a piece is ever allowed to go, as a fraction of
+                   // the cruise speed. At 0 it is at a dead stop at both ends,
+                   // which is what makes the opening read as a snap: it goes from
+                   // nothing to full speed inside HEAD. Lift the floor and the
+                   // piece is already drifting when the window opens, so the
+                   // change of speed is gentler without ever going uniform.
+                   // At 1 the rate is flat and there is no change of speed left.
+
+/* shape() is the old rate curve: 0 at both ends, 1 through the flat middle.
+   rate() lifts it onto the floor and is still normalised to 1 in the middle,
+   which is what the squash-and-stretch expects to be handed. */
+const shape = u => (u = clamp01(u),
+  u < HEAD ? sstep(u/HEAD) : u > TAIL ? sstep((1-u)/(1-TAIL)) : 1);
+const rate  = u => FLOOR + (1-FLOOR)*shape(u);
+
+/* ∫shape over [0,1]: each sstep ramp contributes exactly half its width, so the
+   area is (1+TAIL-HEAD)/2. RATE_C is recomputed whenever a knob moves, which is
+   what keeps ease(1) landing on exactly 1 — her drawing and the finished logo
+   both depend on the endpoints being exact. */
+let RATE_C = 1;
+function normaliseRate(){
+  RATE_C = 1 / (FLOOR + (1-FLOOR)*(1 + TAIL - HEAD)/2);
+}
+normaliseRate();
+
+/* The exact integral of rate(), scaled so ease(0)=0 and ease(1)=1.
+   The two endpoints are returned as literals rather than computed. RATE_C and
+   the integral are built by different sequences of operations, so their product
+   can land a bit or two under 1 — and a progress of 0.9999999999999999 is not
+   the end of the journey: ball() reads e>=1 as "finished" and anything below it
+   as "still a blob", so one ulp is the difference between the finished paw and
+   a paw with a trace of blob left on it. */
+function ease(u){
+  if (u <= 0) return 0;
+  if (u >= 1) return 1;
+  let S;                                   // ∫shape from 0 to u
+  if (u < HEAD){ const v = u/HEAD; S = HEAD * (v*v*v - v*v*v*v/2); }
+  else if (u <= TAIL) S = .5*HEAD + (u-HEAD);
+  else { const w = (u-TAIL)/(1-TAIL), z = 1-w;
+         S = .5*HEAD + (TAIL-HEAD) + (1-TAIL)*(.5 - z*z*z + z*z*z*z/2); }
+  return RATE_C * (FLOOR*u + (1-FLOOR)*S);
+}
+/* 0 at both ends, 1 in the middle — drives everything that should only exist
+   during the journey: the de-crinkling, the tilt, the breath */
+const bump = u => (u = clamp01(u), Math.sin(Math.PI*u));
+/* A second, deliberately lopsided envelope: still zero at both ends, but it
+   stays near-nothing through the opening (where the shape is her line art and
+   must not be touched) and only lets go in the last few percent. That late tail
+   is the whole point — it is what welds combine()'s slices together while they
+   are converging but not yet touching. Peaks at u≈0.71; /.189 normalises it. */
+const weld = u => (u = clamp01(u), u*u*Math.pow(1-u, .8) / .189);
+
+const chan = (c,n) => parseInt(c.substr(1+n*2,2),16);
+function mixColor(a,b,u){
+  const p = n => Math.round(chan(a,n) + (chan(b,n)-chan(a,n))*u).toString(16).padStart(2,'0');
+  return '#'+p(0)+p(1)+p(2);
+}
+
+/* ---- keeping the travelling shapes smooth ----------------------------- *
+ *  This is the fix for the ugly part of the morph. Interpolating two rings
+ *  point by point gives a boundary full of high-frequency crinkle halfway
+ *  through: spikes, folds, little sharp teeth. Two things are done about it.
+ *
+ *  1. relax() — a few passes of neighbour-averaging that melt the crinkle out
+ *     without moving the shape as a whole. Strength follows bump(), so it is
+ *     exactly zero at t=0 and t=1: the drawing and the logo stay untouched,
+ *     and only the in-between is softened.
+ *  2. toCurve() — the ring is emitted as cubic Béziers through every point
+ *     rather than as straight segments, so there is no such thing as a sharp
+ *     joint at any moment. Handle length is capped at a third of each span,
+ *     which is what stops the curve from overshooting into little loops.
+ * ---------------------------------------------------------------------- */
+function relax(pts, passes, w){
+  const n = pts.length;
+  if (n < 8 || passes < 1) return pts;
+  let a = pts.map(p => [p[0], p[1]]), b = new Array(n);
+  for (let k = 0; k < passes; k++){
+    for (let i = 0; i < n; i++){
+      const p = a[(i-1+n)%n], c = a[i], q = a[(i+1)%n];
+      b[i] = [ c[0] + ((p[0]+q[0])/2 - c[0])*w, c[1] + ((p[1]+q[1])/2 - c[1])*w ];
+    }
+    const swap = a; a = b; b = swap;
+  }
+  return a;
+}
+const r1 = n => Math.round(n*10)/10;
+/* plain polyline — used at the two ends, where the shape is her actual drawing
+   or the actual logo and every original corner should survive untouched. It is
+   also a lot cheaper, which matters because that is where the rings are densest. */
+function toPoly(pts){
+  let d = 'M'+r1(pts[0][0])+','+r1(pts[0][1]);
+  for (let i = 1; i < pts.length; i++) d += 'L'+r1(pts[i][0])+','+r1(pts[i][1]);
+  return d+'Z';
+}
+function toCurve(pts){
+  const n = pts.length;
+  if (n < 3) return '';
+  let d = 'M'+r1(pts[0][0])+','+r1(pts[0][1]);
+  for (let i = 0; i < n; i++){
+    const p0=pts[(i-1+n)%n], p1=pts[i], p2=pts[(i+1)%n], p3=pts[(i+2)%n];
+    const span = Math.hypot(p2[0]-p1[0], p2[1]-p1[1]) / 3;
+    let ax=(p2[0]-p0[0])/2, ay=(p2[1]-p0[1])/2;
+    let bx=(p3[0]-p1[0])/2, by=(p3[1]-p1[1])/2;
+    const la=Math.hypot(ax,ay)||1, lb=Math.hypot(bx,by)||1;
+    const sa=Math.min(span,la)/la, sb=Math.min(span,lb)/lb;
+    d += 'C'+r1(p1[0]+ax*sa)+','+r1(p1[1]+ay*sa)+' '
+           +r1(p2[0]-bx*sb)+','+r1(p2[1]-by*sb)+' '
+           +r1(p2[0])+','+r1(p2[1]);
+  }
+  return d+'Z';
+}
+
+const RELAX_PASSES = 14;    // how hard the mid-morph crinkle is melted out
+const THIN_MAX     = 3;     // how far the ring is thinned at the deepest point
+const TENSION      = 12;     // surface tension: how much the edge fattens in flight
+const STRETCH      = .22;   // squash & stretch along the direction of travel
+
+/* Squash & stretch keys off the speed curve rather than off progress, so a piece
+   is longest exactly while it is quickest and round again as it lands. With a
+   flat speed profile that means it holds a steady elongation across the middle
+   and relaxes only at the ends.
+
+   It reads shape() and not rate(), and the difference matters: rate() is shape()
+   lifted onto FLOOR, so once there is a floor rate() no longer reaches zero at
+   the ends — and a non-zero value there would leave a scale() sitting on the
+   finished paw and on her drawing, stretching both. shape() is zero at u=0 and
+   u=1 whatever the knobs say, which is what keeps the two endpoints exact. With
+   FLOOR=0 the two are identical, so the shipped look is unchanged. The cost is
+   that a piece coasting at the floor speed is not stretched; that is the right
+   way round — a still shape that stretches is far worse than a drifting one
+   that does not. */
+
+/* Evaluate one part at progress u, with every point on its own clock and its
+   own curved path. This replaces flubber's fn(u) entirely. */
+/* Where one point of one part sits: partly along its own straight run from
+   source to target, partly on the shared ball. Both the animation and the
+   trajectory drawing go through here, so the picture of the paths cannot drift
+   from the paths themselves. */
+function stepAt(p, i, ep, es){
+  let X = p.ax[i] + p.dx[i]*ep, Y = p.ay[i] + p.dy[i]*ep;
+  const b = p.cxr ? ball(es)*FLOW : 0;
+  if (b > 0){
+    const c = ballCentre(p.sh, es);
+    X += (c[0] + p.cxr[i] - X)*b;
+    Y += (c[1] + p.cyr[i] - Y)*b;
+  }
+  return [X, Y];
+}
+
+function pour(p, u){
+  u = clamp01(u);
+  const n=p.n, ph=p.ph, SP=SPREAD*FLOW, sp=1+SP;
+  /* Two clocks, on purpose. The ball runs on one shared clock so that it stays
+     round; each point keeps its own lagged clock for the gather and the unfold,
+     which is what stops those two moments looking mechanical. */
+  const es = ease(u);
+  const b = p.cxr ? ball(es)*FLOW : 0;
+  let bx=0, by=0;
+  if (b > 0){ const c = ballCentre(p.sh, es); bx=c[0]; by=c[1]; }
+  const out = new Array(n);
+  for (let i=0;i<n;i++){
+    let l = u*sp - ph[i]*SP;
+    l = l<=0 ? 0 : l>=1 ? 1 : l;
+    const ep = ease(l);
+    let X = p.ax[i] + p.dx[i]*ep, Y = p.ay[i] + p.dy[i]*ep;
+    if (b > 0){ X += (bx + p.cxr[i] - X)*b; Y += (by + p.cyr[i] - Y)*b; }
+    out[i] = [X, Y];
+  }
+  return out;
+}
+
+/* ---- the trajectory drawing ------------------------------------------ *
+ *  Every Nth point of every travelling part, traced from where it starts to
+ *  where it ends up. The lag only decides WHEN a point sets off, not WHERE it
+ *  goes, so sweeping e from 0 to 1 gives the true route through space. What it
+ *  does NOT show is the squash-and-stretch, which is a deformation applied to
+ *  the whole piece at draw time rather than a property of any one point's route.
+ * ---------------------------------------------------------------------- */
+const TRAIL_EVERY = 13;
+const TRAIL_STEPS = 72;
+
+function trails(el){
+  const out = [];
+  for (const p of el.parts){
+    if (p.hole) continue;
+    for (let i = 0; i < p.n; i += TRAIL_EVERY){
+      let d = '';
+      for (let k = 0; k <= TRAIL_STEPS; k++){
+        const e = k/TRAIL_STEPS;
+        const q = stepAt(p, i, e, e);
+        d += (k ? 'L' : 'M') + r1(q[0]) + ',' + r1(q[1]);
+      }
+      out.push(d);
+    }
+  }
+  return out;
+}
+
+function frameAt(el,t){
+  const raw = clamp01((t-el.t0)/(el.t1-el.t0));
+  const u = ease(raw);
+  /* cubed, deliberately. A linear bump would start relaxing the shape while it
+     is still recognisably her drawing and quietly eat the face. Cubed, the
+     softening stays asleep through the first third of each piece's journey and
+     only wakes up once the shape is already an abstract mass. */
+  const b = bump(raw), soft = b*b*b;
+  const passes = Math.round(RELAX_PASSES * soft);
+  const step = 1 + Math.round(THIN_MAX * soft);
+  const plain = soft < .02;
+  let d = '', gx = 0, gy = 0, gn = 0;
+  for (const p of el.parts){
+    const pu = (t-p.t0)/(p.t1-p.t0);
+    /* a fully closed hole is dropped rather than drawn at 2% scale — the
+       seam-closing stroke would otherwise leave a stray dot behind */
+    if (p.hole && pu >= 1) continue;
+    let pts = pour(p, pu);
+    for (let i=0;i<pts.length;i++){ gx += pts[i][0]; gy += pts[i][1]; }
+    gn += pts.length;
+    if (plain){ d += (d ? ' ' : '') + toPoly(pts); continue; }
+    pts = relax(pts, passes, .5);
+    if (step > 1){
+      const thin = [];
+      for (let i = 0; i < pts.length; i += step) thin.push(pts[i]);
+      if (thin.length > 6) pts = thin;
+    }
+    d += (d ? ' ' : '') + toCurve(pts);
+  }
+  /* The stroke is the same colour as the fill, so widening it simply fattens
+     the shape. At rest it is a hairline whose only job is to hide the seams
+     between combine()'s slices; in the deep middle it swells, which rounds off
+     what is left of the corners and lets neighbouring pieces run together like
+     liquid instead of sitting next to each other as separate scraps. */
+  /* Squash and stretch, about the piece's own centre and along its own heading.
+     A drop of water is longest when it is moving fastest and rounds up as it
+     lands; keying the elongation to speed rather than to progress is what sells
+     that. The two scales are reciprocal, so area is preserved — it reads as a
+     volume of liquid changing shape, not as a picture being resized. And since
+     shape() is zero at both ends for every setting of the speed knobs, this is
+     the identity transform at t=0 and t=1 — which is what keeps her drawing and
+     the finished paw exact. Do not swap it back to rate(): with FLOOR>0 that
+     never reaches zero, and the finished logo comes out stretched. */
+  let tr = '';
+  const sp = shape(raw)*FLOW;   // shape(), not rate() — see the note by STRETCH
+  if (sp > .003 && gn){
+    const s = 1 + STRETCH*sp;
+    /* Direction from the ball's actual velocity, not from the straight line
+       between start and finish — otherwise the piece would stretch across its
+       own path while it is going round the loop, which looks plainly wrong. */
+    let hx = el.ux, hy = el.uy;
+    if (el.sh && ball(u) > 0){
+      const c1 = ballCentre(el.sh, Math.min(1, u+.01)), a1x=c1[0], a1y=c1[1];
+      const c0 = ballCentre(el.sh, Math.max(0, u-.01));
+      const vx2 = a1x-c0[0], vy2 = a1y-c0[1], vl = Math.hypot(vx2,vy2);
+      if (vl > 1e-4){ hx = vx2/vl; hy = vy2/vl; }
+    }
+    const deg = (Math.atan2(hy, hx)*180/Math.PI).toFixed(2);
+    const ox = r1(gx/gn), oy = r1(gy/gn);
+    tr = 'translate('+ox+' '+oy+') rotate('+deg+') scale('+s.toFixed(4)+' '+(1/s).toFixed(4)+') '
+       + 'rotate('+(-deg)+') translate('+(-ox)+' '+(-oy)+')';
+  }
+  return {d, fill: mixColor(el.from, el.to, u), u,
+          width: (1.2 + TENSION*weld(raw)).toFixed(2),
+          transform: tr};
+}
+
+/* ======================================================================= *
+ *  wiring
+ * ======================================================================= */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const live = $('live'), ghost = $('ghost'), scrub = $('scrub'), tval = $('tval');
+const DURATION = 3000;   // ms at speed x1
+
+let SRC = null, morph = null, nodes = [], rows = [];
+let t = reduce ? 1 : 0, playing = false, speed = 1, dir = 1, last = 0;
+
+fetch('einav-drawing.svg')
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+  .then(txt => { SRC = readDrawing(txt); drawGhost(); rebuild(); if (!reduce) play(true); })
+  .catch(() => {
+    $('art').innerHTML = '<p class="err">לא הצלחתי לטעון את einav-drawing.svg — ' +
+      'צריך להגיש את הדף דרך שרת מקומי, לא לפתוח אותו כקובץ.</p>';
+  });
+
+/* The trajectory diagram. Each traced route is stroked in the colour the piece
+   will end up, so it is possible to see at a glance which lines are heading for
+   the coral toe and which for the pad. Rebuilt on every change to the model. */
+function drawPaths(){
+  if (!morph) return;
+  const svgns = 'http://www.w3.org/2000/svg';
+  const box = $('paths');
+  box.innerHTML = '';
+  for (const el of morph.elements){
+    for (const d of trails(el)){
+      const p = document.createElementNS(svgns,'path');
+      p.setAttribute('d', d);
+      p.setAttribute('stroke', el.to);
+      box.appendChild(p);
+    }
+  }
+}
+
+/* the finished paw, printed faintly behind the animation */
+function drawGhost(){
+  const tgt = pawTargets();
+  ghost.innerHTML = ['pad','toeA','toeB','toeC','toeD'].map(k =>
+    '<path d="'+tgt[k]+'" fill="'+TARGET_FILL[k]+'"/>').join('');
+}
+
+function rebuild(){
+  morph = buildMorph(SRC, MAPPING);
+  live.innerHTML = '';
+  nodes = morph.elements.map(() => {
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    /* evenodd keeps the holes in the line art at t=0; the hairline stroke in
+       the element's own colour closes the seams between combine()'s slices,
+       which otherwise show as pale cracks across the finished paw */
+    p.setAttribute('fill-rule','evenodd');
+    p.setAttribute('stroke-linejoin','round');
+    live.appendChild(p);
+    return p;
+  });
+  drawPaths();
+  $('who').textContent = morph.who;
+  buildLegend();
+  render();
+}
+
+function buildLegend(){
+  rows = morph.elements.map(el => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = '<i class="dot"></i><b></b><span></span>';
+    row.querySelector('b').textContent =
+      HE_SRC[el.grp] + ' · קו ' + (+el.ref.split(':')[1] + 1) + ' ← ' + HE_TARGET[el.target];
+    return row;
+  });
+  const box = $('legend');
+  box.innerHTML = '';
+  rows.forEach(r => box.appendChild(r));
+}
+
+function render(){
+  if (!morph) return;
+  morph.elements.forEach((el,i) => {
+    const f = frameAt(el,t);
+    nodes[i].setAttribute('d', f.d);
+    nodes[i].setAttribute('fill', f.fill);
+    nodes[i].setAttribute('stroke', f.fill);
+    nodes[i].setAttribute('stroke-width', f.width);
+    if (f.transform) nodes[i].setAttribute('transform', f.transform);
+    else nodes[i].removeAttribute('transform');
+    const row = rows[i];
+    row.querySelector('.dot').style.background = f.fill;
+    row.querySelector('span').textContent = Math.round(f.u*100) + '%';
+  });
+  tval.textContent = t.toFixed(3);
+  scrub.value = Math.round(t*1000);
+}
+
+function tick(now){
+  if (!playing) return;
+  const dt = last ? (now-last) : 16;
+  last = now;
+  t += dir * (dt/DURATION) * speed;
+  if (t >= 1 || t <= 0){
+    if ($('loop').checked){ t = t >= 1 ? 0 : 1; }
+    else { t = clamp01(t); play(false); }
+  }
+  render();
+  requestAnimationFrame(tick);
+}
+
+function play(on){
+  if (on && playing) { last = 0; return; }   // never stack two rAF loops
+  playing = on;
+  last = 0;
+  $('play').textContent = on ? '⏸ עצור' : '▶ נגן';
+  if (on) requestAnimationFrame(tick);
+}
+
+$('play').addEventListener('click', () => {
+  if (!playing && ((dir > 0 && t >= 1) || (dir < 0 && t <= 0))) t = dir > 0 ? 0 : 1;
+  play(!playing);
+});
+$('restart').addEventListener('click', () => { t = dir > 0 ? 0 : 1; render(); play(true); });
+scrub.addEventListener('input', () => { play(false); t = +scrub.value/1000; render(); });
+
+function seg(attr, fn){
+  document.querySelectorAll('[data-'+attr+']').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-'+attr+']').forEach(o => o.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      fn(b.dataset[attr]);
+    });
+  });
+}
+seg('speed', v => { speed = +v; });
+seg('dir',   v => { dir = +v; });
+seg('map',   v => {
+  MAPPING = v;
+  const was = playing; play(false);
+  /* the rebuild is a fifth of a second of solid JS — let the pressed state
+     paint first, otherwise the button looks dead while it churns */
+  requestAnimationFrame(() => { rebuild(); if (was) play(true); });
+});
+
+$('flowChk').addEventListener('change', e => {
+  FLOW = e.target.checked ? 1 : 0; drawPaths(); render();
+});
+$('loopChk').addEventListener('change', e => {
+  LOOP = e.target.checked ? 1 : 0; drawPaths(); render();
+});
+$('pathsChk').addEventListener('change', e =>
+  $('stage').classList.toggle('show-paths', e.target.checked));
+
+$('ghostChk').addEventListener('change', e =>
+  $('stage').classList.toggle('show-ghost', e.target.checked));
+
+/* ---- the speed panel -------------------------------------------------- *
+ *  Five knobs onto the timing model, plus a graph of what they currently say.
+ *  Nothing here is part of the animation — it only writes the same constants
+ *  the script already had, so whatever reads well can be copied straight back
+ *  into the source from the line printed under the sliders.
+ * ---------------------------------------------------------------------- */
+const KNOBS = [
+  {id:'Floor', get:()=>FLOOR,    set:v=>FLOOR    = v},
+  {id:'Head',  get:()=>HEAD,     set:v=>HEAD     = v},
+  {id:'Tail',  get:()=>TAIL,     set:v=>TAIL     = v},
+  {id:'In',    get:()=>BALL_IN,  set:v=>BALL_IN  = v},
+  {id:'Out',   get:()=>BALL_OUT, set:v=>BALL_OUT = v},
+];
+
+const PRESETS = {
+  /* what the lab shipped with: a dead stop at both ends and a very short run-up */
+  sharp: {Floor:0,   Head:.10, Tail:.70, In:.26, Out:.88},
+  soft:  {Floor:.22, Head:.22, Tail:.64, In:.38, Out:.84},
+  fluid: {Floor:.42, Head:.34, Tail:.56, In:.50, Out:.78},
+  /* no change of speed left at all — the honest baseline to compare against */
+  even:  {Floor:1,   Head:.10, Tail:.70, In:.46, Out:.80},
+};
+
+/* The graph. u runs left to right over the whole morph; every curve is 0..1, so
+   they share one box. ball() is plotted against ease(u) rather than u, because
+   that is when the gather actually happens on the clock. */
+const GX0 = 10, GX1 = 290, GY0 = 140, GY1 = 10, GSTEPS = 120;
+function plot(f){
+  let d = '';
+  for (let k=0;k<=GSTEPS;k++){
+    const u = k/GSTEPS;
+    const x = GX0 + (GX1-GX0)*u;
+    const y = GY0 + (GY1-GY0)*clamp01(f(u));
+    d += (k?'L':'M') + x.toFixed(1) + ',' + y.toFixed(1);
+  }
+  return d;
+}
+function drawCurve(){
+  $('gGrid').setAttribute('d',
+    'M'+GX0+','+GY1+'H'+GX1+'V'+GY0+'H'+GX0+'Z' +
+    'M'+GX0+','+((GY0+GY1)/2)+'H'+GX1);
+  $('gRate').setAttribute('d', plot(rate));
+  $('gEase').setAttribute('d', plot(ease));
+  $('gBall').setAttribute('d', plot(u => ball(ease(u))));
+}
+
+function applyTuning(){
+  normaliseRate();   // ease(1) must stay exactly 1 or the logo lands short
+  relockLoop();
+  KNOBS.forEach(k => {
+    $('k'+k.id).value = k.get();
+    $('o'+k.id).textContent = k.get().toFixed(2);
+  });
+  $('tuneOut').textContent =
+    'FLOOR ' + FLOOR.toFixed(2) + ' · HEAD ' + HEAD.toFixed(2) +
+    ' · TAIL ' + TAIL.toFixed(2) + ' · BALL_IN ' + BALL_IN.toFixed(2) +
+    ' · BALL_OUT ' + BALL_OUT.toFixed(2) +
+    '  (LOOP ' + LOOP_FROM.toFixed(2) + '→' + LOOP_TO.toFixed(2) + ')';
+  drawCurve();
+  /* BALL_IN / BALL_OUT genuinely move the routes through space, so the
+     trajectory diagram has to be retraced and not just re-rendered. */
+  drawPaths();
+  render();
+}
+
+KNOBS.forEach(k => $('k'+k.id).addEventListener('input', e => {
+  k.set(+e.target.value);
+  document.querySelectorAll('[data-preset]').forEach(b => b.setAttribute('aria-pressed','false'));
+  applyTuning();
+}));
+
+seg('preset', name => {
+  const p = PRESETS[name];
+  KNOBS.forEach(k => k.set(p[k.id]));
+  applyTuning();
+});
+
+applyTuning();
+</script>
+</body>
+</html>
