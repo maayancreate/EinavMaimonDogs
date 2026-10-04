@@ -1,0 +1,15 @@
+name = "einav-publish"
+main = "publish.js"
+compatibility_date = "2026-09-01"
+
+# Secrets are NOT set here — they would end up in git. Set them once, after the
+# first deploy, with:
+#
+#   wrangler secret put GITHUB_TOKEN       fine-grained PAT, this repo only,
+#                                          Contents: Read and write
+#   wrangler secret put PUBLISH_PASSWORD   what Einav types in the editor
+#   wrangler secret put ALLOWED_ORIGIN     https://maayancreate.github.io
+#
+# ALLOWED_ORIGIN matters: without it the CORS header is "*" and any site could
+# POST at this Worker. It would still need the password, but there is no reason
+# to leave the door that wide.
