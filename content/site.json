@@ -1,0 +1,430 @@
+{
+  "settings": {
+    "langToggle": true,
+    "defaultLang": "he"
+  },
+  "text": {
+    "splash.name": {
+      "he": "מעיין מימון",
+      "en": "Einav Maimon"
+    },
+    "splash.tagline": {
+      "he": "כלבנות טיפולית ואילוף",
+      "en": "Therapy dog handling & training"
+    },
+    "brand.name": {
+      "he": "עינב מימון",
+      "en": "Einav Maimon"
+    },
+    "brand.role": {
+      "he": "מאלפת כלבים · מדריכת כלבנות טיפולית",
+      "en": "Dog Trainer · Therapy Dog Instructor"
+    },
+    "nav.services": {
+      "he": "השירותים",
+      "en": "Services"
+    },
+    "nav.about": {
+      "he": "על עינב",
+      "en": "About"
+    },
+    "nav.session": {
+      "he": "איך נראה מפגש",
+      "en": "A session"
+    },
+    "nav.dogs": {
+      "he": "הכלבים",
+      "en": "The dogs"
+    },
+    "nav.cta": {
+      "he": "קביעת שיחת היכרות",
+      "en": "Book an intro call"
+    },
+    "hero.eyebrow": {
+      "he": "מוסמכת כלבנות טיפולית · בהסמכה ל‑CBT",
+      "en": "Certified therapy‑dog handler · CBT in progress"
+    },
+    "hero.title": {
+      "he": "כלב אחד\nפותח שיחה שלמה",
+      "en": "One dog\nopens a whole conversation"
+    },
+    "hero.body": {
+      "he": "מפגשים קבוצתיים ואישיים לילדים, למשפחות ולמבוגרים — ואילוף כלבים לבית. עם כלבים רגועים שאוהבים אנשים, ועם המון סבלנות.",
+      "en": "Group and one‑on‑one sessions for kids, families and older adults — plus everyday dog training at home. With calm dogs who love people, and a lot of patience."
+    },
+    "hero.ctaPrimary": {
+      "he": "בואו נדבר 15 דקות",
+      "en": "Let's talk for 15 minutes"
+    },
+    "hero.ctaSecondary": {
+      "he": "מה אפשר לעשות יחד",
+      "en": "What we can do together"
+    },
+    "hero.statLabel": {
+      "he": "כלבים מקסימים להכיר",
+      "en": "lovely dogs to meet"
+    },
+    "services.eyebrow": {
+      "he": "השירותים",
+      "en": "Services"
+    },
+    "services.title": {
+      "he": "ארבע דרכים לעבוד יחד",
+      "en": "Four ways to work together"
+    },
+    "about.badge": {
+      "he": "בהסמכה",
+      "en": "In progress"
+    },
+    "about.eyebrow": {
+      "he": "על עינב",
+      "en": "About Einav"
+    },
+    "about.title": {
+      "he": "קודם מכירים. אחר כך עובדים.",
+      "en": "First we get to know each other. Then we work."
+    },
+    "about.body": {
+      "he": "עינב מימון היא מאלפת כלבים וכלבנית טיפולית מוסמכת, עם ניסיון בעבודה עם ילדים, משפחות ואוכלוסיות בעלות צרכים מיוחדים. היא עובדת בעיקר בקבוצות, עם הכלבים שלה, וכרגע משלימה תעודת CBT.",
+      "en": "Einav Maimon is a certified dog trainer and therapy‑dog handler with experience working with children, families and people with special needs. She works mostly in groups, with her own dogs, and is currently completing a CBT certificate."
+    },
+    "about.certsTitle": {
+      "he": "הסמכות",
+      "en": "Certifications"
+    },
+    "about.certsNote": {
+      "he": "הקישורים יובילו לקובץ סרוק של התעודה, כדי שמוסדות והורים יוכלו לוודא שההסמכה אמיתית.",
+      "en": "Each link opens a scan of the certificate, so institutions and parents can verify the credentials are real."
+    },
+    "session.eyebrow": {
+      "he": "איך נראה מפגש",
+      "en": "What a session looks like"
+    },
+    "session.title": {
+      "he": "45 דקות, שלושה חלקים",
+      "en": "45 minutes, three parts"
+    },
+    "dogs.eyebrow": {
+      "he": "הצוות הארבע‑רגלי",
+      "en": "The four‑legged team"
+    },
+    "dogs.title": {
+      "he": "שלושה כלבים, לא אותו תפקיד",
+      "en": "Three dogs, not the same job"
+    },
+    "dogs.body": {
+      "he": "חלקם עברו אילוף לעבודה טיפולית, וחלקם פשוט כלבים רגועים ונוחים שמתאימים למשימות עם ילדים. עינב מתאימה את הכלב לקבוצה, ולא להפך.",
+      "en": "Some are trained for therapy work, and some are simply calm, easygoing dogs that suit tasks with children. Einav matches the dog to the group, not the other way around."
+    },
+    "pricing.title": {
+      "he": "מחירים ואזור פעילות",
+      "en": "Pricing & service area"
+    },
+    "pricing.status": {
+      "he": "עוד לא נקבע",
+      "en": "Not set yet"
+    },
+    "pricing.body": {
+      "he": "בגרסה הסופית כאן ייכנסו טווחי מחיר למפגש בודד ולסדרה, ורשימת היישובים שעינב מגיעה אליהם.",
+      "en": "The final version will show price ranges for a single session and a series, plus the towns Einav travels to."
+    },
+    "pricing.badge": {
+      "he": "◍ מקום שמור",
+      "en": "◍ Placeholder"
+    },
+    "contact.eyebrow": {
+      "he": "יצירת קשר",
+      "en": "Get in touch"
+    },
+    "contact.title": {
+      "he": "משאירים טלפון, עינב חוזרת אליכם",
+      "en": "Leave a number, Einav will call you back"
+    },
+    "contact.body": {
+      "he": "שיחת היכרות קצרה, בלי התחייבות: מה קורה אצלכם, מה אפשר לעשות עם כלב, ואיך נראית סדרת מפגשים.",
+      "en": "A short intro call, no commitment: what's going on with you, what a dog can do about it, and what a series of sessions looks like."
+    },
+    "contact.phoneLabel": {
+      "he": "הטלפון של עינב",
+      "en": "Einav's phone"
+    },
+    "contact.formNote": {
+      "he": "בקונספט הזה הטופס עדיין לא שולח — נחבר אותו לוואטסאפ, למייל או ליומן כשנחליט.",
+      "en": "In this concept the form doesn't send yet — we'll connect it to WhatsApp, email or a calendar once we decide."
+    },
+    "form.name": {
+      "he": "שם",
+      "en": "Name"
+    },
+    "form.phone": {
+      "he": "טלפון",
+      "en": "Phone"
+    },
+    "form.topic": {
+      "he": "במה מדובר?",
+      "en": "What's it about?"
+    },
+    "certs.linkLabel": {
+      "he": "צפייה בתעודה",
+      "en": "View certificate"
+    },
+    "footer.name": {
+      "he": "עינב מימון",
+      "en": "Einav Maimon"
+    },
+    "footer.role": {
+      "he": "· מאלפת כלבים · מדריכת כלבנות טיפולית",
+      "en": "· Dog Trainer · Therapy Dog Instructor"
+    },
+    "footer.note": {
+      "he": "קונספט לדף נחיתה · התמונות והטקסטים זמניים",
+      "en": "Landing page concept · photos and copy are placeholders"
+    },
+    "footer.replay": {
+      "he": "↻ נגן שוב את אנימציית הכניסה",
+      "en": "↻ Replay the intro animation"
+    }
+  },
+  "lists": {
+    "marquee": [
+      {
+        "he": "גני ילדים ובתי ספר",
+        "en": "Kindergartens & schools"
+      },
+      {
+        "he": "מסגרות לצרכים מיוחדים",
+        "en": "Special‑needs programs"
+      },
+      {
+        "he": "בתי אבות ודיור מוגן",
+        "en": "Senior residences"
+      },
+      {
+        "he": "אילוף כלבים פרטי",
+        "en": "Private dog training"
+      },
+      {
+        "he": "מבוגרים · אחד על אחד",
+        "en": "Adults · one‑on‑one"
+      },
+      {
+        "he": "משפחות",
+        "en": "Families"
+      }
+    ],
+    "services": [
+      {
+        "title": {
+          "he": "קבוצות ילדים",
+          "en": "Children's groups"
+        },
+        "body": {
+          "he": "מפגש שבועי קבוע בגן, בבית ספר או במסגרת. ביטחון, תקשורת ויכולת לווסת — דרך משימות עם הכלב.",
+          "en": "A weekly session at a kindergarten, school or program. Confidence, communication and self‑regulation through tasks with the dog."
+        }
+      },
+      {
+        "title": {
+          "he": "הורים וילדים",
+          "en": "Parents & children"
+        },
+        "body": {
+          "he": "מפגש משותף שבו הכלב הוא הסיבה לדבר. מתאים למעברים, לחרדות ולתקופות שבהן קשה למצוא שפה משותפת.",
+          "en": "A shared session where the dog is the reason to talk. Good for transitions, anxiety, and stretches when a common language is hard to find."
+        }
+      },
+      {
+        "title": {
+          "he": "קשישים ודיור מוגן",
+          "en": "Older adults"
+        },
+        "body": {
+          "he": "ביקורים קבועים בקבוצה קטנה. מגע, זיכרונות ותנועה — בקצב של הדיירים ולא בקצב שלנו.",
+          "en": "Regular small‑group visits. Touch, memory and movement — at the residents' pace, not ours."
+        }
+      },
+      {
+        "title": {
+          "he": "אילוף כלבים לבית",
+          "en": "Dog training at home"
+        },
+        "body": {
+          "he": "גור חדש, משיכה ברצועה, חרדת נטישה או כלב שלא מסתדר עם הילדים. עובדים עם כל המשפחה, לא רק עם הכלב.",
+          "en": "A new puppy, leash pulling, separation anxiety, or a dog that struggles with the kids. We work with the whole family, not just the dog."
+        }
+      }
+    ],
+    "certs": [
+      {
+        "title": {
+          "he": "תעודת אילוף כלבים",
+          "en": "Dog training certificate"
+        },
+        "meta": {
+          "he": "[ שם בית הספר / המכללה ] · [ שנה ]",
+          "en": "[ School / college name ] · [ year ]"
+        },
+        "href": ""
+      },
+      {
+        "title": {
+          "he": "תעודת כלבנות טיפולית",
+          "en": "Therapy‑dog handling certificate"
+        },
+        "meta": {
+          "he": "[ שם המוסד המסמיך ] · [ שנה ]",
+          "en": "[ Certifying institution ] · [ year ]"
+        },
+        "href": ""
+      },
+      {
+        "title": {
+          "he": "תעודת CBT — בתהליך",
+          "en": "CBT certificate — in progress"
+        },
+        "meta": {
+          "he": "[ שם המוסד המסמיך ] · צפי סיום [ תאריך ]",
+          "en": "[ Certifying institution ] · expected [ date ]"
+        },
+        "href": ""
+      }
+    ],
+    "steps": [
+      {
+        "photo": "uploads/photos-1789298673051-xg5b.png",
+        "title": {
+          "he": "פגישה",
+          "en": "Meeting"
+        },
+        "body": {
+          "he": "הכלב נכנס לחדר, כולם יושבים במעגל. אף אחד לא חייב לגעת.",
+          "en": "The dog walks in, everyone sits in a circle. Nobody has to touch."
+        }
+      },
+      {
+        "photo": "uploads/photos-1789298668728-f0af.png",
+        "title": {
+          "he": "משימה",
+          "en": "Task"
+        },
+        "body": {
+          "he": "כל ילד מקבל תפקיד — להוביל, להאכיל, ללמד פקודה. ההצלחה מיידית ונראית.",
+          "en": "Each child gets a role — to lead, to feed, to teach a cue. Success is immediate and visible."
+        }
+      },
+      {
+        "photo": "uploads/photos-1789298668767-wr45.png",
+        "title": {
+          "he": "פרידה",
+          "en": "Goodbye"
+        },
+        "body": {
+          "he": "מסכמים מה קרה, נפרדים מהכלב, ומסמנים למה נחזור בפעם הבאה.",
+          "en": "We review what happened, say goodbye to the dog, and mark what we'll return to next time."
+        }
+      }
+    ],
+    "dogs": [
+      {
+        "photo": "uploads/screenshot-2026-09-13-142204-562832-1.png",
+        "name": {
+          "he": "גוץ",
+          "en": "gootch"
+        },
+        "meta": {
+          "he": "גולדן רטריבר אנגלי · ידידותי ובעל אינטילגנציה רגשית גבוה",
+          "en": "Breed · what he's good at"
+        }
+      },
+      {
+        "photo": "uploads/photos-1789298673084-j1na.png",
+        "name": {
+          "he": "[ שם ]",
+          "en": "[ Name ]"
+        },
+        "meta": {
+          "he": "גזע · במה הוא טוב",
+          "en": "Breed · what he's good at"
+        }
+      },
+      {
+        "photo": "uploads/photos-1789298668767-wr45.png",
+        "name": {
+          "he": "[ שם ]",
+          "en": "[ Name ]"
+        },
+        "meta": {
+          "he": "גזע · במה הוא טוב",
+          "en": "Breed · what he's good at"
+        }
+      }
+    ],
+    "testimonials": [
+      {
+        "quote": {
+          "he": "[ מקום להמלצה — משפט או שניים מהורה, מגננת או ממנהלת מסגרת. ]",
+          "en": "[ Testimonial placeholder — a sentence or two from a parent, teacher or program director. ]"
+        },
+        "author": {
+          "he": "[ שם ]",
+          "en": "[ Name ]"
+        },
+        "role": {
+          "he": "· [ תפקיד ]",
+          "en": "· [ role ]"
+        }
+      },
+      {
+        "quote": {
+          "he": "[ מקום להמלצה — אפשר גם משפט קצר של ילד. ]",
+          "en": "[ Testimonial placeholder — a child's short sentence works too. ]"
+        },
+        "author": {
+          "he": "[ שם ]",
+          "en": "[ Name ]"
+        },
+        "role": {
+          "he": "· [ תפקיד ]",
+          "en": "· [ role ]"
+        }
+      }
+    ],
+    "topics": [
+      {
+        "he": "קבוצת ילדים",
+        "en": "Children's group"
+      },
+      {
+        "he": "הורים וילדים",
+        "en": "Parents & children"
+      },
+      {
+        "he": "מבוגרים — אחד על אחד",
+        "en": "Adults — one-on-one"
+      },
+      {
+        "he": "מסגרת לצרכים מיוחדים",
+        "en": "Special-needs program"
+      },
+      {
+        "he": "בית אבות / דיור מוגן",
+        "en": "Senior residence"
+      },
+      {
+        "he": "אילוף כלב פרטי",
+        "en": "Private dog training"
+      }
+    ]
+  },
+  "media": {
+    "hero.photo1": "uploads/photos-1789298673081-6u2m.png",
+    "hero.photo2": "uploads/photos-1789298673063-8ygv.png",
+    "hero.photo3": "uploads/photos-1789298673084-j1na.png",
+    "about.photo": "uploads/photos-1789298673065-ghtg.png",
+    "about.logo": "uploads/logo-einav-official.png"
+  },
+  "contact": {
+    "phone": "054‑2612096",
+    "phoneTel": "+972542612096"
+  }
+}

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>עריכת התוכן — עינב מימון</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Alef:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16324F; --cream:#FBF6EE; --coral:#E4572E; --amber:#F2A03D;
+    --green:#4C9A6B; --slate:#4A5C6F; --brown:#8A7A66;
+    --line:rgba(22,50,79,.12);
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--cream); color:var(--ink);
+       font-family:'Heebo',system-ui,sans-serif; font-size:15px;}
+  h1,h2,h3{margin:0; font-weight:900; letter-spacing:-.03em}
+  button{font-family:inherit}
+
+  /* ---- shell: editor on one side, live preview on the other ---- */
+  .shell{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); height:100dvh}
+  @media (max-width:1000px){ .shell{grid-template-columns:1fr; height:auto} }
+
+  .pane{min-width:0; overflow-y:auto; padding:0 0 120px}
+  .preview{border-inline-start:1px solid var(--line); background:#fff; position:sticky; top:0;
+           height:100dvh; display:flex; flex-direction:column}
+  @media (max-width:1000px){ .preview{position:static; height:70vh; border-inline-start:0; border-top:1px solid var(--line)} }
+  .preview iframe{flex:1; width:100%; border:0}
+
+  /* ---- top bar ---- */
+  .bar{position:sticky; top:0; z-index:20; background:rgba(251,246,238,.94);
+       backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+       padding:14px 20px; display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+  .bar h1{font-size:17px; margin-inline-end:auto}
+  .btn{border:1.5px solid rgba(22,50,79,.22); background:transparent; color:var(--ink);
+       font-size:13px; font-weight:700; padding:9px 16px; border-radius:99px; cursor:pointer;
+       transition:background .15s,color .15s,border-color .15s; white-space:nowrap}
+  .btn:hover{background:var(--ink); color:var(--cream); border-color:var(--ink)}
+  .btn.primary{background:var(--coral); border-color:var(--coral); color:#fff}
+  .btn.primary:hover{background:var(--ink); border-color:var(--ink)}
+  .btn:disabled{opacity:.45; cursor:default}
+  .btn:disabled:hover{background:transparent; color:var(--ink); border-color:rgba(22,50,79,.22)}
+
+  .status{font-size:13px; font-weight:700; color:var(--brown)}
+  .status.ok{color:var(--green)} .status.err{color:var(--coral)}
+
+  /* ---- sections ---- */
+  .sec{border-bottom:1px solid var(--line)}
+  .sec>summary{padding:15px 20px; cursor:pointer; font-weight:900; font-size:15px;
+               display:flex; align-items:center; gap:10px; list-style:none}
+  .sec>summary::-webkit-details-marker{display:none}
+  .sec>summary::before{content:'▸'; color:var(--brown); transition:transform .15s}
+  .sec[open]>summary::before{transform:rotate(-90deg)}
+  .sec .body{padding:0 20px 22px}
+  .count{margin-inline-start:auto; font-size:12px; font-weight:500; color:var(--brown)}
+
+  /* ---- one editable string ---- */
+  .row{padding:13px 0; border-top:1px dashed rgba(22,50,79,.13)}
+  .row:first-child{border-top:0}
+  .rowhead{display:flex; align-items:center; gap:8px; margin-bottom:7px}
+  .label{font-size:12px; font-weight:700; color:var(--slate)}
+  .path{font-size:11px; color:var(--brown); direction:ltr; font-family:ui-monospace,monospace}
+  .pair{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  @media (max-width:620px){ .pair{grid-template-columns:1fr} }
+  .field{display:flex; flex-direction:column; gap:4px; min-width:0}
+  .field>span{font-size:11px; font-weight:700; color:var(--brown)}
+  textarea,input[type=text],input[type=url]{
+    font-family:inherit; font-size:14px; line-height:1.5; padding:9px 11px;
+    border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink);
+    width:100%; resize:vertical; min-height:42px}
+  textarea:focus,input:focus{outline:none; border-color:var(--coral)}
+  .en textarea,.en input{direction:ltr; text-align:left}
+
+  /* ---- flags ---- */
+  .flag{font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:99px; white-space:nowrap}
+  .flag.todo{background:rgba(228,87,46,.12); color:var(--coral)}
+  .flag.noen{background:rgba(242,160,61,.18); color:#8a5a10}
+
+  /* ---- lists ---- */
+  .item{border:1px solid var(--line); border-radius:16px; padding:13px 15px; margin-top:12px; background:#fff}
+  .itemhead{display:flex; align-items:center; gap:8px; margin-bottom:4px}
+  .itemhead b{font-size:12px; color:var(--brown)}
+  .mini{border:0; background:transparent; color:var(--brown); cursor:pointer;
+        font-size:12px; font-weight:700; padding:4px 8px; border-radius:8px}
+  .mini:hover{background:rgba(22,50,79,.07); color:var(--ink)}
+  .mini.danger:hover{background:rgba(228,87,46,.12); color:var(--coral)}
+  .itemtools{margin-inline-start:auto; display:flex; gap:2px}
+
+  /* ---- photos ---- */
+  .photo{display:flex; gap:12px; align-items:center; margin-top:8px}
+  .photo img{width:76px; height:76px; object-fit:cover; border-radius:12px;
+             border:1px solid var(--line); background:var(--cream); flex:none}
+  .photo .pbtns{display:flex; flex-direction:column; gap:6px; min-width:0}
+  .photo .name{font-size:11px; color:var(--brown); direction:ltr; overflow:hidden;
+               text-overflow:ellipsis; white-space:nowrap; max-width:220px}
+
+  /* ---- settings ---- */
+  .switch{display:flex; align-items:center; gap:11px; padding:13px 0}
+  .switch input{width:17px; height:17px; accent-color:var(--coral)}
+  .switch .hint{font-family:'Alef',serif; font-size:13px; color:var(--brown); line-height:1.6}
+
+  .note{font-family:'Alef',serif; font-size:13.5px; line-height:1.7; color:var(--brown);
+        margin:0 0 14px}
+  .warn{background:rgba(242,160,61,.14); border-radius:12px; padding:11px 14px; margin:14px 20px 0;
+        font-family:'Alef',serif; font-size:13px; line-height:1.6; color:#7a5510}
+
+  dialog{border:0; border-radius:20px; padding:24px; max-width:420px; width:calc(100% - 40px);
+         box-shadow:0 30px 70px rgba(22,50,79,.3)}
+  dialog::backdrop{background:rgba(22,50,79,.45)}
+  dialog h3{font-size:17px; margin-bottom:6px}
+  dialog .row{border:0; padding:12px 0 0}
+  .dlgbtns{display:flex; gap:8px; justify-content:flex-end; margin-top:16px}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="pane">
+    <div class="bar">
+      <h1>עריכת התוכן</h1>
+      <span class="status" id="status"></span>
+      <button class="btn" id="revertBtn" title="מחיקת השינויים שלא פורסמו">↺ ביטול שינויים</button>
+      <button class="btn" id="downloadBtn">⭳ הורדת קובץ</button>
+      <button class="btn primary" id="publishBtn">פרסום לאתר</button>
+    </div>
+
+    <div class="warn" id="draftWarn" hidden>
+      יש כאן שינויים שעדיין לא פורסמו. הם שמורים בדפדפן הזה בלבד — עד שלוחצים על «פרסום לאתר».
+    </div>
+
+    <div id="form"></div>
+  </div>
+
+  <div class="preview">
+    <iframe id="preview" title="תצוגה מקדימה של האתר"></iframe>
+  </div>
+</div>
+
+<dialog id="pwDlg">
+  <h3>פרסום לאתר</h3>
+  <p class="note" id="pwNote">צריך את הסיסמה כדי לפרסם. השינויים יופיעו באתר תוך כדקה.</p>
+  <div class="row">
+    <div class="field">
+      <span>סיסמה</span>
+      <input type="password" id="pwInput" autocomplete="current-password">
+    </div>
+  </div>
+  <label class="switch"><input type="checkbox" id="pwRemember"> <span class="hint">לזכור אותי במחשב הזה</span></label>
+  <div class="dlgbtns">
+    <button class="btn" id="pwCancel">ביטול</button>
+    <button class="btn primary" id="pwGo">פרסום</button>
+  </div>
+</dialog>
+
+<script src="editor.js"></script>
+</body>
+</html>
