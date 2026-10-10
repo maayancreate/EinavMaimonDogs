@@ -41,8 +41,8 @@
       "en": "Book an intro call"
     },
     "hero.eyebrow": {
-      "he": "מוסמכת כלבנות טיפולית · בהסמכה ל‑CBT",
-      "en": "Certified therapy‑dog handler · CBT in progress"
+      "he": "מוסמכת כלבנות טיפולית · בהסמכה ל‑liCBT",
+      "en": "Certified therapy‑dog handler · liCBT in progress"
     },
     "hero.title": {
       "he": "כלב אחד\nפותח שיחה שלמה",
@@ -196,10 +196,6 @@
         "en": "Special‑needs programs"
       },
       {
-        "he": "בתי אבות ודיור מוגן",
-        "en": "Senior residences"
-      },
-      {
         "he": "אילוף כלבים פרטי",
         "en": "Private dog training"
       },
@@ -215,7 +211,7 @@
     "services": [
       {
         "title": {
-          "he": "קבוצות ילדים",
+          "he": "חוגי כלבנות לילדים",
           "en": "Children's groups"
         },
         "body": {
@@ -225,22 +221,12 @@
       },
       {
         "title": {
-          "he": "הורים וילדים",
+          "he": "כלבנות מקרבת - הורים וילדים",
           "en": "Parents & children"
         },
         "body": {
           "he": "מפגש משותף שבו הכלב הוא הסיבה לדבר. מתאים למעברים, לחרדות ולתקופות שבהן קשה למצוא שפה משותפת.",
           "en": "A shared session where the dog is the reason to talk. Good for transitions, anxiety, and stretches when a common language is hard to find."
-        }
-      },
-      {
-        "title": {
-          "he": "קשישים ודיור מוגן",
-          "en": "Older adults"
-        },
-        "body": {
-          "he": "ביקורים קבועים בקבוצה קטנה. מגע, זיכרונות ותנועה — בקצב של הדיירים ולא בקצב שלנו.",
-          "en": "Regular small‑group visits. Touch, memory and movement — at the residents' pace, not ours."
         }
       },
       {
